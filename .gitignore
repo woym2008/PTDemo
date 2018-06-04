@@ -1,0 +1,9 @@
+PTDemo/Library
+PTDemo/Temp
+PTDemo/UnityPackageManager
+Library
+Temp
+UnityPackageManager
+
+*.csproj
+*.sln
