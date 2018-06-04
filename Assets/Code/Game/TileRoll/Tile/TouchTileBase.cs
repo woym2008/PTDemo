@@ -116,29 +116,29 @@ namespace Demo
             m_Parent = parent;
         }
         //--------------------------------------------
-        float getStartTime()
+        public float getStartTime()
         {
             return (float)m_TileData.StartTime;
         }
 
-        float getProcess()
+        public float getProcess()
         {
-
+            return (float)m_TileData.Process;
         }
 
-        void setPosition(Vector3 pos)
+        public void setPosition(Vector3 pos)
         {
-
+            this.transform.position = pos;
         }
 
-        void setRotation(Quaternion quat)
+        public void setRotation(Quaternion rot)
         {
-
+            this.transform.rotation = rot;
         }
 
-        void setScale(Vector3 scale)
+        public void setScale(Vector3 scale)
         {
-
+            this.transform.localScale = scale;
         }
         //--------------------------------------------
         public virtual void OnEndTouch()

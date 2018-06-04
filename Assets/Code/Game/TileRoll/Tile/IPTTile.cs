@@ -12,7 +12,7 @@ public interface IPTTile
 
     void setPosition(Vector3 pos);
 
-    void setRotation(Quaternion quat);
+    void setRotation(Quaternion rot);
 
     void setScale(Vector3 scale);
 }
