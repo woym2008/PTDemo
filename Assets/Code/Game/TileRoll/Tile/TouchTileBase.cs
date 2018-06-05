@@ -124,6 +124,7 @@ namespace Demo
         public float getProcess()
         {
             return (float)m_TileData.Process;
+
         }
 
         public void setPosition(Vector3 pos)
