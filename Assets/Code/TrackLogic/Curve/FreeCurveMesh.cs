@@ -16,26 +16,106 @@ public class FreeCurveMesh : MonoBehaviour {
 
     public SplineMesh splinemesh;
 
-    private LinkedList<CurveNode> nodelist = new LinkedList<CurveNode>();
+    private List<SplineNode> nodecachelist = new List<SplineNode>();
 
     void OnEnable()
     {
+       
+        if(spline  == null )
+        {
+            spline = base.GetComponent<Spline>();
+            if(spline == null)
+            {
+                Debug.LogError("Not Contain Componet Spline");
+                base.enabled = false;
+                return;
+            }
+        }
+        if(splinemesh == null)
+        {
+            splinemesh = base.GetComponent<SplineMesh>();
+            if(splinemesh == null)
+            {
+                base.enabled = false;
+                Debug.LogError("Not Contain Componet SplineMesh");
+                return;
+            }
+        }
 
+        spline.updateMode = Spline.UpdateMode.DontUpdate;
+        splinemesh.updateMode = SplineMesh.UpdateMode.DontUpdate;
+
+        SetupNodeList();
+        
     }
-	   
-    
 
-
-    ///////////////////////////////////////
-    #region CurveNode Data
-    /// <summary>
-    /// 曲线上的路径点信息
-    /// </summary>
-    public class CurveNode
+    private void SetupNodeList()
     {
-        public Vector3 position { get; set; }
-        public Quaternion rotation { get; set; }
-        public GameObject nodeObject { get; set; }      // 节点对象
+        nodecachelist.Clear();
+        int count = transform.childCount;
+
+        for(int num = 0; num < count; ++ num)
+        {
+            Transform child = transform.GetChild(num);
+            if(child.GetComponent<SplineNode>() != null )
+            {
+                nodecachelist.Add(child.GetComponent<SplineNode>());
+            }
+        }
+
+        SplineNode[] nodeArray = spline.SplineNodes;
+        for(int i = 0; i< nodeArray.Length; ++ i)
+        {
+            if(nodecachelist.Contains(nodeArray[i]))
+            {
+                nodecachelist.Remove(nodeArray[i]);
+            }
+        }
     }
-    #endregion
+
+
+    public int GetNodeCount()
+    {
+        return (spline.SplineNodes.Length + nodecachelist.Count);
+    }
+
+    public void AdjustCurveNodes(CurveNodeData[] arrNode)
+    {
+        int len = arrNode.Length;
+        int maxlen = GetNodeCount();
+        if(len > maxlen)
+        {
+            len = maxlen;
+        }
+
+        SplineNode[] internalNodes = spline.SplineNodes;
+        int internalCount = internalNodes.Length;
+
+        if(len < internalCount)
+        {
+            for(int num = len; num < internalCount; ++ num)
+            {                
+                spline.RemoveSplineNode(internalNodes[num]);
+                nodecachelist.Add(internalNodes[num]);
+            }
+        }
+
+        for(int i = 0; i< len; ++ i)
+        {
+
+        }     
+                
+        spline.RemoveSplineNode()
+    }
+
+
+    ///////////////////////////////////
+#region Curve Node Data
+    public class CurveNodeData
+    {
+        public Vector3 position{get;set;}
+        public Quaternion rotation { get; set; }
+    }
+
+#endregion
 }
