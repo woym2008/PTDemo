@@ -308,7 +308,8 @@ public class SplineMesh : MonoBehaviour
 			bentMesh = new Mesh( );
 		
 			bentMesh.name = "BentMesh";
-			bentMesh.hideFlags = HideFlags.HideAndDontSave;
+            //bentMesh.hideFlags = HideFlags.HideAndDontSave;
+            bentMesh.hideFlags = HideFlags.DontSave;
 		}
 		
 		MeshFilter meshFilter = GetComponent<MeshFilter>( );

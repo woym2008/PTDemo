@@ -321,8 +321,8 @@ Transform:
   - {fileID: 1699851438}
   - {fileID: 1666779880}
   - {fileID: 1040907457}
-  - {fileID: 405324751}
   - {fileID: 788898209}
+  - {fileID: 405324751}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -359,7 +359,7 @@ MonoBehaviour:
   perNodeTension: 0
   tension: 0.5
   normal: {x: 0, y: 1, z: 0}
-  autoClose: 1
+  autoClose: 0
   interpolationAccuracy: 5
 --- !u!33 &354274287
 MeshFilter:
@@ -495,11 +495,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 405324750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3, y: 0, z: -0.34}
+  m_LocalPosition: {x: 8.01, y: 0, z: -6.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 354274285}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &405324752
 MonoBehaviour:
@@ -718,7 +718,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 354274285}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &788898210
 MonoBehaviour:
