@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Demo.GameSystem
+namespace Demo.TileTrack
 {
     public class NodeObject : MonoBehaviour
     {

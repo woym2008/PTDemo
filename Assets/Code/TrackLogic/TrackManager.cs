@@ -12,19 +12,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Demo.GameSystem
+namespace Demo.TileTrack
 {
+        ///////////////////////////////////
+#region Curve Node Data
+    public class CurveNodeData
+    {
+        public Vector3 position{get;set;}
+        public Quaternion rotation { get; set; }
+    }
+
+#endregion
+
     public class TrackManager: XSingleton<TrackManager>
     {
         public bool isDebug = false;
 
         public ITrackViewer trackViewer;
         private int m_TrackLineNum = 2;             // 轨道数量
-        //private  float m_speed = 3;                   // 轨道运动的速度
+        //private  float m_speed = 3;               // 轨道运动的速度
         public int maxTrackNum = 4;
-        //private float m_fSpace = 2f;                // 音符间距(m)
-        private bool m_isMoveable = false;      // 是否可以运动
-        private float m_fRunningTime = 0;       // 轨道运行的时间
+        //private float m_fSpace = 2f;              // 音符间距(m)
+        private bool m_isMoveable = false;          // 是否可以运动
+        private float m_fRunningTime = 0;           // 轨道运行的时间
 
         /// /////////////////////////////////////////
 
@@ -56,12 +66,12 @@ namespace Demo.GameSystem
 
         //protected MouseTouchArea m_touchArea;
         protected NodeObject m_lastNote;
-        protected TrackPanel trackPanel;
+        //protected TrackPanel trackPanel;
         float timeSpace = 0;
 
 
 
-        public bool Init(TrackDefination.enTrackType trackType)
+        public bool Init(TrackNumDef.enTrackType trackType = TrackNumDef.enTrackType.Curve)
         {
             if (trackViewer != null)
             {
@@ -71,10 +81,10 @@ namespace Demo.GameSystem
 
             switch (trackType)
             {
-                case TrackDefination.enTrackType.Linear:
+                case TrackNumDef.enTrackType.Linear:
                     trackViewer = new LinearTrackViewer();
                     break;
-                case TrackDefination.enTrackType.Spline:
+                case TrackNumDef.enTrackType.Curve:
                     trackViewer = new CurveTrackRollViewer();
                     break;
             }
@@ -88,12 +98,31 @@ namespace Demo.GameSystem
             return true;
         }
 
+        public void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
+        {
+            trackViewer.GenerateTrack(obj, pathDataArray);
+        }
+
+        /// <summary>
+        /// 获取轨道上某点的坐标位置
+        /// </summary>
+        /// <param name="paramater"> 0-1 索取的点在轨道中的百分比率</param>
+        /// <returns></returns>
+        public Vector3 GetPosition(float paramater, int lineIndex)
+        {
+            return trackViewer.GetPosition(paramater, lineIndex);
+        }
+        public Quaternion GetRotation(float paramater, int lineIndex)
+        {
+            return trackViewer.GetRotation(paramater, lineIndex);
+        }
+
         public float Speed
         {
             get { return 0; }
             set
             {
-                
+                Debug.LogWarning("@@@@@@@@@@ 未实现 Speed");
             }
         }
 

@@ -7,14 +7,14 @@
 
 using System;
 
-namespace Demo.GameSystem
+namespace Demo.TileTrack
 {
-    public class TrackDefination
+    public class TrackNumDef
     {
         public enum enTrackType
         {
             Linear,     // 线性，一条线运动
-            Spline,     // 样条曲线运动
+            Curve,     // 样条曲线运动
         }
 
         static public float tilespace = 2f;     //音符间隔

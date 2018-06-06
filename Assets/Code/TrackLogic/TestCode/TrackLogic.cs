@@ -9,30 +9,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Demo.GameSystem
+namespace Demo.TileTrack
 {
     public class TrackLogic : MonoBehaviour
     {
-        
-        public ITrackViewer trackViewer;
-
+        public GameObject trackPrefab;
 
 
         // Use this for initialization
         void Start()
         {
-            trackViewer = new CurveTrackRollViewer();
+            TrackManager.GetInstance().Init(TrackNumDef.enTrackType.Curve);
 
-
+            SetupPath();
         }
 
         // Update is called once per frame
-        void Update()
+        //void Update()
+        //{
+
+        //}
+
+        void SetupPath()
         {
+            GameObject pathRoot = GameObject.Find("RootPath");
+            List<CurveNodeData> pathDataList = new List<CurveNodeData>();
 
+
+
+            Transform pathTrans = pathRoot.transform;
+            for (int i =0; i< pathTrans.childCount; ++ i )
+            {
+                Transform child = pathTrans.GetChild(i);
+                CurveNodeData data = new CurveNodeData();
+                data.position = child.position;
+                data.rotation = child.rotation;
+                pathDataList.Add(data);
+            }
+
+            TrackManager.GetInstance().GenerateTrack(trackPrefab, pathDataList.ToArray());
         }
-
-
     }
 }
 

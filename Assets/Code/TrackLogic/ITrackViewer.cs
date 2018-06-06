@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Demo.GameSystem
+namespace Demo.TileTrack
 {
     public interface ITrackViewer
     {
@@ -58,6 +58,17 @@ namespace Demo.GameSystem
         float GetProgressRatio(float value);
         bool CheckPushValue();
         bool PushValue(NodeObject value);
+
+        void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray);
+        /// <summary>
+        /// 获取轨道上的某点的位置
+        /// </summary>
+        /// <param name="paramater">表示所取点在整个轨道中的比率 0-1</param>
+        /// <param name="lineIndex">表示的轨道线索引 左边第一条索引为0 </param>
+        /// <returns></returns>
+        Vector3 GetPosition(float paramater, int lineIndex);
+
+        Quaternion GetRotation(float paramater, int lineIndex);
     }
 
 
@@ -112,7 +123,11 @@ namespace Demo.GameSystem
         { return true; }
         public virtual bool PushValue(NodeObject value)
         { return true; }
+        public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
+        { }
+        public virtual Vector3 GetPosition(float parameter, int lineIndex) { return Vector3.zero; }
 
+        public virtual Quaternion GetRotation(float paramater, int lineIndex) { return Quaternion.identity; }
 
         // 轨道数据集合
         public class trackviewData{
