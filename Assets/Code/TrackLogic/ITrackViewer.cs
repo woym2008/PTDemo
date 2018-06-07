@@ -50,7 +50,8 @@ namespace Demo.TileTrack
         /// 获取轨道的运行速度
         /// </summary>
         /// <param name="num"></param>
-        void SetTracklineNum(int num);
+        void SetTracklineNum(int num, float lineSpace);
+        int GetTracklineNum();
         /// <summary>
         /// 轨道运行完成
         /// </summary>
@@ -62,7 +63,7 @@ namespace Demo.TileTrack
         /// <returns></returns>
         float GetProgressRatio(float value);
         bool CheckPushValue();
-        bool PushValue(IPTTile value);
+        bool PushValue(IPTTile value, int lineIndex);
 
         void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray);
         /// <summary>
@@ -74,6 +75,9 @@ namespace Demo.TileTrack
         Vector3 GetPosition(float paramater, int lineIndex);
 
         Quaternion GetRotation(float paramater, int lineIndex);
+
+        void SetTrackWidth(float width);
+        void SetTrackHeight(float height);
     }
 
 
@@ -100,9 +104,14 @@ namespace Demo.TileTrack
         public virtual void OnUpdate()
         { }
 
-        public virtual void SetTracklineNum(int num)
+        public virtual void SetTracklineNum(int num, float lineSpace)
         {
             _data.lineNum = num;
+            _data.lineSpace = lineSpace;
+        }
+        public virtual int GetTracklineNum()
+        {
+            return (_data.lineNum > 0) ?_data.lineNum : 1;
         }
         public virtual void OnClear()
         { }
@@ -126,7 +135,7 @@ namespace Demo.TileTrack
         }
         public virtual bool CheckPushValue()
         { return true; }
-        public virtual bool PushValue(IPTTile value)
+        public virtual bool PushValue(IPTTile value,int lineIndex)
         { return true; }
         public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
         { }
@@ -138,7 +147,12 @@ namespace Demo.TileTrack
         {
             return _data.tracklength;
         }
+        public virtual void SetTrackWidth(float width)
+        {
 
+        }
+        public virtual void SetTrackHeight(float height)
+        { }
         // 轨道数据集合
         public class trackviewData{
             public bool isRunning { get; set; }
@@ -147,6 +161,9 @@ namespace Demo.TileTrack
             public float tracklength { get; set; }      // 轨道的长度
             public float runnungTime { get; set; }
             public bool isFinished { get; set; }
+            public float lineSpace { get; set; }
+            public float width { get; set; }
+            public float height { get; set; }
         }
     }
 }

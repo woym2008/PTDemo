@@ -13,44 +13,41 @@ namespace Demo.TileTrack
 {
     public class CurveTrackRollViewer : TrackBase
     {
+        public class CacheData
+        {
+            public int lineIndex = 0;
+            public IPTTile node;
+        }
+
+
         public GameObject trackRoot;
 
-        Spline _spline;
+        public Spline _spline;
         SplineMesh _splineMesh;
         MeshRenderer _meshRender;
        
         //public Transform _player;
 
         private float runnedLength = 0f;
-        private float progress = 0f;
+        public float progress = 0f;
 
-        private List<IPTTile> _prepareList;
-        private int m_maxCacheNum = 6;
-        private List<IPTTile> _operateList;
+        private List<CacheData> _prepareList;
+        private int m_maxCacheNum = 20;
+        //private List<IPTTile> _operateList;
 
-
+        private List<CurveTrackLine> _lineList = new List<CurveTrackLine>();
         public override void Init()
         {
             Debug.Log("SplineTrackViewer Init");
 
             if (_prepareList == null)
             {
-                _prepareList = new List<IPTTile>();
+                _prepareList = new List<CacheData>();
             }
             else
             {
                 RecoveryNode(ref _prepareList);
             }
-
-            if (_operateList == null)
-            {
-                _operateList = new List<IPTTile>();
-            }
-            else
-            {
-                RecoveryNode(ref _operateList);
-            }
-
 
             trackRoot = GameObject.Find("TrackRoot");
             if (trackRoot == null)
@@ -111,12 +108,71 @@ namespace Demo.TileTrack
             return rotation;
         }
 
-        public override void SetTracklineNum(int num)
+        public override void SetTracklineNum(int num, float lineSpace)
         {
-            base.SetTracklineNum(num);
-            Debug.Log("Set Track Line num operate");
+            base.SetTracklineNum(num, lineSpace);
+                        
+            int midIndex = 0;
+            float offsetX = 0f;
+            if (num % 2 == 0)
+            {
+                midIndex = (int)(num * 0.5f);
+                for (int i = 0; i < num; ++i)
+                {
+                    if (i < midIndex)
+                    {
+                        offsetX = (i - midIndex + 0.5f) * _data.lineSpace;
+                    }
+                    else
+                    {
+                        offsetX = (i - midIndex + 0.5f) * _data.lineSpace;
+                    }
+
+                    if (_lineList.Count <= i)
+                    {
+                        CurveTrackLine line = new CurveTrackLine(this);
+                        line.lineIndex = i;
+                        _lineList.Add(line);
+                    }
+                    _lineList[i].OffsetX = offsetX;
+                }
+            }
+            else
+            {
+                midIndex = (int)(num * 0.5f);
+                for (int i = 0; i < num; ++i)
+                {
+                    offsetX = (i - midIndex) * _data.lineSpace;
+
+                    if (_lineList.Count <= i)
+                    {
+                        CurveTrackLine line = new CurveTrackLine(this);
+                        line.lineIndex = i;
+                        _lineList.Add(line);
+                    }
+
+                    _lineList[i].OffsetX = offsetX;
+                }
+            }
         }
 
+        public override void SetTrackWidth(float width)
+        {
+            this._data.width = width;
+            Vector2 scale = _splineMesh.xyScale;
+            scale.x = width;
+            this._splineMesh.xyScale = scale;
+            this._splineMesh.UpdateMesh();
+        }
+
+        public override void SetTrackHeight(float height)
+        {
+            this._data.height = height;
+            Vector2 scale = _splineMesh.xyScale;
+            scale.y = height;
+            this._splineMesh.xyScale = scale;
+            this._splineMesh.UpdateMesh();
+        }
         public override void OnAwake(bool isStart)
         {
             base.OnAwake(isStart);
@@ -138,10 +194,14 @@ namespace Demo.TileTrack
         public override void OnClear()
         {
             RecoveryNode(ref _prepareList);
-            RecoveryNode(ref _operateList);
-
             _prepareList.Clear();
-            _operateList.Clear();
+
+            for (int i = 0; i < _lineList.Count; ++i )
+            {
+                _lineList[i].Clear();
+            }
+            //RecoveryNode(ref _operateList);            
+            //_operateList.Clear();
         }
 
         public override void OnDestroy()
@@ -169,9 +229,13 @@ namespace Demo.TileTrack
             }
             return true;
         }
-        public override bool PushValue(IPTTile node)
+        public override bool PushValue(IPTTile node, int lineIndex)
         {
-            _prepareList.Add(node);
+            CacheData data = new CacheData();
+            data.lineIndex = lineIndex;
+            data.node = node;
+
+            _prepareList.Add(data);
             return true;
         }
 
@@ -288,12 +352,13 @@ namespace Demo.TileTrack
         {
             if (_prepareList.Count > 0)
             {
-                IPTTile node = _prepareList[0];
-                if (node.getStartProcess() <= this.progress)
+                CacheData data = _prepareList[0];
+
+                if (data.node.getStartProcess() <= this.progress)
                 {
                     _prepareList.RemoveAt(0);
 
-                    PushIntoTackline(0, node);
+                    PushIntoTackline(0, data.node);
                 }
             }
 
@@ -301,63 +366,52 @@ namespace Demo.TileTrack
 
         private void PushIntoTackline(int lineIndex, IPTTile node)
         {
-            node.Appear(lineIndex);
+            CurveTrackLine line = _lineList[lineIndex];
+            if(line == null)
+            {
+                Debug.LogError("not contain this line index " + lineIndex);
+            }
 
-            //node.SetParent(transformTrackRoot);
+            line.PushValue(node);
 
-            lineIndex %= this._data.lineNum;
-            // 倒叙
-            _operateList.Insert(0, node);
+            //node.Appear(lineIndex);
 
-            float progress = this.progress + node.getPositionProgress();
+            ////node.SetParent(transformTrackRoot);
 
-            Vector3 position = this._spline.GetPositionOnSpline(progress);
-            Quaternion rotation = this._spline.GetOrientationOnSpline(progress);
+            //lineIndex %= this._data.lineNum;
+            //// 倒叙
+            //_operateList.Insert(0, node);
 
-            //node.progress = progress;
-            node.setProcess(progress);
+            //float progress = this.progress + node.getPositionProgress();
 
-            //node.transform.position = position;
-            //node.transform.rotation = rotation;
-            node.setPosition(position);
-            node.setRotation(rotation);
+            //Vector3 position = this._spline.GetPositionOnSpline(progress);
+            //Quaternion rotation = this._spline.GetOrientationOnSpline(progress);
+
+            ////node.progress = progress;
+            //node.setProcess(progress);
+
+            ////node.transform.position = position;
+            ////node.transform.rotation = rotation;
+            //node.setPosition(position);
+            //node.setRotation(rotation);
         }
 
         private void UpdateOperateList()
         {
-            int count = _operateList.Count;
-
-            for (int i = count - 1; i >= 0; --i)
+            for(int i = 0; i< _lineList.Count; ++ i)
             {
-                IPTTile node = _operateList[i];
-
-                UpdateTilePosition(node);
-
-                if (node.getStartProcess() + TrackNumDef.tileLifeProgress <= this.progress)
-                {
-                    _operateList.RemoveAt(i);
-                    //NodeManager.instance.RecoverNode(node);
-                }
+                _lineList[i].OnUpdate();
             }
+            
         }
 
-        private void UpdateTilePosition(IPTTile node)
-        {
-            //node.progress = node.progress - (Time.deltaTime * Game.instance.tileSpeed);
-
-            Vector3 position = this._spline.GetPositionOnSpline(node.getProcess());
-            Quaternion rotation = this._spline.GetOrientationOnSpline(node.getProcess());
-            //node.transform.position = position;
-            //node.transform.rotation = rotation;
-            node.setPosition(position);
-            node.setRotation(rotation);
-        }
-
-        private void RecoveryNode(IPTTile node)
+        public void RecoveryNode(IPTTile node)
         {
             //NodeManager.instance.RecoverNode(node);
+            Debug.LogWarning("未实现节点回收");
         }
-        private void RecoveryNode(ref List<IPTTile> list)
+
+        public void RecoveryNode(ref List<IPTTile> list)
         {
             for (int i = list.Count - 1; i >= 0; --i)
             {
@@ -367,7 +421,94 @@ namespace Demo.TileTrack
             }
             list.Clear();
         }
+        public void RecoveryNode(ref List<CacheData> list)
+        {
+            for (int i = list.Count - 1; i >= 0; --i)
+            {
+                IPTTile node = list[i].node;
+                list.RemoveAt(i);
+                RecoveryNode(node);
+            }
+            list.Clear();
+        }
+    }
 
+
+
+    ///////////////////////////////////////////////////////////
+    //// 曲面轨道线类
+
+    public class CurveTrackLine:TileLineBase
+    {
+        private CurveTrackRollViewer _trackViewer;
+        
+        public float OffsetX;
+        public float OffsetY;
+
+        private List<IPTTile> _operateList = new List<IPTTile>();
+
+        public CurveTrackLine(CurveTrackRollViewer trackViewer)
+        {
+            this._trackViewer = trackViewer;
+        }
+
+        public override void PushValue(IPTTile node)
+        {
+            base.PushValue(node);
+
+            node.Appear(lineIndex);
+
+            // 倒叙
+            _operateList.Insert(0, node);
+
+            float progress = this._trackViewer.progress + node.getPositionProgress();
+
+            Vector3 position = this._trackViewer._spline.GetPositionOnSpline(progress);
+            Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);
+
+            node.setProcess(progress);
+            position.x += OffsetX;
+            node.setPosition(position);
+            node.setRotation(rotation);
+        }
+
+        public override void OnUpdate()
+        {
+            int count = _operateList.Count;
+
+            for (int i = count - 1; i >= 0; --i)
+            {
+                IPTTile node = _operateList[i];
+
+                UpdateTilePosition(node);
+
+                if (node.getStartProcess() + TrackNumDef.tileLifeProgress <= this._trackViewer.progress)
+                {
+                    _operateList.RemoveAt(i);
+                    this._trackViewer.RecoveryNode(node);
+                }
+            }
+        }
+
+        public override void Clear()
+        {
+            this._trackViewer.RecoveryNode(ref this._operateList);
+            this._operateList.Clear();
+
+        }
+
+        private void UpdateTilePosition(IPTTile node)
+        {
+            //node.progress = node.progress - (Time.deltaTime * Game.instance.tileSpeed);
+            Vector3 position = this._trackViewer._spline.GetPositionOnSpline(node.getProcess());
+            Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(node.getProcess());
+
+            position.x += OffsetX;
+
+            node.setPosition(position);
+
+            node.setRotation(rotation);
+        }
     }
 }
 
