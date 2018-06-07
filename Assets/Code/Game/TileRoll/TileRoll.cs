@@ -105,7 +105,8 @@ namespace Demo
                 float length = m_track.trackViewer.GetTrackLength();
 
                 float speed = length / musictime;
-                m_track.trackViewer.SetSpeed(speed);
+                //m_track.trackViewer.SetSpeed(speed);
+                m_track.Speed = speed;
 
             }
         }

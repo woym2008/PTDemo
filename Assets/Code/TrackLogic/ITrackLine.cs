@@ -16,7 +16,7 @@ namespace Demo.TileTrack
 {
     public interface ITrackLine
     {       
-        void PushValue(IPTTile node);
+        void PushValue(IPTTile node, int latestCount);
 
         void Clear();
 
@@ -30,7 +30,7 @@ namespace Demo.TileTrack
 
         protected List<IPTTile> _tileList = new List<IPTTile>();
 
-        public virtual void PushValue(IPTTile node)
+        public virtual void PushValue(IPTTile node, int latestCount)
         {
             _tileList.Add(node);
         }

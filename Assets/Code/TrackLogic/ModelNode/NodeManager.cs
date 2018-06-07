@@ -31,7 +31,7 @@ namespace Demo.TileTrack
             public NodeManager.eNodeType eType;
             // 节点必须的一些数据
             public float startTime = 0;      // 开始的时间刻
-            public float startProgrss = 0f;  // 开始的进度
+            public float startProgress = 0f;  // 开始的进度
             public float length = 1.0f;      // 播放时间长度
             public int mtype = 0;            // "mtype" 类型
             public int trackIndex = 0;       // 轨道的标识
@@ -52,7 +52,7 @@ namespace Demo.TileTrack
                 startTime = 1000;
                 length = 1.0f;
                 trackIndex = 0;
-                startProgrss = 0;
+                startProgress = 0;
             }
 
         }

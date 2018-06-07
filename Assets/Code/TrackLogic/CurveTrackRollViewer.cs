@@ -33,6 +33,9 @@ namespace Demo.TileTrack
 
         private List<CacheData> _prepareList;
         private int m_maxCacheNum = 20;
+
+        public int intoTrackNodeCount = 0;
+
         //private List<IPTTile> _operateList;
 
         private List<CurveTrackLine> _lineList = new List<CurveTrackLine>();
@@ -176,6 +179,9 @@ namespace Demo.TileTrack
         public override void OnAwake(bool isStart)
         {
             base.OnAwake(isStart);
+
+            intoTrackNodeCount = 0;
+
             if (isStart)
             {
                 this.runnedLength = 0f;
@@ -269,7 +275,7 @@ namespace Demo.TileTrack
                 _data.tracklength = length;
             }
 
-
+            _data.spacingProgress = TrackNumDef.tilespace / _data.tracklength;
         }
 
         public override void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
@@ -329,14 +335,15 @@ namespace Demo.TileTrack
         }
 
         private void UpdateTrackRunning()
-        {
+        {            
+           
             float deltaLen = this._data.speed * Time.deltaTime;
             float deltaProgress = deltaLen / this._data.tracklength;
 
             this.progress += deltaProgress;
 
-            Vector3 position = this._spline.GetPositionOnSpline(this.progress);
-            Quaternion rotation = this._spline.GetOrientationOnSpline(this.progress);
+            //Vector3 position = this._spline.GetPositionOnSpline(this.progress);
+            //Quaternion rotation = this._spline.GetOrientationOnSpline(this.progress);
 
             //_player.position = position;
             //_player.rotation = rotation;
@@ -372,28 +379,9 @@ namespace Demo.TileTrack
                 Debug.LogError("not contain this line index " + lineIndex);
             }
 
-            line.PushValue(node);
+            intoTrackNodeCount++;
 
-            //node.Appear(lineIndex);
-
-            ////node.SetParent(transformTrackRoot);
-
-            //lineIndex %= this._data.lineNum;
-            //// 倒叙
-            //_operateList.Insert(0, node);
-
-            //float progress = this.progress + node.getPositionProgress();
-
-            //Vector3 position = this._spline.GetPositionOnSpline(progress);
-            //Quaternion rotation = this._spline.GetOrientationOnSpline(progress);
-
-            ////node.progress = progress;
-            //node.setProcess(progress);
-
-            ////node.transform.position = position;
-            ////node.transform.rotation = rotation;
-            //node.setPosition(position);
-            //node.setRotation(rotation);
+            line.PushValue(node, intoTrackNodeCount);
         }
 
         private void UpdateOperateList()
@@ -452,16 +440,15 @@ namespace Demo.TileTrack
             this._trackViewer = trackViewer;
         }
 
-        public override void PushValue(IPTTile node)
+        public override void PushValue(IPTTile node, int latestCount)
         {
-            base.PushValue(node);
-
-            node.Appear(lineIndex);
+            base.PushValue(node, latestCount);            
 
             // 倒叙
             _operateList.Insert(0, node);
 
-            float progress = this._trackViewer.progress + node.getPositionProgress();
+            //float progress = this._trackViewer.progress + node.getPositionProgress();
+            float progress = latestCount * this._trackViewer.GetSpacingProgress() + node.getPositionProgress();
 
             Vector3 position = this._trackViewer._spline.GetPositionOnSpline(progress);
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);
@@ -470,6 +457,8 @@ namespace Demo.TileTrack
             position.x += OffsetX;
             node.setPosition(position);
             node.setRotation(rotation);
+
+            node.Appear(lineIndex);
         }
 
         public override void OnUpdate()
@@ -494,7 +483,6 @@ namespace Demo.TileTrack
         {
             this._trackViewer.RecoveryNode(ref this._operateList);
             this._operateList.Clear();
-
         }
 
         private void UpdateTilePosition(IPTTile node)

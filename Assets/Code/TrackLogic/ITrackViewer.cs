@@ -153,6 +153,8 @@ namespace Demo.TileTrack
         }
         public virtual void SetTrackHeight(float height)
         { }
+        public virtual float GetSpacingProgress()
+        { return _data.spacingProgress; }
         // 轨道数据集合
         public class trackviewData{
             public bool isRunning { get; set; }
@@ -164,6 +166,9 @@ namespace Demo.TileTrack
             public float lineSpace { get; set; }
             public float width { get; set; }
             public float height { get; set; }
+
+            public float spacingProgress = 0f;
+            public float spacingTime = 0;
         }
     }
 }

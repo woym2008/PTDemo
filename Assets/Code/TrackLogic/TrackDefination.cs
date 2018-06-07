@@ -19,8 +19,8 @@ namespace Demo.TileTrack
 
 
         static public int maxTrackLineNum = 4;      // 轨道线最大数量
-        static public int defaultLineNum = 3;
-        static public float defaultlineSpace = 1.0f;  // 轨道线之间的距离
+        static public int defaultLineNum = 1;
+        static public float defaultlineSpace = 0.3f;  // 轨道线之间的距离
         
 
         static public float tilespace = 2f;         // 音符间隔

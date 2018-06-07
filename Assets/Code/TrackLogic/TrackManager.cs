@@ -121,13 +121,13 @@ namespace Demo.TileTrack
             return trackViewer.GetRotation(paramater, lineIndex);
         }
 
-        // 设置轨道上的滑块相对轨道的速度
+        // 设置轨道的运动速度
         public float Speed
         {
-            get { return 0; }
+            get { return trackViewer.GetSpeed(); }
             set
             {
-                Debug.LogWarning("@@@@@@@@@@ 未实现 Speed");
+                trackViewer.SetSpeed(value);
             }
         }
 
@@ -236,23 +236,23 @@ namespace Demo.TileTrack
         public void Update()
         {
 
-            //// Test code 
-            //if (Input.GetKeyDown(KeyCode.Space))
-            //{
-            //    if (!m_isMoveable)
-            //    {
-            //        this.Start();
-            //    }
+            // Test code 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!m_isMoveable)
+                {
+                    this.Start();
+                }
 
-            //    Object obj = Resources.Load("TileRes/NormalTile");
-            //    if (obj != null)
-            //    {
-            //        GameObject go = GameObject.Instantiate(obj) as GameObject;
-            //        NodeObject node = go.AddComponent<NodeObject>();
+                Object obj = Resources.Load("TileRes/NormalTile");
+                if (obj != null)
+                {
+                    GameObject go = GameObject.Instantiate(obj) as GameObject;
+                    NodeObject node = go.AddComponent<NodeObject>();
 
-            //        this.PushValue(node);
-            //    }
-            //}
+                    this.PushValue(node);
+                }
+            }
             ///////////////////////
 
             if (!m_isMoveable)
