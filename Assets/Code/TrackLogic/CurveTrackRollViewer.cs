@@ -365,7 +365,7 @@ namespace Demo.TileTrack
                 {
                     _prepareList.RemoveAt(0);
 
-                    PushIntoTackline(0, data.node);
+                    PushIntoTackline(data.lineIndex, data.node);
                 }
             }
 
@@ -448,7 +448,7 @@ namespace Demo.TileTrack
             _operateList.Insert(0, node);
 
             //float progress = this._trackViewer.progress + node.getPositionProgress();
-            float progress = latestCount * this._trackViewer.GetSpacingProgress() + node.getPositionProgress();
+            float progress = (latestCount + TrackNumDef.preTileSpace) * this._trackViewer.GetSpacingProgress();
 
             Vector3 position = this._trackViewer._spline.GetPositionOnSpline(progress);
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);

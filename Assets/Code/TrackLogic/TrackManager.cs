@@ -237,22 +237,22 @@ namespace Demo.TileTrack
         {
 
             // Test code 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (!m_isMoveable)
-                {
-                    this.Start();
-                }
+            //if (Input.GetKeyDown(KeyCode.Space))
+            //{
+            //    if (!m_isMoveable)
+            //    {
+            //        this.Start();
+            //    }
 
-                Object obj = Resources.Load("TileRes/NormalTile");
-                if (obj != null)
-                {
-                    GameObject go = GameObject.Instantiate(obj) as GameObject;
-                    NodeObject node = go.AddComponent<NodeObject>();
+            //    Object obj = Resources.Load("TileRes/NormalTile");
+            //    if (obj != null)
+            //    {
+            //        GameObject go = GameObject.Instantiate(obj) as GameObject;
+            //        NodeObject node = go.AddComponent<NodeObject>();
 
-                    this.PushValue(node);
-                }
-            }
+            //        this.PushValue(node);
+            //    }
+            //}
             ///////////////////////
 
             if (!m_isMoveable)
