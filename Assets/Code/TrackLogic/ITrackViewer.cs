@@ -41,6 +41,11 @@ namespace Demo.TileTrack
         /// <param name="value"></param>
         void SetSpeed(float value);
         float GetSpeed();
+
+        /// <summary>
+        /// 获取轨道长度
+        /// </summary>
+        float GetTrackLength();
         /// <summary>
         /// 获取轨道的运行速度
         /// </summary>
@@ -57,7 +62,7 @@ namespace Demo.TileTrack
         /// <returns></returns>
         float GetProgressRatio(float value);
         bool CheckPushValue();
-        bool PushValue(NodeObject value);
+        bool PushValue(IPTTile value);
 
         void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray);
         /// <summary>
@@ -121,13 +126,18 @@ namespace Demo.TileTrack
         }
         public virtual bool CheckPushValue()
         { return true; }
-        public virtual bool PushValue(NodeObject value)
+        public virtual bool PushValue(IPTTile value)
         { return true; }
         public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
         { }
         public virtual Vector3 GetPosition(float parameter, int lineIndex) { return Vector3.zero; }
 
         public virtual Quaternion GetRotation(float paramater, int lineIndex) { return Quaternion.identity; }
+
+        public float GetTrackLength()
+        {
+            return _data.tracklength;
+        }
 
         // 轨道数据集合
         public class trackviewData{

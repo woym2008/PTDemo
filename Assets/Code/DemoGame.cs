@@ -1,4 +1,5 @@
-﻿using PTAudio.Frame;
+﻿//using Demo.TileTrack;
+using PTAudio.Frame;
 using PTAudio.Midi.Builder;
 using PTAudio.Midi.Data.Util;
 using System;
@@ -45,6 +46,9 @@ namespace Demo
         //------------------------------------
         bool m_bEnableCamera = false;
 
+        //------------------------------------
+        public GameObject m_trackPrefab;
+        //------------------------------------
         private void Start()
         {
             m_system = new AudioSystem();
@@ -63,28 +67,32 @@ namespace Demo
 
             //--------------------------------------
             m_Roll = new TileRoll();
-            m_Roll.m_RollRoot = m_RollRoot;
-            m_Roll.m_LocalOffset = m_LocalOffset;
+            //m_Roll.m_RollRoot = m_RollRoot;
+            //m_Roll.m_LocalOffset = m_LocalOffset;
             m_Roll.m_MaxTile = m_MaxTile;
             m_Roll.TrackNum = TrackNum;
-            m_Roll.m_TrackThickness = m_TrackThickness;
-            m_Roll.m_TrackWidth = m_TrackWidth;
-            m_Roll.m_TileRollLength = m_TileRollLength;
+            //m_Roll.m_TrackThickness = m_TrackThickness;
+            //m_Roll.m_TrackWidth = m_TrackWidth;
+            //m_Roll.m_TileRollLength = m_TileRollLength;
+            m_Roll.m_trackPrefab = m_trackPrefab;
             //--------------------------------------
             MidiTile[] m_Tiles;
             if(m_system.getTileDatas(out m_Tiles))
             {
                 int bpm = m_system.getBPM();
                 float basebeat = m_system.getBaseBeat();
-                m_Roll.Init(m_Tiles, bpm, basebeat);
+                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_system.getMusicTime());
 
-                if(m_RotObj != null)
-                {
-                    m_Roll.SetRot(m_RotObj.localEulerAngles);
-                }                
+                //if(m_RotObj != null)
+                //{
+                //    m_Roll.SetRot(m_RotObj.localEulerAngles);
+                //}                
             }
-
+            //--------------------------------------
             
+            
+            //--------------------------------------
+
             TouchTileFactory.Init();
         }
 
@@ -101,13 +109,14 @@ namespace Demo
             {
                 Debug.LogWarning("m_Player is null");
             }
+
             m_Player.MoveUpdate(Time.deltaTime);
 
             //Debug.LogWarning("MoveUpdate ok");
             //test
             if (Input.GetKeyDown(KeyCode.T))
             {
-                m_Roll.EnableGame();
+                m_Roll.EnableGame(m_Player);
                 m_Player.startMove();
             }
             if (Input.GetKeyDown(KeyCode.S))
@@ -120,21 +129,27 @@ namespace Demo
 
         public void StartDemo()
         {
-            m_Roll.EnableGame();
+            m_Roll.EnableGame(m_Player);
             m_Player.startMove();
-
+            //m_Player.SetSpeed(5);
         }
 
         public void AddCamSpeed()
         {
             m_CameraSpeed += 0.5f;
-            m_Player.SetSpeed(m_CameraSpeed);
+            //m_Player.SetSpeed(m_CameraSpeed);
+
+            m_Roll.m_track.Speed = m_CameraSpeed;
         }
 
         public void ReduceCamSpeed()
         {
             m_CameraSpeed -= 0.5f;
-            m_Player.SetSpeed(m_CameraSpeed);
+            //m_Player.SetSpeed(m_CameraSpeed);
+
+            m_Roll.m_track.Speed = m_CameraSpeed;
         }
+
+        
     }
 }

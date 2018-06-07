@@ -35,9 +35,10 @@ namespace Demo
         protected float m_MoveSpeed;
 
         //protected Transform m_Parent;
-        protected TileTrack m_Parent;
+        //protected TileTrack m_Parent;
 
         protected MidiTile m_TileData;
+        protected float m_CurProcess;
 
         [SerializeField]
         private float m_MoveTime;
@@ -59,6 +60,7 @@ namespace Demo
         public virtual void InitTile(MidiTile data, float scale)
         {
             m_TileData = data;
+            m_CurProcess = 0;
             m_MoveSpeed = 1.0f;
 
             m_MoveTime = 0;
@@ -71,7 +73,7 @@ namespace Demo
             m_TouchState = TouchState.NotTouch;
         }
         
-        public virtual void FrameUpdate(float realpassedtime)
+        public virtual void FrameUpdate(float process)
         {
             //Vector3 offset = m_Parent.TransformVector(0, m_MoveSpeed * Time.deltaTime, 0);
             //this.transform.position = new Vector3(
@@ -79,20 +81,22 @@ namespace Demo
             //    this.transform.position.y + offset.y,
             //    this.transform.position.z + offset.z);
             m_MoveTime += Time.deltaTime;
-            Vector3 pos = m_Parent.GetPos(m_MoveTime);
 
-            Quaternion rot = m_Parent.GetRot(m_MoveTime);
+            //m_CurProcess = process;
+            //Vector3 pos = m_Parent.GetPos(m_MoveTime);
 
-            this.transform.position = pos;
-            this.transform.rotation = rot;
+            //Quaternion rot = m_Parent.GetRot(m_MoveTime);
 
-            if (m_TouchState == TouchState.Touched)
-            {
-                if(m_TileData.UpdatePlayTile(Time.deltaTime))
-                {
-                    ReleaseSelf();
-                }
-            }
+            //this.transform.position = pos;
+            //this.transform.rotation = rot;
+
+            //if (m_TouchState == TouchState.Touched)
+            //{
+            //    if(m_TileData.UpdatePlayTile(Time.deltaTime))
+            //    {
+            //        ReleaseSelf();
+            //    }
+            //}
             //m_TileData.PlayTile(realpassedtime);
         }
         //--------------------------------------------
@@ -111,25 +115,45 @@ namespace Demo
             m_MoveSpeed = speed;
         }
 
-        public void AttachParent(TileTrack parent)
-        {
-            m_Parent = parent;
-        }
+        //public void AttachParent(TileTrack parent)
+        //{
+        //    m_Parent = parent;
+        //}
         //--------------------------------------------
         public float getStartTime()
         {
             return (float)m_TileData.StartTime;
         }
 
-        public float getProcess()
+        public float getStartProcess()
         {
             return (float)m_TileData.Process;
+        }
 
+        public float getProcess()
+        {
+            return m_CurProcess;
+
+        }
+
+        public void Appear(int trackid)
+        {
+
+        }
+
+        public void setProcess(float process)
+        {
+            m_CurProcess = process;
+        }
+
+        public float getPositionProgress()
+        {
+            return 0;
         }
 
         public void setPosition(Vector3 pos)
         {
-            this.transform.position = pos;
+            this.transform.position = new Vector3(pos.x, pos.y + 0.8f, pos.z);
         }
 
         public void setRotation(Quaternion rot)
@@ -180,7 +204,7 @@ namespace Demo
             if (other.gameObject.tag == "TouchArea")
             {
                 Debug.Log("exit touch area release");
-                if(m_TouchState == TouchState.NotTouch)
+                if(m_TouchState == TouchState.NotTouch || m_TouchState == TouchState.CanTouch)
                 {
                     ReleaseSelf();
                 }                
@@ -193,5 +217,8 @@ namespace Demo
 
             TouchTileFactory.ReleaseTile(this);
         }
+        //----------------------------------------------------
+        
+        //----------------------------------------------------
     }
 }

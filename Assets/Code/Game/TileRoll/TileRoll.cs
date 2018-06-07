@@ -1,4 +1,5 @@
-﻿using PTAudio.Midi.Builder;
+﻿using Demo.TileTrack;
+using PTAudio.Midi.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Demo
         //    Running,
         //}
 
-        public List<TileTrack> m_Tracks;
+        //public List<TileTrack> m_Tracks;
 
         public Queue<TileSpawner> m_CacheSpawner;
 
@@ -56,58 +57,56 @@ namespace Demo
         public float m_BaseBeat = 1.0f;
 
         //根据bpm算出的结果，一个object从轨道的一端走到另一端的时间
+        //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
+
+        //---------------------------------------------------
+        //track
+        public TrackManager m_track;
+        //------------------------------------
+        public GameObject m_trackPrefab;
+        //---------------------------------------------------
 
         public TileRoll()
         {
 
         }
-        public void Init(MidiTile[] tiles, int bpm, float basebeat, Transform root = null)
-        {            
+        public void Init(MidiTile[] tiles, int bpm, float basebeat,
+            float musictime,
+            Transform root = null
+            )
+        {        
+            //fsm
             m_FSM = new TileRollFSM();
             m_FSM.SetState(new TRStopState(this));
 
-            m_Tracks = new List<TileTrack>();
+            //m_Tracks = new List<TileTrack>();
 
+            //init tile spawner
             m_BPM = bpm;
             //basebeat = m_BaseBeat;
             float basetiletime = 60.0f * basebeat / bpm;
-
-            CreateSpawners(tiles, basebeat); 
-            if(m_TileRollView == null)
-            {
-                m_TileRollView = InstanceTillRollView();
-            }
-            m_TileRollView.SetEntity(this);
-
-            
             m_RollTime = basetiletime * m_MaxTile;
 
-            if(root != null)
+            //float waitprocess = m_RollTime / musictime;
+            CreateSpawners(tiles, basebeat);
+
+            
+
+            //-----------------------------------------------------------
+            //init track
+            for (int i=0;i<1;++i)
             {
-                m_RollRoot = null;
-            }
-            m_TileRollView.transform.parent = m_RollRoot;
-            m_TileRollView.transform.localPosition = m_LocalOffset;
+                m_track = TrackManager.instance;
+                //track
+                m_track.Init(TrackNumDef.enTrackType.Curve);
+                SetupPath(m_track);
 
-            for (int i=0;i< TrackNum; ++i)
-            {
-                TileTrack track = new TileTrack(i,m_TileRollView.transform);                
+                float length = m_track.trackViewer.GetTrackLength();
 
-                float offsetx = (i+0.5f) * m_TrackWidth - m_TrackWidth * TrackNum * 0.5f;
-                float offsety = -m_TileRollLength;
+                float speed = length / musictime;
+                m_track.trackViewer.SetSpeed(speed);
 
-                Vector3 offset = new Vector3(offsetx, offsety, 0);
-
-                track.SetLength(m_TileRollLength);
-                track.SetWidth(m_TrackWidth);
-                track.SetThickness(m_TrackThickness);
-
-                track.SetOffset(offset);
-
-                track.SetTime(m_RollTime);
-
-                m_Tracks.Add(track);
             }
         }
 
@@ -151,9 +150,9 @@ namespace Demo
             }
         }
 
-        public void EnableGame()
+        public void EnableGame(CameraPlayer player)
         {
-            m_FSM.SetState(new TRRunningState(this));
+            m_FSM.SetState(new TRRunningState(this, player));
         }
 
         public void StopGame()
@@ -163,10 +162,28 @@ namespace Demo
 
         public void SetRot(Vector3 localeur)
         {
-            if(m_TileRollView != null)
+            //if(m_TileRollView != null)
+            //{
+            //    m_TileRollView.transform.localEulerAngles = localeur;
+            //}
+        }
+
+        void SetupPath(TrackManager track)
+        {
+            GameObject pathRoot = GameObject.Find("RootPath");
+            List<CurveNodeData> pathDataList = new List<CurveNodeData>();
+
+            Transform pathTrans = pathRoot.transform;
+            for (int i = 0; i < pathTrans.childCount; ++i)
             {
-                m_TileRollView.transform.localEulerAngles = localeur;
+                Transform child = pathTrans.GetChild(i);
+                CurveNodeData data = new CurveNodeData();
+                data.position = child.position;
+                data.rotation = child.rotation;
+                pathDataList.Add(data);
             }
+
+            track.GenerateTrack(m_trackPrefab, pathDataList.ToArray());
         }
     }
 }

@@ -10,9 +10,19 @@ public interface IPTTile
 
     float getProcess();
 
+    void setProcess(float process);
+
+    float getStartProcess();
+
+    float getPositionProgress();
+
     void setPosition(Vector3 pos);
 
     void setRotation(Quaternion rot);
 
     void setScale(Vector3 scale);
+
+    void Appear(int trackIndex);
+
+    //void Recover();
 }

@@ -22,7 +22,7 @@ namespace Demo
         Vector3 m_start;
         Vector3 m_end;
 
-        float m_AllTime;
+        public float m_AllTime;
         float m_PassedTime;
         //------------------------------------------------
         public Transform getPlayerRoot()
@@ -35,6 +35,14 @@ namespace Demo
             get
             {
                 return m_position;
+            }
+        }
+
+        public Vector3 setPosition
+        {
+            set
+            {
+                m_position = value;
             }
         }
         //------------------------------------------------
@@ -56,7 +64,7 @@ namespace Demo
             m_direct = (m_end - m_start).normalized;
             m_State = PlayerState.Stop;
 
-            m_speed = (m_end - m_start).magnitude / m_AllTime;
+            //m_speed = (m_end - m_start).magnitude / m_AllTime;
 
             Debug.Log("CameraPlayer start");
             //m_CameraView = InstanceCameraPrefab();

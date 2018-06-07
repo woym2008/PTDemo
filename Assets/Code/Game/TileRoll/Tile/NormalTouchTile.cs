@@ -21,9 +21,9 @@ namespace Demo
         {
             base.InitTile(data, scale);
 
-            RenderModel.SetLength(scale);
+            RenderModel.SetLength(0.1f);
             RenderModel.SetWidth(0.1f);
-            RenderModel.SetDepth(0.1f);
+            RenderModel.SetDepth(scale);
 
             RenderModel.CreateMesh();
 

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Demo.TileTrack
 {
-    public class NodeObject : MonoBehaviour
+    public class NodeObject : MonoBehaviour, IPTTile
     {
         protected GameObject _gameObject;
         protected Transform _trans;
@@ -205,6 +205,52 @@ namespace Demo.TileTrack
         // 死亡特效
         public virtual void DisappearEffect()
         { }
+        //----------------------------------------------------------------
+        public float getStartTime()
+        {
+            return startTime;
+        }
 
+        public float getProcess()
+        {
+            return progress;
+        }
+
+        public float getStartProcess()
+        {
+            return startProgress;
+        }
+
+        public void setPosition(Vector3 pos)
+        {
+            this.transform.position = pos;
+        }
+
+        public void setRotation(Quaternion rot)
+        {
+            this.transform.rotation = rot;
+        }
+
+        public void setScale(Vector3 scale)
+        {
+            this.transform.localScale = scale;
+        }
+
+        public void setProcess(float pro)
+        {
+            progress = pro;
+        }
+
+        public float getPositionProgress()
+        {
+            return positionProgress;
+        }
+
+        //void Appear()
+        //{
+
+        //}
+
+        //void Recover();
     }
 }

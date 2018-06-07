@@ -160,7 +160,8 @@ namespace Demo.TileTrack
 
 
         // 压入节点数据
-        public bool PushValue(NodeObject node)
+        //public bool PushValue(NodeObject node)
+        public bool PushValue(IPTTile node)
         {
             return this.trackViewer.PushValue(node);
         }

@@ -24,9 +24,9 @@ namespace Demo.TileTrack
         private float runnedLength = 0f;
         private float progress = 0f;
 
-        private List<NodeObject> _prepareList;
+        private List<IPTTile> _prepareList;
         private int m_maxCacheNum = 6;
-        private List<NodeObject> _operateList;
+        private List<IPTTile> _operateList;
 
 
         public override void Init()
@@ -35,7 +35,7 @@ namespace Demo.TileTrack
 
             if (_prepareList == null)
             {
-                _prepareList = new List<NodeObject>();
+                _prepareList = new List<IPTTile>();
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Demo.TileTrack
 
             if (_operateList == null)
             {
-                _operateList = new List<NodeObject>();
+                _operateList = new List<IPTTile>();
             }
             else
             {
@@ -169,7 +169,7 @@ namespace Demo.TileTrack
             }
             return true;
         }
-        public override bool PushValue(NodeObject node)
+        public override bool PushValue(IPTTile node)
         {
             _prepareList.Add(node);
             return true;
@@ -241,6 +241,8 @@ namespace Demo.TileTrack
             _meshRender.material = obj.GetComponent<Renderer>().material;
 
             _splineMesh.UpdateMesh();
+
+            calculateTrackLength();
         }
 
 
@@ -286,8 +288,8 @@ namespace Demo.TileTrack
         {
             if (_prepareList.Count > 0)
             {
-                NodeObject node = _prepareList[0];
-                if (node.startProgress <= this.progress)
+                IPTTile node = _prepareList[0];
+                if (node.getStartProcess() <= this.progress)
                 {
                     _prepareList.RemoveAt(0);
 
@@ -297,7 +299,7 @@ namespace Demo.TileTrack
 
         }
 
-        private void PushIntoTackline(int lineIndex, NodeObject node)
+        private void PushIntoTackline(int lineIndex, IPTTile node)
         {
             node.Appear(lineIndex);
 
@@ -307,15 +309,18 @@ namespace Demo.TileTrack
             // 倒叙
             _operateList.Insert(0, node);
 
-            float progress = this.progress + node.positionProgress;
+            float progress = this.progress + node.getPositionProgress();
 
             Vector3 position = this._spline.GetPositionOnSpline(progress);
             Quaternion rotation = this._spline.GetOrientationOnSpline(progress);
 
-            node.progress = progress;
+            //node.progress = progress;
+            node.setProcess(progress);
 
-            node.transform.position = position;
-            node.transform.rotation = rotation;
+            //node.transform.position = position;
+            //node.transform.rotation = rotation;
+            node.setPosition(position);
+            node.setRotation(rotation);
         }
 
         private void UpdateOperateList()
@@ -324,37 +329,39 @@ namespace Demo.TileTrack
 
             for (int i = count - 1; i >= 0; --i)
             {
-                NodeObject node = _operateList[i];
+                IPTTile node = _operateList[i];
 
                 UpdateTilePosition(node);
 
-                if (node.startProgress + TrackNumDef.tileLifeProgress <= this.progress)
+                if (node.getStartProcess() + TrackNumDef.tileLifeProgress <= this.progress)
                 {
                     _operateList.RemoveAt(i);
-                    NodeManager.instance.RecoverNode(node);
+                    //NodeManager.instance.RecoverNode(node);
                 }
             }
         }
 
-        private void UpdateTilePosition(NodeObject node)
+        private void UpdateTilePosition(IPTTile node)
         {
             //node.progress = node.progress - (Time.deltaTime * Game.instance.tileSpeed);
 
-            Vector3 position = this._spline.GetPositionOnSpline(node.progress);
-            Quaternion rotation = this._spline.GetOrientationOnSpline(node.progress);
-            node.transform.position = position;
-            node.transform.rotation = rotation;
+            Vector3 position = this._spline.GetPositionOnSpline(node.getProcess());
+            Quaternion rotation = this._spline.GetOrientationOnSpline(node.getProcess());
+            //node.transform.position = position;
+            //node.transform.rotation = rotation;
+            node.setPosition(position);
+            node.setRotation(rotation);
         }
 
-        private void RecoveryNode(NodeObject node)
+        private void RecoveryNode(IPTTile node)
         {
-            NodeManager.instance.RecoverNode(node);
+            //NodeManager.instance.RecoverNode(node);
         }
-        private void RecoveryNode(ref List<NodeObject> list)
+        private void RecoveryNode(ref List<IPTTile> list)
         {
             for (int i = list.Count - 1; i >= 0; --i)
             {
-                NodeObject node = list[i];
+                IPTTile node = list[i];
                 list.RemoveAt(i);
                 RecoveryNode(node);
             }
