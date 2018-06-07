@@ -65,7 +65,7 @@ namespace Demo.TileTrack
         bool CheckPushValue();
         bool PushValue(IPTTile value, int lineIndex);
 
-        void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray);
+        void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegment);
         /// <summary>
         /// 获取轨道上的某点的位置
         /// </summary>
@@ -137,7 +137,7 @@ namespace Demo.TileTrack
         { return true; }
         public virtual bool PushValue(IPTTile value,int lineIndex)
         { return true; }
-        public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
+        public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegement)
         { }
         public virtual Vector3 GetPosition(float parameter, int lineIndex) { return Vector3.zero; }
 
