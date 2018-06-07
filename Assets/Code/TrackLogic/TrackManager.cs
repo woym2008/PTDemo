@@ -102,9 +102,14 @@ namespace Demo.TileTrack
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="pathDataArray"></param>
-        public void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
+        /// <param name="meshSegment">mesh分段数目，数目越少性能越高</param>
+        public void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray,int meshSegment = -1)
         {
-            trackViewer.GenerateTrack(obj, pathDataArray);
+            if(meshSegment <= 0)
+            {
+                meshSegment = TrackNumDef.CurveMeshSegment;
+            }
+            trackViewer.GenerateTrack(obj, pathDataArray, meshSegment);
         }
 
         /// <summary>

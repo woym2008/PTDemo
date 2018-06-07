@@ -278,7 +278,7 @@ namespace Demo.TileTrack
             _data.spacingProgress = TrackNumDef.tilespace / _data.tracklength;
         }
 
-        public override void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
+        public override void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegement)
         {
             SplineNode[] preNodeArr = _spline.SplineNodes;
             if(preNodeArr != null && preNodeArr.Length > 0)
@@ -307,9 +307,10 @@ namespace Demo.TileTrack
             _spline.UpdateSpline();
 
             _splineMesh.baseMesh = obj.GetComponent<MeshFilter>().mesh;
+            _splineMesh.segmentCount = meshSegement;
 
             _meshRender.material = obj.GetComponent<Renderer>().material;
-
+            
             _splineMesh.UpdateMesh();
 
             calculateTrackLength();
