@@ -129,6 +129,9 @@ namespace Demo
             {
                 m_FSM.FrameUpdate(dt);
             }
+
+            // Test code
+            //TrackManager.GetInstance().Update();
         }
 
         private TileRollView InstanceTillRollView()

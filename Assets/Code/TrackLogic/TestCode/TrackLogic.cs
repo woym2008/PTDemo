@@ -21,7 +21,7 @@ namespace Demo.TileTrack
         {
             TrackManager.GetInstance().Init(TrackNumDef.enTrackType.Curve);
 
-            SetupPath();
+            //SetupPath();
         }
 
         // Update is called once per frame

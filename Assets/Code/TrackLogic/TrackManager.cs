@@ -34,11 +34,10 @@ namespace Demo.TileTrack
         public int maxTrackNum = 4;
         //private float m_fSpace = 2f;              // 音符间距(m)
         private bool m_isMoveable = false;          // 是否可以运动
-        private float m_fRunningTime = 0;           // 轨道运行的时间
+        private float m_runningTime = 0;           // 轨道运行的时间
 
         /// /////////////////////////////////////////
-
-
+        
         public static float changingTime = 3f;        
         
         //private List<TrackLine> _trackLineList;
@@ -50,7 +49,7 @@ namespace Demo.TileTrack
         private float m_minLineSpace = 1.0f;    // 最宽的轨道间距
         public float[] m_lineSpaces = { 0f, 2.0f, 1.2f, 1.0f };
         public float m_adjustTime = 0.9f;
-        private int _lastTrackIndex = 0;        // 最近分配的轨道编号
+        private int m_lastTrackIndex = 0;        // 最近分配的轨道编号
 
 
         //private List<NodeObject> _prepareList;   // 预备队列，等待加入轨道的节点列表
@@ -58,8 +57,8 @@ namespace Demo.TileTrack
 
 
         /////////////// 临时数据，以后再详细设计整理
-        protected Transform m_trackParent;        // 父节点，其坐标表示轨道终点
-        //protected GameObject m_trackPanel;        // 轨道面板
+        //protected Transform m_trackParent;        // 父节点，其坐标表示轨道终点
+        //protected GameObject m_trackPanel;      // 轨道面板
         //protected Transform m_trackTrans;
         protected Vector3 m_trackPosition;        // 轨道的坐标位置，计算终点坐标
         protected Vector3 m_trackEndPos;
@@ -91,13 +90,18 @@ namespace Demo.TileTrack
 
             trackViewer.Init();
 
-            trackViewer.SetTracklineNum(m_TrackLineNum);
+            this.ResetTracklineNum(TrackNumDef.defaultLineNum, false);
 
             //trackViewer.SetSpeed(Game.instance.m_CameraSpeed);
 
             return true;
         }
 
+        /// <summary>
+        /// 生成轨道面
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="pathDataArray"></param>
         public void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray)
         {
             trackViewer.GenerateTrack(obj, pathDataArray);
@@ -117,6 +121,7 @@ namespace Demo.TileTrack
             return trackViewer.GetRotation(paramater, lineIndex);
         }
 
+        // 设置轨道上的滑块相对轨道的速度
         public float Speed
         {
             get { return 0; }
@@ -128,7 +133,7 @@ namespace Demo.TileTrack
 
         public float runningTime
         {
-            get { return m_fRunningTime; }
+            get { return m_runningTime; }
         }
         
         public int trackNum
@@ -145,10 +150,20 @@ namespace Demo.TileTrack
             get { return m_isMoveable; }
         }
 
-        public void ResetTracklineNum(int num, bool displayUI)
+        // 设置轨道线的数目
+        public void ResetTracklineNum(int num, bool bDisplayEffect)
         {
-            Debug.LogWarning("没有实现变轨操作");
-            //Game.instance.StartCoroutine(SetTracklineNum(num, 0f, displayUI));
+            float linespace = TrackNumDef.defaultlineSpace;
+            this.ResetTracklineNum(num, linespace);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="lineSpace">每根轨道间距</param>
+        public void ResetTracklineNum(int num,float lineSpace)
+        {
+            this.trackViewer.SetTracklineNum(num,lineSpace);
         }
 
        
@@ -161,9 +176,27 @@ namespace Demo.TileTrack
 
         // 压入节点数据
         //public bool PushValue(NodeObject node)
-        public bool PushValue(IPTTile node)
+        public bool PushValue(IPTTile node,int lineIndex = -1)
         {
-            return this.trackViewer.PushValue(node);
+            if(lineIndex < 0)
+            {
+                int lineNum = this.trackViewer.GetTracklineNum();
+
+                int randValue = UnityEngine.Random.Range((int)0, (int)(lineNum * 100));
+                if (randValue * 0.01f > (lineNum * 0.5f))
+                {
+                    lineIndex = m_lastTrackIndex + 1;
+                }
+                else
+                {
+                    lineIndex = m_lastTrackIndex - 1;
+                }
+                lineIndex = (lineIndex < 0) ? 0 : ((lineIndex >= lineNum) ? lineNum - 1 : lineIndex);
+            }
+
+            m_lastTrackIndex = lineIndex;
+
+            return this.trackViewer.PushValue(node, lineIndex);
         }
 
 
@@ -171,7 +204,7 @@ namespace Demo.TileTrack
         public void Start()
         {
             m_isMoveable = true;
-            m_fRunningTime = 0;
+            m_runningTime = 0;
             timeSpace = 0;
 
             trackViewer.OnAwake(true);
@@ -202,9 +235,33 @@ namespace Demo.TileTrack
         // 由Game驱动
         public void Update()
         {
+
+            //// Test code 
+            //if (Input.GetKeyDown(KeyCode.Space))
+            //{
+            //    if (!m_isMoveable)
+            //    {
+            //        this.Start();
+            //    }
+
+            //    Object obj = Resources.Load("TileRes/NormalTile");
+            //    if (obj != null)
+            //    {
+            //        GameObject go = GameObject.Instantiate(obj) as GameObject;
+            //        NodeObject node = go.AddComponent<NodeObject>();
+
+            //        this.PushValue(node);
+            //    }
+            //}
+            ///////////////////////
+
             if (!m_isMoveable)
                 return;
+
+            m_runningTime += Time.deltaTime;
+
             trackViewer.OnUpdate();
+            
         }        
     }
 }
