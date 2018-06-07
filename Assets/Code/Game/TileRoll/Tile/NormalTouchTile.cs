@@ -17,9 +17,9 @@ namespace Demo
         //--------------------------------------
         public MorphCube RenderModel;
 
-        public override void InitTile(MidiTile data, float scale)
+        public override void InitTile(MidiTile data, float scale, float startprocess = 0)
         {
-            base.InitTile(data, scale);
+            base.InitTile(data, scale, startprocess);
 
             RenderModel.SetLength(0.1f);
             RenderModel.SetWidth(0.1f);

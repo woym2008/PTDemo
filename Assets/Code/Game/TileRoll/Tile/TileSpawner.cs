@@ -27,13 +27,13 @@ namespace Demo
             m_Scale = scale;
         }
 
-        public TouchTileBase CreateTile()
+        public TouchTileBase CreateTile(float startprocess)
         {
             TouchTileBase pBeat = TouchTileFactory.CreateTile();
             if (pBeat != null)
             {
                 pBeat.InitTile(
-                    m_SelfData, m_Scale);
+                    m_SelfData, m_Scale, startprocess);
             }
 
             return pBeat;

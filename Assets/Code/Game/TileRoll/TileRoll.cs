@@ -60,6 +60,12 @@ namespace Demo
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
 
+        public float m_MusicTime = 0.0f;
+
+        //---------------------------------------------------
+        public Vector3 m_TileOffset = Vector3.zero;
+        //---------------------------------------------------
+        public CameraPlayer m_Player;
         //---------------------------------------------------
         //track
         public TrackManager m_track;
@@ -75,10 +81,14 @@ namespace Demo
             float musictime,
             Transform root = null
             )
-        {        
+        {
+            m_Player = new CameraPlayer(root);
+
             //fsm
             m_FSM = new TileRollFSM();
             m_FSM.SetState(new TRStopState(this));
+
+            m_MusicTime = musictime;
 
             //m_Tracks = new List<TileTrack>();
 
@@ -86,7 +96,8 @@ namespace Demo
             m_BPM = bpm;
             //basebeat = m_BaseBeat;
             float basetiletime = 60.0f * basebeat / bpm;
-            m_RollTime = basetiletime * m_MaxTile;
+            //m_RollTime = basetiletime * m_MaxTile;
+            m_RollTime = 10.0f;
 
             //float waitprocess = m_RollTime / musictime;
             CreateSpawners(tiles, basebeat);
@@ -108,6 +119,8 @@ namespace Demo
                 m_track.trackViewer.SetSpeed(speed);
 
             }
+
+            m_Player.position = m_track.GetPosition(0, 0);
         }
 
         public void FrameUpdate(float dt)
@@ -150,9 +163,9 @@ namespace Demo
             }
         }
 
-        public void EnableGame(CameraPlayer player)
+        public void EnableGame()
         {
-            m_FSM.SetState(new TRRunningState(this, player));
+            m_FSM.SetState(new TRRunningState(this));
         }
 
         public void StopGame()

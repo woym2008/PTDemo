@@ -17,18 +17,19 @@ namespace Demo
 
         public float m_TileSpeed = 1.0f;
 
-        CameraPlayer m_Player;
+        
+        //CameraPlayer m_Player;
 
 
         //-----------------------------------------------
         //临时的 活动块的管理
         public List<TouchTileBase> m_RunningTiles;
 
-        public TRRunningState(TileRoll tr, CameraPlayer player)
+        public TRRunningState(TileRoll tr)
         {
             m_TR = tr;
 
-            m_Player = player;
+            //m_Player = player;
 
             //----------
             m_RunningTiles = new List<TouchTileBase>();
@@ -37,7 +38,7 @@ namespace Demo
         public void Reset()
         {
             m_StartTime = 0;
-            m_RunningTime = -m_TR.m_RollTime;
+            m_RunningTime = 0;
         }
 
         public void Enter()
@@ -56,13 +57,13 @@ namespace Demo
 
         public void Execute(float dt)
         {
-            m_StartTime += dt * basespeed;
-            m_RunningTime += dt * basespeed;
+            m_StartTime += dt;
+            m_RunningTime += dt;
 
             if(m_TR.m_CacheSpawner.Count > 0)
             {
                 TileSpawner pSpawner = m_TR.m_CacheSpawner.Peek();
-                if (pSpawner.getStartTime <= m_StartTime + m_TR.m_RollTime)
+                if (pSpawner.getStartTime <= m_StartTime)
                 {
                     AttachBlock(pSpawner);
                     m_TR.m_CacheSpawner.Dequeue();
@@ -75,13 +76,14 @@ namespace Demo
             //}
             m_TR.m_track.Update();
 
-            float param = m_RunningTime / m_Player.m_AllTime;
+            float param = m_RunningTime / m_TR.m_MusicTime;
             
             Vector3 curpos = m_TR.m_track.GetPosition(param, 0);
-            m_Player.setPosition = new Vector3(curpos.x,curpos.y+0.5f, curpos.z);
+            m_TR.m_Player.position = new Vector3(curpos.x,curpos.y, curpos.z) + m_TR.m_TileOffset;
 
+            m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, 0);
             //-----------------------------
-            for(int i= m_RunningTiles.Count-1;i>=0;--i)
+            for (int i= m_RunningTiles.Count-1;i>=0;--i)
             {
                 m_RunningTiles[i].FrameUpdate(param);
             }
@@ -98,7 +100,8 @@ namespace Demo
         //---------------------------------------------------
         void AttachBlock(TileSpawner bs)
         {
-            TouchTileBase pTile = bs.CreateTile();
+            float startprocess = (m_RunningTime + m_TR.m_RollTime) / m_TR.m_MusicTime;
+            TouchTileBase pTile = bs.CreateTile(startprocess);
 
             if (pTile != null)
             {                
@@ -115,10 +118,14 @@ namespace Demo
 
             m_RunningTiles.Add(pTile);
 
-            float param = m_RunningTime / m_Player.m_AllTime;
-            pTile.setProcess(param);
+            //float param = (m_RunningTime + m_TR.m_RollTime) / m_TR.m_MusicTime;
+            ////pTile.setProcess(param);
 
-            pTile.setRotation(Quaternion.AngleAxis(90, Vector3.right) * m_TR.m_track.GetRotation(param, 0));
+            //Vector3 pos = m_TR.m_track.GetPosition(param, 0);
+            //Debug.Log("New Tile Pos:" + pos);
+            //pTile.setPosition(m_TR.m_track.GetPosition(param,0));
+
+            //pTile.setRotation(Quaternion.AngleAxis(90, Vector3.right) * m_TR.m_track.GetRotation(param, 0));
            
         }
     }

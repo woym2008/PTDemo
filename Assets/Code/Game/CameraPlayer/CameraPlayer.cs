@@ -10,39 +10,40 @@ namespace Demo
     {
         //------------------------------------------------
         CameraView m_CameraView;
-        
+
         //------------------------------------------------
-        Vector3 m_position;        
-
-        float m_speed = 1;
-        float m_speedparam = 1.0f;
-
-        Vector3 m_direct = new Vector3(0,0,1);
+        //public Vector3 m_CameraOffset;
         //------------------------------------------------
-        Vector3 m_start;
-        Vector3 m_end;
+        Vector3 m_position;
+        Quaternion m_rotation;
 
-        public float m_AllTime;
-        float m_PassedTime;
         //------------------------------------------------
         public Transform getPlayerRoot()
         {
             return m_CameraView.transform;
         }
 
-        public Vector3 getPosition
+        public Vector3 position
         {
             get
             {
                 return m_position;
             }
-        }
-
-        public Vector3 setPosition
-        {
             set
             {
                 m_position = value;
+            }
+        }
+
+        public Quaternion rotation
+        {
+            set
+            {
+                m_rotation = value;
+            }
+            get
+            {
+                return m_rotation;
             }
         }
         //------------------------------------------------
@@ -54,27 +55,13 @@ namespace Demo
         }
         PlayerState m_State;
         //------------------------------------------------
-        public CameraPlayer(float time, Vector3 start, Vector3 end, Transform playerroot = null)
+        public CameraPlayer(Transform playerroot = null)
         {
-            m_start = start;
-            m_end = end;
-            m_AllTime = time;
-            m_PassedTime = 0.0f;
-
-            m_direct = (m_end - m_start).normalized;
-            m_State = PlayerState.Stop;
-
-            //m_speed = (m_end - m_start).magnitude / m_AllTime;
-
             Debug.Log("CameraPlayer start");
-            //m_CameraView = InstanceCameraPrefab();
+
             m_CameraView = playerroot.GetComponent<CameraView>();
             Debug.Log("m_CameraView ok");
             m_CameraView.m_Player = this;
-            //m_CameraView.transform.position = m_start;
-            //m_CameraView.transform.LookAt(m_end);
-
-            m_position = m_start;
         }
 
         CameraView InstanceCameraPrefab()
@@ -95,29 +82,9 @@ namespace Demo
 
         public void MoveUpdate(float dt)
         {
-            switch(m_State)
-            {
-                case PlayerState.Move:
-
-                    m_position = m_position + m_direct * dt * m_speed * m_speedparam;
-
-                    break;
-                case PlayerState.Stop:
-                    m_position = m_start;
-                    break;
-            }
             
         }
 
-        //public void setSpeed(float sp)
-        //{
-        //    m_speed = sp;
-        //}
-
-        //public void setDirect(Vector3 dir)
-        //{
-        //    m_direct = dir;
-        //}
         //------------------------------------------------------
         public void startMove()
         {
@@ -133,11 +100,6 @@ namespace Demo
         public void pauseMove()
         {
             m_State = PlayerState.Pause;
-        }
-
-        public void SetSpeed(float sp)
-        {
-            m_speedparam = sp;
         }
     }
 }

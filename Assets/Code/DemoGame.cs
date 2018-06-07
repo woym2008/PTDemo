@@ -26,7 +26,7 @@ namespace Demo
 
         public Transform m_RotObj;
 
-        public CameraPlayer m_Player;
+        //public CameraPlayer m_Player;
 
         public Transform m_StartTrans;
         public Transform m_EndTrans;
@@ -34,9 +34,11 @@ namespace Demo
         public Transform m_PlayerObj;
 
         //------------------------------------
+        public Vector3 m_TileOffset = Vector3.zero;
+        //------------------------------------
         public Transform m_RollRoot;
         public Vector3 m_LocalOffset;
-        public int m_MaxTile = 10;
+        public int m_MaxTile = 20;
         public int TrackNum = 4;
         public float m_TrackThickness = 0.1f;
         public float m_TrackWidth = 5.0f;
@@ -63,7 +65,7 @@ namespace Demo
 #endif
             m_system.load(path, maintrackIndex);
 
-            m_Player = new CameraPlayer((float)m_system.getMusicTime(), m_StartTrans.position, m_EndTrans.position, m_PlayerObj);
+            //m_Player = new CameraPlayer(m_PlayerObj);
 
             //--------------------------------------
             m_Roll = new TileRoll();
@@ -71,6 +73,7 @@ namespace Demo
             //m_Roll.m_LocalOffset = m_LocalOffset;
             m_Roll.m_MaxTile = m_MaxTile;
             m_Roll.TrackNum = TrackNum;
+            m_Roll.m_TileOffset = m_TileOffset;
             //m_Roll.m_TrackThickness = m_TrackThickness;
             //m_Roll.m_TrackWidth = m_TrackWidth;
             //m_Roll.m_TileRollLength = m_TileRollLength;
@@ -81,7 +84,7 @@ namespace Demo
             {
                 int bpm = m_system.getBPM();
                 float basebeat = m_system.getBaseBeat();
-                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_system.getMusicTime());
+                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_system.getMusicTime(), m_PlayerObj);
 
                 //if(m_RotObj != null)
                 //{
@@ -105,32 +108,32 @@ namespace Demo
             m_Roll.FrameUpdate(Time.deltaTime);
 
             //Debug.LogWarning("MoveUpdate");
-            if(m_Player == null)
-            {
-                Debug.LogWarning("m_Player is null");
-            }
+            //if(m_Player == null)
+            //{
+            //    Debug.LogWarning("m_Player is null");
+            //}
 
-            m_Player.MoveUpdate(Time.deltaTime);
+            //m_Player.MoveUpdate(Time.deltaTime);
 
             //Debug.LogWarning("MoveUpdate ok");
             //test
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                m_Roll.EnableGame(m_Player);
-                m_Player.startMove();
-            }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                m_Roll.StopGame();
-                m_Player.stopMove();
-            }
+            //if (Input.GetKeyDown(KeyCode.T))
+            //{
+            //    m_Roll.EnableGame(m_Player);
+            //    m_Player.startMove();
+            //}
+            //if (Input.GetKeyDown(KeyCode.S))
+            //{
+            //    m_Roll.StopGame();
+            //    m_Player.stopMove();
+            //}
             //end
         }
 
         public void StartDemo()
         {
-            m_Roll.EnableGame(m_Player);
-            m_Player.startMove();
+            m_Roll.EnableGame();
+            //m_Player.startMove();
             //m_Player.SetSpeed(5);
         }
 

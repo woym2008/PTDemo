@@ -10,6 +10,8 @@ namespace Demo
     {
         public CameraPlayer m_Player;
 
+        public Vector3 m_CameraOffset = Vector3.zero;
+
         private void Start()
         {
             
@@ -17,7 +19,9 @@ namespace Demo
 
         private void Update()
         {
-            this.transform.position = m_Player.getPosition;
+            this.transform.position = m_Player.position + m_CameraOffset;
+
+            this.transform.rotation = m_Player.rotation;
         }
     }
 }

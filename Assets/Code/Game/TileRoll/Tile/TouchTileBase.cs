@@ -57,10 +57,10 @@ namespace Demo
             }
         }
         //--------------------------------------------
-        public virtual void InitTile(MidiTile data, float scale)
+        public virtual void InitTile(MidiTile data, float scale, float startprocess = 0)
         {
             m_TileData = data;
-            m_CurProcess = 0;
+            m_CurProcess = startprocess;
             m_MoveSpeed = 1.0f;
 
             m_MoveTime = 0;
@@ -72,7 +72,13 @@ namespace Demo
             //m_bIsTouched = false;
             m_TouchState = TouchState.NotTouch;
         }
-        
+
+        public void SetCurProcess()
+        {
+
+        }
+
+
         public virtual void FrameUpdate(float process)
         {
             //Vector3 offset = m_Parent.TransformVector(0, m_MoveSpeed * Time.deltaTime, 0);
