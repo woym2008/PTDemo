@@ -19,16 +19,16 @@ namespace Demo.TileTrack
 
 
         static public int maxTrackLineNum = 4;      // 轨道线最大数量
-        static public int defaultLineNum = 3;
-        static public float defaultlineSpace = 1.0f;  // 轨道线之间的距离
+        static public int defaultLineNum = 2;
+        static public float defaultlineSpace = 0.5f;  // 轨道线之间的距离
         
 
-        static public float tilespace = 2f;         // 音符间隔
+        static public float tilespace = 0.5f;         // 音符间隔
         static public float tileLifeTime = 1f;      // 生存的时长
         
         static public float tileLifeProgress = 0.5f;
 
-        static public float preTileSpace = 10;      // 生成块提前的位置(有几个空余块)
+        static public float preTileSpace = 5;      // 生成块提前的位置(有几个空余块)
     }
 }
 

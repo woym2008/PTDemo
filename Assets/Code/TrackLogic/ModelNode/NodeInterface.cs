@@ -44,7 +44,7 @@ namespace Demo.TileTrack
         }
         public float startProgress
         {
-            get { return _data.startProgrss; }
+            get { return _data.startProgress; }
         }
         public float positionProgress{
             get { return _data.posProgrss; }
@@ -99,7 +99,7 @@ namespace Demo.TileTrack
         public virtual void ResetDataInfo(NodeManager.NodeData dataInfo)
         {
             _data.startTime = dataInfo.startTime;
-            _data.startProgrss = dataInfo.startProgrss;
+            _data.startProgress = dataInfo.startProgress;
             _data.length = (float)dataInfo.length;
             _data.index = dataInfo.index;
             _data.subIndex = dataInfo.subIndex;
