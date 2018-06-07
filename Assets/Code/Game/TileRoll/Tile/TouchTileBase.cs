@@ -39,6 +39,7 @@ namespace Demo
 
         protected MidiTile m_TileData;
         protected float m_CurProcess;
+        protected float m_StartProcess;
 
         [SerializeField]
         private float m_MoveTime;
@@ -60,7 +61,8 @@ namespace Demo
         public virtual void InitTile(MidiTile data, float scale, float startprocess = 0)
         {
             m_TileData = data;
-            m_CurProcess = startprocess;
+            m_StartProcess = startprocess;
+            m_CurProcess = 0;
             m_MoveSpeed = 1.0f;
 
             m_MoveTime = 0;
@@ -72,12 +74,6 @@ namespace Demo
             //m_bIsTouched = false;
             m_TouchState = TouchState.NotTouch;
         }
-
-        public void SetCurProcess()
-        {
-
-        }
-
 
         public virtual void FrameUpdate(float process)
         {
@@ -154,12 +150,12 @@ namespace Demo
 
         public float getPositionProgress()
         {
-            return 0;
+            return m_StartProcess;
         }
 
         public void setPosition(Vector3 pos)
         {
-            this.transform.position = new Vector3(pos.x, pos.y + 0.8f, pos.z);
+            this.transform.position = new Vector3(pos.x, pos.y, pos.z);
         }
 
         public void setRotation(Quaternion rot)

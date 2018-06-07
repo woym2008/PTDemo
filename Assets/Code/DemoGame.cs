@@ -46,6 +46,9 @@ namespace Demo
 
         public float m_CameraSpeed = 1.0f;
         //------------------------------------
+        public AudioClip m_Accompaniment = null;
+        public float m_AccompVolume = 0.5f;
+        //------------------------------------
         bool m_bEnableCamera = false;
 
         //------------------------------------
@@ -84,7 +87,7 @@ namespace Demo
             {
                 int bpm = m_system.getBPM();
                 float basebeat = m_system.getBaseBeat();
-                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_system.getMusicTime(), m_PlayerObj);
+                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_Tiles[m_Tiles.Length-1].EndTime, m_PlayerObj);
 
                 //if(m_RotObj != null)
                 //{
@@ -92,8 +95,11 @@ namespace Demo
                 //}                
             }
             //--------------------------------------
-            
-            
+            //accomp
+            m_system.SetAccompaniment(m_Accompaniment.name, m_Accompaniment);
+            m_system.SetAccompanimentVolume(m_Accompaniment.name, m_AccompVolume);
+
+
             //--------------------------------------
 
             TouchTileFactory.Init();
@@ -135,6 +141,7 @@ namespace Demo
             m_Roll.EnableGame();
             //m_Player.startMove();
             //m_Player.SetSpeed(5);
+            m_system.PlayAccompaniment(m_Roll.m_RollTime);
         }
 
         public void AddCamSpeed()
@@ -142,7 +149,7 @@ namespace Demo
             m_CameraSpeed += 0.5f;
             //m_Player.SetSpeed(m_CameraSpeed);
 
-            m_Roll.m_track.Speed = m_CameraSpeed;
+            //m_Roll.m_track.Speed = m_CameraSpeed;
         }
 
         public void ReduceCamSpeed()
@@ -150,7 +157,7 @@ namespace Demo
             m_CameraSpeed -= 0.5f;
             //m_Player.SetSpeed(m_CameraSpeed);
 
-            m_Roll.m_track.Speed = m_CameraSpeed;
+            //m_Roll.m_track.Speed = m_CameraSpeed;
         }
 
         

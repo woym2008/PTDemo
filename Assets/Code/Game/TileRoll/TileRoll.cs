@@ -62,6 +62,9 @@ namespace Demo
 
         public float m_MusicTime = 0.0f;
 
+        public float m_IntoTouchProportion = 0.1f;
+        public float m_IntoTouchAreaTime = 0;
+
         //---------------------------------------------------
         public Vector3 m_TileOffset = Vector3.zero;
         //---------------------------------------------------
@@ -96,8 +99,10 @@ namespace Demo
             m_BPM = bpm;
             //basebeat = m_BaseBeat;
             float basetiletime = 60.0f * basebeat / bpm;
-            //m_RollTime = basetiletime * m_MaxTile;
-            m_RollTime = 10.0f;
+            m_RollTime = basetiletime * m_MaxTile;
+            //m_RollTime = 10.0f;
+
+            
 
             //float waitprocess = m_RollTime / musictime;
             CreateSpawners(tiles, basebeat);
@@ -116,9 +121,8 @@ namespace Demo
                 float length = m_track.trackViewer.GetTrackLength();
 
                 float speed = length / musictime;
-                //m_track.trackViewer.SetSpeed(speed);
                 m_track.Speed = speed;
-
+                m_track.trackViewer.SetTrackHeight(0.001f);
             }
 
             m_Player.position = m_track.GetPosition(0, 0);
@@ -200,7 +204,7 @@ namespace Demo
                 pathDataList.Add(data);
             }
 
-            track.GenerateTrack(m_trackPrefab, pathDataList.ToArray());
+            track.GenerateTrack(m_trackPrefab, pathDataList.ToArray(),400);
         }
     }
 }

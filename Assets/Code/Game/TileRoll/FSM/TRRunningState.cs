@@ -79,7 +79,7 @@ namespace Demo
             float param = m_RunningTime / m_TR.m_MusicTime;
             
             Vector3 curpos = m_TR.m_track.GetPosition(param, 0);
-            m_TR.m_Player.position = new Vector3(curpos.x,curpos.y, curpos.z) + m_TR.m_TileOffset;
+            m_TR.m_Player.position = new Vector3(curpos.x, curpos.y, curpos.z);
 
             m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, 0);
             //-----------------------------
@@ -100,7 +100,7 @@ namespace Demo
         //---------------------------------------------------
         void AttachBlock(TileSpawner bs)
         {
-            float startprocess = (m_RunningTime + m_TR.m_RollTime) / m_TR.m_MusicTime;
+            float startprocess = m_TR.m_RollTime / m_TR.m_MusicTime;
             TouchTileBase pTile = bs.CreateTile(startprocess);
 
             if (pTile != null)
