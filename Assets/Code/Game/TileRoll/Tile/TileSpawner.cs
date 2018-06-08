@@ -25,23 +25,23 @@ namespace Demo
             }
         }
 
-        public float getScale
+        public float getLength
         {
             get
             {
-                return m_Scale;
+                return m_Length;
             }
         }
 
         MidiTile m_SelfData;
-        float m_Scale;
+        float m_Length;
 
         public TileSpawner(
-            MidiTile data, float scale)
+            MidiTile data, float l)
         {
             m_SelfData = data;
 
-            m_Scale = scale;
+            m_Length = l;
         }
 
         public TouchTileBase CreateTile(float startprocess, string name, Vector3[] points = null)
@@ -50,7 +50,7 @@ namespace Demo
             if (pBeat != null)
             {
                 pBeat.InitTile(
-                    m_SelfData, m_Scale, startprocess);
+                    m_SelfData, m_Length, startprocess);
 
                 pBeat.CreateMesh(points);
             }

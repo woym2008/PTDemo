@@ -19,6 +19,10 @@ namespace Demo
 
         private void Update()
         {
+            if(m_Player == null)
+            {
+                return;
+            }
             this.transform.position = m_Player.position + m_CameraOffset;
 
             this.transform.rotation = m_Player.rotation;

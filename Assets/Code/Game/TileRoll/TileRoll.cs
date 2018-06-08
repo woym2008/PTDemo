@@ -81,6 +81,16 @@ namespace Demo
         //---------------------------------------------------
         public bool m_bAutoPlay = false;
         //---------------------------------------------------
+        public float m_TileLenght = 0.2f;
+        TileManager m_TileMgr;
+        public TileManager getTileManager
+        {
+            get
+            {
+                return m_TileMgr;
+            }
+        }
+        //---------------------------------------------------
         //cache Audio System
         AudioSystem m_system;
         //---------------------------------------------------
@@ -94,6 +104,8 @@ namespace Demo
             )
         {
             m_Player = new CameraPlayer(root);
+
+            m_TileMgr = new TileManager();
 
             //fsm
             m_FSM = new TileRollFSM();
@@ -111,32 +123,25 @@ namespace Demo
             m_RollTime = basetiletime * m_MaxTile;
             //m_RollTime = 10.0f;
 
-            
+            m_track = TrackManager.instance;
 
             //float waitprocess = m_RollTime / musictime;
-            CreateSpawners(tiles, basebeat);
-
-            
-
+            //CreateSpawners(tiles, basebeat);
+            //tilelenght = 
+            m_TileMgr.CreateSpawners(tiles, basetiletime,m_MaxTile,
+                musictime, m_TileLenght);
             //-----------------------------------------------------------
-            //init track
-            for (int i=0;i<1;++i)
-            {
-                m_track = TrackManager.instance;
-                //track
-                m_track.Init(TrackNumDef.enTrackType.Curve);
-                SetupPath(m_track);
+            //track
+            TrackManager.instance.Init(TrackNumDef.enTrackType.Curve);
+            SetupPath(TrackManager.instance);
 
-                float length = m_track.trackViewer.GetTrackLength();
+            float length = TrackManager.instance.trackViewer.GetTrackLength();
 
-                float speed = length / musictime;
-                m_track.Speed = speed;
-                m_track.trackViewer.SetTrackHeight(0.001f);
-
-                m_track.maxTrackNum = 5;
-            }
-
-            m_Player.position = m_track.GetPosition(0, 0);
+            float speed = length / musictime;
+            TrackManager.instance.Speed = speed;
+            TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
+            //-----------------------------------------------------------
+            m_Player.position = TrackManager.instance.GetPosition(0, 0);
         }
 
         public void FrameUpdate(float dt)

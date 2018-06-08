@@ -44,6 +44,8 @@ namespace Demo
         [SerializeField]
         public float m_MoveTime;
 
+        public float m_DesoryTime;
+
         //bool m_bIsTouched = false;
         //bool m_bCanTouch = false;
         TouchState m_TouchState = TouchState.NotTouch;
@@ -58,7 +60,7 @@ namespace Demo
             }
         }
         //--------------------------------------------
-        public virtual void InitTile(MidiTile data, float scale, float startprocess = 0)
+        public virtual void InitTile(MidiTile data, float lenght, float startprocess = 0)
         {
             m_TileData = data;
             m_StartProcess = startprocess;
@@ -232,6 +234,15 @@ namespace Demo
         //        }                
         //    }
         //}
+        public bool IsUseless()
+        {
+            if(m_TouchState == TouchState.Touched)
+            {
+                return true;
+            }
+
+            return false;
+        }
         //----------------------------------------------------
         public void ReleaseSelf()
         {

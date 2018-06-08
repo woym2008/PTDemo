@@ -76,44 +76,18 @@ namespace Demo
             m_Roll = new TileRoll();
             //m_Roll.m_RollRoot = m_RollRoot;
             //m_Roll.m_LocalOffset = m_LocalOffset;
-            m_Roll.m_MaxTile = m_MaxTile;
-            m_Roll.TrackNum = TrackNum;
-            m_Roll.m_TileOffset = m_TileOffset;
-            //m_Roll.m_TrackThickness = m_TrackThickness;
-            //m_Roll.m_TrackWidth = m_TrackWidth;
-            //m_Roll.m_TileRollLength = m_TileRollLength;
-            m_Roll.m_trackPrefab = m_trackPrefab;            
-            //--------------------------------------
-            MidiTile[] m_Tiles;
-            if(m_system.getTileDatas(out m_Tiles))
-            {
-                int bpm = m_system.getBPM();
-                float basebeat = m_system.getBaseBeat();
-                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_Tiles[m_Tiles.Length-1].EndTime, m_PlayerObj);
-
-                //if(m_RotObj != null)
-                //{
-                //    m_Roll.SetRot(m_RotObj.localEulerAngles);
-                //}
-            }
-            //--------------------------------------
-            //accomp
-            m_system.SetAccompaniment(m_Accompaniment.name, m_Accompaniment);
-            m_system.SetAccompanimentVolume(m_Accompaniment.name, m_AccompVolume);
-
-
-            //--------------------------------------
-
-            TouchTileFactory.Init();
+            //InitData();
         }
 
         private void Update()
         {
             //Debug.LogWarning("m_system.update");
-            m_system.update(Time.deltaTime);
+            if(m_system != null)
+                m_system.update(Time.deltaTime);
 
             //Debug.LogWarning("FrameUpdate");
-            m_Roll.FrameUpdate(Time.deltaTime);
+            if (m_Roll != null)
+                m_Roll.FrameUpdate(Time.deltaTime);
 
             //Debug.LogWarning("MoveUpdate");
             //if(m_Player == null)
@@ -138,8 +112,43 @@ namespace Demo
             //end
         }
 
+        void InitData()
+        {
+            m_Roll.m_MaxTile = m_MaxTile;
+            m_Roll.TrackNum = TrackNum;
+            m_Roll.m_TileOffset = m_TileOffset;
+            //m_Roll.m_TrackThickness = m_TrackThickness;
+            //m_Roll.m_TrackWidth = m_TrackWidth;
+            //m_Roll.m_TileRollLength = m_TileRollLength;
+            m_Roll.m_trackPrefab = m_trackPrefab;
+            //--------------------------------------
+            MidiTile[] m_Tiles;
+            if (m_system.getTileDatas(out m_Tiles))
+            {
+                int bpm = m_system.getBPM();
+                float basebeat = m_system.getBaseBeat();
+                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_Tiles[m_Tiles.Length - 1].EndTime, m_PlayerObj);
+
+                //if(m_RotObj != null)
+                //{
+                //    m_Roll.SetRot(m_RotObj.localEulerAngles);
+                //}
+            }
+            //--------------------------------------
+            //accomp
+            m_system.SetAccompaniment(m_Accompaniment.name, m_Accompaniment);
+            m_system.SetAccompanimentVolume(m_Accompaniment.name, m_AccompVolume);
+
+
+            //--------------------------------------
+
+            TouchTileFactory.Init();
+        }
+
         public void StartDemo()
         {
+            InitData();
+
             m_Roll.EnableGame(m_system);
             //m_Player.startMove();
             //m_Player.SetSpeed(5);
