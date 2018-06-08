@@ -43,12 +43,12 @@ Material:
     - _Density: 0.23828357
     - _EdgeAlpha: 0
     - _FrezFalloff: 0.5970149
-    - _FrezPow: 1
-    - _Gloss: 0.73134327
+    - _FrezPow: 1.17
+    - _Gloss: 0.372
     - _Metalics: 0.83582085
     - _RefScale: 1
-    - _Reflection: 0.43283582
-    - _Shininess: 0.5008956
+    - _Reflection: 0.524
+    - _Shininess: 0.03
     m_Colors:
     - _Color: {r: 0.003921569, g: 0.21176471, b: 0.5803922, a: 0.29411766}
     - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
