@@ -430,7 +430,7 @@ namespace Demo.TileTrack
     public class CurveTrackLine:TileLineBase
     {
         private CurveTrackRollViewer _trackViewer;
-        
+
         public float OffsetX;
         public float OffsetY;
 
@@ -448,8 +448,8 @@ namespace Demo.TileTrack
             // 倒叙
             _operateList.Insert(0, node);
 
-            //float progress = this._trackViewer.progress + node.getPositionProgress();
-            float progress = (latestCount + TrackNumDef.preTileSpace) * this._trackViewer.GetSpacingProgress();
+            float progress = this._trackViewer.progress + node.getPositionProgress();
+            //float progress = (latestCount + TrackNumDef.preTileSpace) * this._trackViewer.GetSpacingProgress();
 
             Vector3 position = this._trackViewer._spline.GetPositionOnSpline(progress);
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);
@@ -492,7 +492,8 @@ namespace Demo.TileTrack
             Vector3 position = this._trackViewer._spline.GetPositionOnSpline(node.getProcess());
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(node.getProcess());
 
-            position.x += OffsetX;
+            //position.x += OffsetX;
+            position += (rotation * new Vector3(OffsetX, OffsetY,0));
 
             node.setPosition(position);
 
