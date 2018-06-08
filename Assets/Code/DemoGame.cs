@@ -54,6 +54,8 @@ namespace Demo
         //------------------------------------
         public GameObject m_trackPrefab;
         //------------------------------------
+        //public float AutoPlay = 1.0f;
+        //------------------------------------
         private void Start()
         {
             m_system = new AudioSystem();
@@ -80,7 +82,7 @@ namespace Demo
             //m_Roll.m_TrackThickness = m_TrackThickness;
             //m_Roll.m_TrackWidth = m_TrackWidth;
             //m_Roll.m_TileRollLength = m_TileRollLength;
-            m_Roll.m_trackPrefab = m_trackPrefab;
+            m_Roll.m_trackPrefab = m_trackPrefab;            
             //--------------------------------------
             MidiTile[] m_Tiles;
             if(m_system.getTileDatas(out m_Tiles))
@@ -92,7 +94,7 @@ namespace Demo
                 //if(m_RotObj != null)
                 //{
                 //    m_Roll.SetRot(m_RotObj.localEulerAngles);
-                //}                
+                //}
             }
             //--------------------------------------
             //accomp
@@ -138,7 +140,7 @@ namespace Demo
 
         public void StartDemo()
         {
-            m_Roll.EnableGame();
+            m_Roll.EnableGame(m_system);
             //m_Player.startMove();
             //m_Player.SetSpeed(5);
             m_system.PlayAccompaniment(m_Roll.m_RollTime);
@@ -146,20 +148,26 @@ namespace Demo
 
         public void AddCamSpeed()
         {
-            m_CameraSpeed += 0.5f;
+            //m_CameraSpeed += 0.5f;
             //m_Player.SetSpeed(m_CameraSpeed);
 
             //m_Roll.m_track.Speed = m_CameraSpeed;
+
+            m_Roll.AddSpeed();
         }
 
         public void ReduceCamSpeed()
         {
-            m_CameraSpeed -= 0.5f;
+            //m_CameraSpeed -= 0.5f;
             //m_Player.SetSpeed(m_CameraSpeed);
 
             //m_Roll.m_track.Speed = m_CameraSpeed;
+            m_Roll.ReduceSpeed();
         }
 
-        
+        public void AutoPlay()
+        {
+            m_Roll.m_bAutoPlay = !m_Roll.m_bAutoPlay;
+        }
     }
 }

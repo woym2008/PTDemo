@@ -31,6 +31,8 @@ namespace Demo
         public int segment_y = 2;
         public int segment_z = 2;
         //-------------------------------
+        public float collidescale = 1.0f;
+        //-------------------------------
         public void CreateMesh()
         {
             if(SelfMesh == null)
@@ -104,7 +106,7 @@ namespace Demo
 
             m_Collider.center = new Vector3(width * 0.5f * ExtendDirect.x, 
                 length * 0.5f * ExtendDirect.y, 
-                depth * 0.5f * ExtendDirect.z);
+                -depth * 0.5f * ExtendDirect.z);
             //m_Collider.center = new Vector3(0,length*0.5f,0);
             //m_Collider.size = m_render.bounds.size;
 
@@ -116,7 +118,8 @@ namespace Demo
             m_Collider.size = new Vector3(
                 width,
                 length,
-                depth);
+                depth) * collidescale;
+
             //end
             //m_Collider.bounds.
         }

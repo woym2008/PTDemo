@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Demo
 {
@@ -13,6 +14,22 @@ namespace Demo
             get
             {
                 return m_SelfData.StartTime;
+            }
+        }
+
+        public double getEndTime
+        {
+            get
+            {
+                return m_SelfData.EndTime;
+            }
+        }
+
+        public float getScale
+        {
+            get
+            {
+                return m_Scale;
             }
         }
 
@@ -27,16 +44,19 @@ namespace Demo
             m_Scale = scale;
         }
 
-        public TouchTileBase CreateTile(float startprocess)
+        public TouchTileBase CreateTile(float startprocess, string name, Vector3[] points = null)
         {
-            TouchTileBase pBeat = TouchTileFactory.CreateTile();
+            TouchTileBase pBeat = TouchTileFactory.CreateTile(name);
             if (pBeat != null)
             {
                 pBeat.InitTile(
                     m_SelfData, m_Scale, startprocess);
+
+                pBeat.CreateMesh(points);
             }
 
             return pBeat;
         }
+
     }
 }

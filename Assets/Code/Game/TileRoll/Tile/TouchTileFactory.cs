@@ -17,11 +17,11 @@ namespace Demo
             m_Recycler = new Recycler();
         }
 
-        static public TouchTileBase CreateTile()
+        static public TouchTileBase CreateTile(string name)
         {
             Debug.LogWarning("CreateTile");
-            string respath = m_BasePath + NormalTouchTile.m_TileName;
-            TouchTileBase tile = m_Recycler.Pop(NormalTouchTile.m_TileName) as TouchTileBase;
+            string respath = m_BasePath + name;
+            TouchTileBase tile = m_Recycler.Pop(name) as TouchTileBase;
             if(tile == null)
             {
                 tile = InstanceTilePrefab(respath);

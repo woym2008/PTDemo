@@ -42,7 +42,7 @@ namespace Demo
         protected float m_StartProcess;
 
         [SerializeField]
-        private float m_MoveTime;
+        public float m_MoveTime;
 
         //bool m_bIsTouched = false;
         //bool m_bCanTouch = false;
@@ -75,14 +75,19 @@ namespace Demo
             m_TouchState = TouchState.NotTouch;
         }
 
-        public virtual void FrameUpdate(float process)
+        public virtual void CreateMesh(Vector3[] points = null)
+        {
+
+        }
+
+        public virtual void FrameUpdate(float dt)
         {
             //Vector3 offset = m_Parent.TransformVector(0, m_MoveSpeed * Time.deltaTime, 0);
             //this.transform.position = new Vector3(
             //    this.transform.position.x + offset.x,
             //    this.transform.position.y + offset.y,
             //    this.transform.position.z + offset.z);
-            m_MoveTime += Time.deltaTime;
+            m_MoveTime += dt;
 
             //m_CurProcess = process;
             //Vector3 pos = m_Parent.GetPos(m_MoveTime);
@@ -153,12 +158,12 @@ namespace Demo
             return m_StartProcess;
         }
 
-        public void setPosition(Vector3 pos)
+        public virtual void setPosition(Vector3 pos)
         {
             this.transform.position = new Vector3(pos.x, pos.y, pos.z);
         }
 
-        public void setRotation(Quaternion rot)
+        public virtual void setRotation(Quaternion rot)
         {
             this.transform.rotation = rot;
         }
@@ -172,6 +177,14 @@ namespace Demo
         {
         }
 
+        public void EnableTouch()
+        {
+            if (m_TouchState == TouchState.NotTouch)
+            {
+                m_TouchState = TouchState.CanTouch;
+            }
+        }
+
         public virtual void OnTouchBeat(Vector3 touchpos)
         {
             if(m_TouchState == TouchState.CanTouch)
@@ -179,6 +192,8 @@ namespace Demo
                 Debug.Log("OnTouchBeat");
                 m_TouchState = TouchState.Touched;
                 m_TileData.PlayTile();
+
+                ShowPress();
             }            
         }
 
@@ -186,32 +201,37 @@ namespace Demo
         {
         }
         //----------------------------------------------------
-        public void OnTriggerEnter(Collider other)
+        public virtual void ShowPress()
         {
-            if(other.gameObject.tag == "TouchArea")
-            {
-                //m_bCanTouch = true;
-                m_TouchState = TouchState.CanTouch;
-            }
 
-            if (other.gameObject.tag == "AutoTouch" && m_TouchState == TouchState.CanTouch)
-            {
-                m_TileData.PlayTile();
-                m_TouchState = TouchState.Touched;
-            }
         }
+        //----------------------------------------------------
+        //public void OnTriggerEnter(Collider other)
+        //{
+        //    if(other.gameObject.tag == "TouchArea")
+        //    {
+        //        //m_bCanTouch = true;
+        //        m_TouchState = TouchState.CanTouch;
+        //    }
 
-        public void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.tag == "TouchArea")
-            {
-                Debug.Log("exit touch area release");
-                if(m_TouchState == TouchState.NotTouch || m_TouchState == TouchState.CanTouch)
-                {
-                    ReleaseSelf();
-                }                
-            }
-        }
+        //    if (other.gameObject.tag == "AutoTouch" && m_TouchState == TouchState.CanTouch)
+        //    {
+        //        m_TileData.PlayTile();
+        //        m_TouchState = TouchState.Touched;
+        //    }
+        //}
+
+        //public void OnTriggerExit(Collider other)
+        //{
+        //    if (other.gameObject.tag == "TouchArea")
+        //    {
+        //        Debug.Log("exit touch area release");
+        //        if(m_TouchState == TouchState.NotTouch || m_TouchState == TouchState.CanTouch)
+        //        {
+        //            ReleaseSelf();
+        //        }                
+        //    }
+        //}
         //----------------------------------------------------
         public void ReleaseSelf()
         {

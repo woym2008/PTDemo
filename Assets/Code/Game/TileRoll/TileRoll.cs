@@ -1,4 +1,5 @@
 ﻿using Demo.TileTrack;
+using PTAudio.Frame;
 using PTAudio.Midi.Builder;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,9 @@ namespace Demo
         public float m_BPM = 90;
         public float m_BaseBeat = 1.0f;
 
+        float m_curBPM;
+        float m_speedratio = 1.0f;
+
         //根据bpm算出的结果，一个object从轨道的一端走到另一端的时间
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
@@ -75,7 +79,11 @@ namespace Demo
         //------------------------------------
         public GameObject m_trackPrefab;
         //---------------------------------------------------
-
+        public bool m_bAutoPlay = false;
+        //---------------------------------------------------
+        //cache Audio System
+        AudioSystem m_system;
+        //---------------------------------------------------
         public TileRoll()
         {
 
@@ -97,6 +105,7 @@ namespace Demo
 
             //init tile spawner
             m_BPM = bpm;
+            m_curBPM = m_BPM;
             //basebeat = m_BaseBeat;
             float basetiletime = 60.0f * basebeat / bpm;
             m_RollTime = basetiletime * m_MaxTile;
@@ -123,6 +132,8 @@ namespace Demo
                 float speed = length / musictime;
                 m_track.Speed = speed;
                 m_track.trackViewer.SetTrackHeight(0.001f);
+
+                m_track.maxTrackNum = 5;
             }
 
             m_Player.position = m_track.GetPosition(0, 0);
@@ -132,7 +143,7 @@ namespace Demo
         {
             if(m_FSM != null)
             {
-                m_FSM.FrameUpdate(dt);
+                m_FSM.FrameUpdate(dt * m_speedratio);
             }
 
             // Test code
@@ -171,8 +182,10 @@ namespace Demo
             }
         }
 
-        public void EnableGame()
+        public void EnableGame(AudioSystem system)
         {
+            m_system = system;
+
             m_FSM.SetState(new TRRunningState(this));
         }
 
@@ -205,6 +218,30 @@ namespace Demo
             }
 
             track.GenerateTrack(m_trackPrefab, pathDataList.ToArray(),400);
+        }
+
+        public void AddSpeed()
+        {
+            m_curBPM += 10;
+            m_speedratio = m_curBPM/(float)m_BPM;
+
+            float length = m_track.trackViewer.GetTrackLength();
+            float speed = length / m_MusicTime;
+            m_track.Speed = speed * m_speedratio;
+
+            m_system.setMusicSpeed(m_speedratio);
+        }
+
+        public void ReduceSpeed()
+        {
+            m_curBPM -= 10;
+            m_speedratio = m_curBPM / (float)m_BPM;
+
+            float length = m_track.trackViewer.GetTrackLength();
+            float speed = length / m_MusicTime;
+            m_track.Speed = speed * m_speedratio;
+
+            m_system.setMusicSpeed(m_speedratio);
         }
     }
 }

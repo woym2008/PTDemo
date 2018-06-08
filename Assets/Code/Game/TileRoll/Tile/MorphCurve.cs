@@ -38,21 +38,6 @@ namespace Demo
         {
 
         }
-        //public void CreateMesh()
-        //{
-        //    if(SelfMesh == null)
-        //    {
-        //        SelfMesh = new Mesh();
-        //    }
-
-        //    m_Collider = this.gameObject.GetComponent<BoxCollider>();
-        //    if (m_Collider == null)
-        //    {
-        //        m_Collider = this.gameObject.AddComponent<BoxCollider>();
-        //    }
-
-        //    BuildMesh();
-        //}
 
         public void SetLength(float l)
         {
@@ -82,12 +67,6 @@ namespace Demo
                 m_Collider = this.gameObject.AddComponent<BoxCollider>();
             }
 
-            //m_MeshCollider = this.gameObject.GetComponent<MeshCollider>();
-            //if (m_MeshCollider == null)
-            //{
-            //    m_MeshCollider = this.gameObject.AddComponent<MeshCollider>();
-            //}
-
             BuildMesh(pos);
         }
         //-------------------------------
@@ -101,6 +80,11 @@ namespace Demo
         //-------------------------------
         void BuildMesh(Vector3[] pos)
         {
+            //Matrix4x4 mt = Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0));
+            //for (int i = 0; i < pos.Length; ++i)
+            //{
+            //    pos[i] = mt * pos[i];
+            //}
             meshfilter = this.GetComponent<MeshFilter>();
             if(meshfilter == null)
             {
@@ -131,6 +115,9 @@ namespace Demo
             
             m_render.material = m_material;
 
+            m_Collider.center = new Vector3(width * 0.5f * ExtendDirect.x,
+                length * 0.5f * ExtendDirect.y,
+                depth * 0.5f * ExtendDirect.z);
             //m_Collider.center = new Vector3(0,length*0.5f,0);
             //m_Collider.size = m_render.bounds.size;
 
@@ -167,7 +154,7 @@ namespace Demo
             segment_z = 2;
             segment_y = centerposs.Length;
 
-            for (int y = 0; y < centerposs.Length; ++y)
+            for (int y = 0; y < segment_y; ++y)
             {
                 //front
                 for (int x = 0; x < segment_x; ++x)
@@ -186,7 +173,7 @@ namespace Demo
                 }
                 
             }
-            for (int y = 0; y < centerposs.Length; ++y)
+            for (int y = 0; y < segment_y; ++y)
             {
                 //back
                 for (int x = 0; x < segment_x; ++x)
@@ -204,7 +191,7 @@ namespace Demo
                 }
             }
 
-            for (int y = 0; y < centerposs.Length; ++y)
+            for (int y = 0; y < segment_y; ++y)
             {
                 //left
                 for (int z = 0; z < segment_z; ++z)
@@ -222,7 +209,7 @@ namespace Demo
                 }
             }
 
-            for (int y = 0; y < centerposs.Length; ++y)
+            for (int y = 0; y < segment_y; ++y)
             {
                 //right
                 for (int z = 0; z < segment_z; ++z)

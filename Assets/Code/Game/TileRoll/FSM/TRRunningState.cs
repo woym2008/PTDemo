@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PTAudio.Frame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,8 @@ namespace Demo
         //-----------------------------------------------
         //临时的 活动块的管理
         public List<TouchTileBase> m_RunningTiles;
-
+        //-----------------------------------------------
+        
         public TRRunningState(TileRoll tr)
         {
             m_TR = tr;
@@ -85,7 +87,22 @@ namespace Demo
             //-----------------------------
             for (int i= m_RunningTiles.Count-1;i>=0;--i)
             {
-                m_RunningTiles[i].FrameUpdate(param);
+                m_RunningTiles[i].FrameUpdate(dt);
+                if(m_RunningTiles[i].m_MoveTime > m_TR.m_RollTime - 2.0f)
+                {
+                    m_RunningTiles[i].EnableTouch();
+
+                    if (m_TR.m_bAutoPlay)
+                    {                        
+                        m_RunningTiles[i].OnTouchBeat(Vector3.zero);
+                    }
+                }
+
+                if (m_RunningTiles[i].m_MoveTime > m_TR.m_RollTime + m_TR.m_RollTime)
+                {
+                    m_RunningTiles[i].ReleaseSelf();
+                    m_RunningTiles.Remove(m_RunningTiles[i]);
+                }
             }
         }
 
@@ -100,8 +117,28 @@ namespace Demo
         //---------------------------------------------------
         void AttachBlock(TileSpawner bs)
         {
+            //test for curve
+            TouchTileBase pTile = null;
             float startprocess = m_TR.m_RollTime / m_TR.m_MusicTime;
-            TouchTileBase pTile = bs.CreateTile(startprocess);
+
+            //if (bs.getScale > 1)
+            //{
+            //    int numpoints = 16;
+            //    Vector3[] curvepoints = new Vector3[numpoints];
+            //    float endtime = (float)bs.getEndTime;
+            //    float everytime = (endtime - (float)bs.getStartTime) / numpoints;
+            //    for (int i = 0; i < curvepoints.Length; ++i)
+            //    {
+            //        float process = startprocess + ((float)bs.getStartTime + everytime * i) / m_TR.m_MusicTime;
+            //        curvepoints[i] = m_TR.m_track.GetPosition(process, 0);
+            //    }
+            //    pTile = bs.CreateTile(startprocess, CurverTouchTile.m_TileName, curvepoints);
+            //}
+            //else
+            {
+                pTile = bs.CreateTile(startprocess, NormalTouchTile.m_TileName);
+            }
+
 
             if (pTile != null)
             {                
