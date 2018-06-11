@@ -63,6 +63,8 @@ namespace Demo.TileTrack
         /// <returns></returns>
         float GetProgressRatio(float value);
         bool CheckPushValue();
+        // 加测是否可以放到对应的轨道线上
+        bool CheckPushValue(IPTTile value, int lineIndex = -1);
         bool PushValue(IPTTile value, int lineIndex);
 
         void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegment);
@@ -135,6 +137,8 @@ namespace Demo.TileTrack
         }
         public virtual bool CheckPushValue()
         { return true; }
+        public virtual bool CheckPushValue(IPTTile value, int lineIndex = -1)
+        { return true; }
         public virtual bool PushValue(IPTTile value,int lineIndex)
         { return true; }
         public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegement)
@@ -145,6 +149,10 @@ namespace Demo.TileTrack
 
         public float GetTrackLength()
         {
+            if (_data.tracklength <= 0)
+            {
+                return 1;
+            }
             return _data.tracklength;
         }
         public virtual void SetTrackWidth(float width)

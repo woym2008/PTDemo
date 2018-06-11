@@ -223,10 +223,15 @@ namespace Demo.TileTrack
         {
             if (this._data.tracklength <= 0)
             {
+   
                 return 0;
             }
             return (value / this._data.tracklength);
         }
+        /// <summary>
+        /// 检测是否可以将节点放置到轨道上
+        /// </summary>
+        /// <returns></returns>
         public override bool CheckPushValue()
         {
             if (_prepareList.Count >= m_maxCacheNum)
@@ -235,8 +240,28 @@ namespace Demo.TileTrack
             }
             return true;
         }
+
+        public override bool CheckPushValue(IPTTile value, int lineIndex = -1)
+        {
+            if (lineIndex < 0)
+                return (_prepareList.Count < m_maxCacheNum);
+            
+            CurveTrackLine trackline = _lineList[lineIndex];
+            if(trackline == null)
+            {
+                return false;
+            }
+            return trackline.CheckPushValue(value);
+        }
+
         public override bool PushValue(IPTTile node, int lineIndex)
         {
+            CurveTrackLine line = _lineList[lineIndex];
+            if(line != null)
+            {
+                line.ApplyforResource(node);
+            }
+
             CacheData data = new CacheData();
             data.lineIndex = lineIndex;
             data.node = node;
@@ -433,6 +458,7 @@ namespace Demo.TileTrack
 
         public float OffsetX;
         public float OffsetY;
+        public float occupiedProgress = 0f; // 已经被占用的部分
 
         private List<IPTTile> _operateList = new List<IPTTile>();
 
@@ -441,15 +467,37 @@ namespace Demo.TileTrack
             this._trackViewer = trackViewer;
         }
 
+        private float getTileStartProgress(IPTTile node)
+        {
+            return this._trackViewer.progress + node.getPositionProgress();
+        }
+
+        public float ApplyforResource(IPTTile node)
+        {
+            float progress = getTileStartProgress(node);
+            // 计算滑块的长度占据的部分数值
+            float len = 0;
+            float ratio = len / this._trackViewer.GetTrackLength();
+            this.occupiedProgress = progress + ratio;
+            
+            return this.occupiedProgress;
+        }
+
+        public override bool CheckPushValue(IPTTile node)
+        {
+            float progress = getTileStartProgress(node);
+            return progress >= this.occupiedProgress;
+        }
+
         public override void PushValue(IPTTile node, int latestCount)
         {
-            base.PushValue(node, latestCount);            
+            base.PushValue(node, latestCount);
 
             // 倒叙
             _operateList.Insert(0, node);
-
-            float progress = this._trackViewer.progress + node.getPositionProgress();
-            //float progress = (latestCount + TrackNumDef.preTileSpace) * this._trackViewer.GetSpacingProgress();
+                        
+            //float progress = this._trackViewer.progress + node.getPositionProgress();
+            float progress = getTileStartProgress(node);           
 
             Vector3 position = this._trackViewer._spline.GetPositionOnSpline(progress);
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);
