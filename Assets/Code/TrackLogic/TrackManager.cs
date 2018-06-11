@@ -170,14 +170,21 @@ namespace Demo.TileTrack
         {
             this.trackViewer.SetTracklineNum(num,lineSpace);
         }
-
-       
+        
+        /// <summary>
+        /// 检测是否可以放置到轨道上
+        /// </summary>
+        /// <param name="trackline"></param>
+        /// <returns></returns>
         public bool CheckPushValue()
         {
             return this.trackViewer.CheckPushValue();
         }
 
-
+        public bool CheckPushValue(IPTTile tile, int lineIndex)
+        {
+            return this.trackViewer.CheckPushValue(tile, lineIndex);
+        }
 
         // 压入节点数据
         //public bool PushValue(NodeObject node)
@@ -185,6 +192,7 @@ namespace Demo.TileTrack
         {
             if(lineIndex < 0)
             {
+                // 采用默认的随机分配
                 int lineNum = this.trackViewer.GetTracklineNum();
 
                 int randValue = UnityEngine.Random.Range((int)0, (int)(lineNum * 100));
@@ -197,6 +205,19 @@ namespace Demo.TileTrack
                     lineIndex = m_lastTrackIndex - 1;
                 }
                 lineIndex = (lineIndex < 0) ? 0 : ((lineIndex >= lineNum) ? lineNum - 1 : lineIndex);
+
+                if (!this.trackViewer.CheckPushValue(node,lineIndex))
+                {
+                    for(int i = 1; i< lineNum; ++i)
+                    {
+                        int newIndex = (lineIndex + i) % lineNum;
+                        if(this.trackViewer.CheckPushValue(node,newIndex))
+                        {
+                            lineIndex = newIndex;
+                            break;
+                        }
+                    }
+                }
             }
 
             m_lastTrackIndex = lineIndex;

@@ -15,7 +15,8 @@ using UnityEngine;
 namespace Demo.TileTrack
 {
     public interface ITrackLine
-    {       
+    {
+        bool CheckPushValue(IPTTile value);
         void PushValue(IPTTile node, int latestCount);
 
         void Clear();
@@ -29,6 +30,9 @@ namespace Demo.TileTrack
         public int lineIndex = 0;
 
         protected List<IPTTile> _tileList = new List<IPTTile>();
+
+        public virtual bool CheckPushValue(IPTTile value)
+        { return true; }
 
         public virtual void PushValue(IPTTile node, int latestCount)
         {
