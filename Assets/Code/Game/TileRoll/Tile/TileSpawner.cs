@@ -44,18 +44,21 @@ namespace Demo
             m_Length = l;
         }
 
-        public TouchTileBase CreateTile(float startprocess, string name, Vector3[] points = null)
+        public TouchTileBase CreateTile(float startprocess, float endprocess, float delaytime, string name)
         {
             TouchTileBase pBeat = TouchTileFactory.CreateTile(name);
             if (pBeat != null)
             {
                 pBeat.InitTile(
-                    m_SelfData, m_Length, startprocess);
-
-                pBeat.CreateMesh(points);
+                    m_SelfData, m_Length, startprocess, endprocess, delaytime);                
             }
 
             return pBeat;
+        }
+
+        public void CreateTileMesh(TouchTileBase pBeat, Vector3[] points = null)
+        {
+            pBeat.CreateMesh(points);
         }
 
     }

@@ -79,9 +79,9 @@ namespace Demo
         //------------------------------------
         public GameObject m_trackPrefab;
         //---------------------------------------------------
-        public bool m_bAutoPlay = false;
+        //public bool m_bAutoPlay = false;
         //---------------------------------------------------
-        public float m_TileLenght = 0.2f;
+        public float m_TileLenght = 0.4f;
         TileManager m_TileMgr;
         public TileManager getTileManager
         {
@@ -247,6 +247,11 @@ namespace Demo
             m_track.Speed = speed * m_speedratio;
 
             m_system.setMusicSpeed(m_speedratio);
+        }
+
+        public void SetAutoPlay()
+        {
+            m_TileMgr.m_bAutoPlay = !m_TileMgr.m_bAutoPlay;
         }
     }
 }

@@ -33,9 +33,9 @@ namespace Demo
                     point2.position, endpoint.position);
                 points.Add(pos);
             }
-            RenderModel.SetLength(10);
+            RenderModel.SetLength(0.1f);
             RenderModel.SetWidth(0.1f);
-            RenderModel.SetDepth(0.1f);
+            RenderModel.SetDepth(10);
 
             RenderModel.CreateMesh(points.ToArray());
 

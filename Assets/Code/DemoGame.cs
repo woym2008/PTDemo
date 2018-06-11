@@ -39,10 +39,10 @@ namespace Demo
         public Transform m_RollRoot;
         public Vector3 m_LocalOffset;
         public int m_MaxTile = 20;
-        public int TrackNum = 4;
-        public float m_TrackThickness = 0.1f;
-        public float m_TrackWidth = 5.0f;
-        public float m_TileRollLength = 10.0f;
+        //public int TrackNum = 4;
+        //public float m_TrackThickness = 0.1f;
+        //public float m_TrackWidth = 5.0f;
+        //public float m_TileRollLength = 10.0f;
 
         public float m_CameraSpeed = 1.0f;
         //------------------------------------
@@ -115,7 +115,7 @@ namespace Demo
         void InitData()
         {
             m_Roll.m_MaxTile = m_MaxTile;
-            m_Roll.TrackNum = TrackNum;
+            //m_Roll.TrackNum = TrackNum;
             m_Roll.m_TileOffset = m_TileOffset;
             //m_Roll.m_TrackThickness = m_TrackThickness;
             //m_Roll.m_TrackWidth = m_TrackWidth;
@@ -176,7 +176,7 @@ namespace Demo
 
         public void AutoPlay()
         {
-            m_Roll.m_bAutoPlay = !m_Roll.m_bAutoPlay;
+            m_Roll.SetAutoPlay();
         }
     }
 }

@@ -103,6 +103,11 @@ namespace Demo.TileTrack
         public override Vector3 GetPosition(float parameter, int lineIndex)
         {
             Vector3 pos = _spline.GetPositionOnSpline(parameter);
+            if(lineIndex < _lineList.Count)
+            {
+                pos.x += _lineList[lineIndex].OffsetX;
+            }
+            
             return pos;
         }
         public override Quaternion GetRotation(float paramater, int lineIndex) 

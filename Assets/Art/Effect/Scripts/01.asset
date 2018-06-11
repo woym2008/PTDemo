@@ -97,19 +97,19 @@ MonoBehaviour:
       logMin: -7
       logMax: 3
   bloom:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       bloom:
-        intensity: 1.46
-        threshold: 1.72
-        softKnee: 0.72
-        radius: 6
+        intensity: 0.52
+        threshold: 1.82
+        softKnee: 0.474
+        radius: 4.38
         antiFlicker: 0
       lensDirt:
         texture: {fileID: 0}
         intensity: 3
   colorGrading:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       tonemapping:
         tonemapper: 1
@@ -122,7 +122,7 @@ MonoBehaviour:
       basic:
         postExposure: 0
         temperature: 0
-        tint: 0
+        tint: -0
         hueShift: 0
         saturation: 1
         contrast: 1

@@ -23,7 +23,10 @@ namespace Demo
             {
                 return;
             }
-            this.transform.position = m_Player.position + m_CameraOffset;
+
+            Vector3 l = m_Player.rotation * m_CameraOffset;
+
+            this.transform.position = m_Player.position + l;
 
             this.transform.rotation = m_Player.rotation;
         }

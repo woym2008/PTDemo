@@ -61,11 +61,14 @@ namespace Demo
             m_TR.m_track.Update();
 
             float param = m_RunningTime / m_TR.m_MusicTime;
-            
-            Vector3 curpos = m_TR.m_track.GetPosition(param, 0);
+
+            int playertracknum = m_TR.m_track.trackNum / 2;
+
+            Vector3 curpos = m_TR.m_track.GetPosition(param, playertracknum);
             m_TR.m_Player.position = new Vector3(curpos.x, curpos.y, curpos.z);
 
-            m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, 0);
+            
+            m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, playertracknum);
             //-----------------------------
             m_TR.getTileManager.Update(dt);
             //for (int i= m_RunningTiles.Count-1;i>=0;--i)

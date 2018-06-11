@@ -22,36 +22,54 @@ namespace Demo
         private Vector2[] uv;
         private int[] triangles;
         //-------------------------------
-        public Vector3 ExtendDirect = new Vector3(0, 1, 0);
-        public float length = 1.0f;
-        public float width = 1.0f;
-        public float depth = 1.0f;
+        public Vector3 UpDirect = new Vector3(0, 1, 0);
+        public float up_length = 1.0f;
+        public float right_length = 1.0f;
+        public float forward_length = 1.0f;
 
         //public float baselength = 4.0f;
 
-        public int segment_x = 2;
-        public int segment_y = 2;
-        public int segment_z = 2;
+        public int segment_right = 2;
+        public int segment_up = 2;
+        public int segment_forward = 2;
+
+        //test
+        //public List<GameObject> gameobjectlist = new List<GameObject>();
 
         //-------------------------------
         public void CreateMesh()
         {
 
         }
+        //public void CreateMesh()
+        //{
+        //    if(SelfMesh == null)
+        //    {
+        //        SelfMesh = new Mesh();
+        //    }
+
+        //    m_Collider = this.gameObject.GetComponent<BoxCollider>();
+        //    if (m_Collider == null)
+        //    {
+        //        m_Collider = this.gameObject.AddComponent<BoxCollider>();
+        //    }
+
+        //    BuildMesh();
+        //}
 
         public void SetLength(float l)
         {
-            length = l;
+            up_length = l;
         }
 
         public void SetWidth(float l)
         {
-            width = l;
+            right_length = l;
         }
 
         public void SetDepth(float l)
         {
-            depth = l;
+            forward_length = l;
         }
 
         public void CreateMesh(Vector3[] pos)
@@ -67,6 +85,12 @@ namespace Demo
                 m_Collider = this.gameObject.AddComponent<BoxCollider>();
             }
 
+            //m_MeshCollider = this.gameObject.GetComponent<MeshCollider>();
+            //if (m_MeshCollider == null)
+            //{
+            //    m_MeshCollider = this.gameObject.AddComponent<MeshCollider>();
+            //}
+
             BuildMesh(pos);
         }
         //-------------------------------
@@ -80,11 +104,6 @@ namespace Demo
         //-------------------------------
         void BuildMesh(Vector3[] pos)
         {
-            //Matrix4x4 mt = Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0));
-            //for (int i = 0; i < pos.Length; ++i)
-            //{
-            //    pos[i] = mt * pos[i];
-            //}
             meshfilter = this.GetComponent<MeshFilter>();
             if(meshfilter == null)
             {
@@ -114,200 +133,225 @@ namespace Demo
 
             
             m_render.material = m_material;
-
-            m_Collider.center = new Vector3(width * 0.5f * ExtendDirect.x,
-                length * 0.5f * ExtendDirect.y,
-                depth * 0.5f * ExtendDirect.z);
-            //m_Collider.center = new Vector3(0,length*0.5f,0);
-            //m_Collider.size = m_render.bounds.size;
-
-            //temp
-            //m_Collider.size = new Vector3(
-            //    m_render.bounds.size.x,
-            //    m_render.bounds.size.y, 
-            //    m_render.bounds.size.z);
-            //m_Collider.size = new Vector3(
-            //    width,
-            //    length,
-            //    depth);
-            //end
-            //m_Collider.bounds.
-
-            //m_MeshCollider.sharedMesh = this.SelfMesh;
+            
         }
         private void SetVertivesUV(Vector3[] centerposs)
         {
-            //中间曲线是Y方向上的 算出XZ
+            //test points
+            //List<Vector3> points = new List<Vector3>();
+
+            //以center为中心
+            Vector3 center = centerposs[0];
+            for(int i=0; i<centerposs.Length; ++i) {
+                centerposs[i] = centerposs[i] - center;
+            }
+
+            //上方向是up
+            //前方向需要求
+            Vector3[] forwarddirs = new Vector3[centerposs.Length];
+            Vector3[] rightdirs = new Vector3[centerposs.Length];
+
+            for (int i = 0; i < forwarddirs.Length-1; ++i) {
+                forwarddirs[i] = (centerposs[i+1] - centerposs[i]).normalized;
+                rightdirs[i] = Vector3.Cross(forwarddirs[i],UpDirect);
+            }
+            forwarddirs[forwarddirs.Length - 1] = forwarddirs[forwarddirs.Length - 2];
+            rightdirs[rightdirs.Length - 1] = Vector3.Cross(forwarddirs[forwarddirs.Length - 1],UpDirect);
+
+            //顶点数
             int allpointnum = centerposs.Length * 8 + 8;
-            //int allpointnum = 2 * segment_x * segment_y + 2 * segment_y * segment_z + 2 * segment_x * segment_z;
-            //vertices = new Vector3[24 + (allpointnum - 8) * 2];
+
+            //构造顶点
             vertices = new Vector3[allpointnum];
-            //vertices = new Vector3[segment_x * segment_y * segment_z * 3];
             uv = new Vector2[vertices.Length];
 
-            float tinyheight = length / (centerposs.Length - 1);
-            float tinywidth = width ;
-            float tinydepth = depth ;
+            float tinyforward = forward_length / (centerposs.Length - 1);
+            float tinyup = up_length ;
+            float tinyright = right_length ;
             int num = 0;
 
-            segment_x = 2;
-            segment_z = 2;
-            segment_y = centerposs.Length;
+            segment_right = 2;
+            segment_up = 2;
+            segment_forward = centerposs.Length;
 
-            for (int y = 0; y < segment_y; ++y)
-            {
-                //front
-                for (int x = 0; x < segment_x; ++x)
+            //构建沿着传入线段方向的弯曲立方体
+            //face1 front
+            for (int y = 0; y < segment_forward; ++y)
+            {                
+                for (int x = 0; x < segment_right; ++x)
                 {
-                    Vector3 pos = new Vector3(
-                        centerposs[y].x + tinywidth * x - width * 0.5f,
-                        centerposs[y].y,
-                        centerposs[y].z + depth * 0.5f)
-                        
-                        - centerposs[0];
+                    //Vector3 pos = new Vector3(
+                    //    centerposs[y].x + tinyleft * x,
+                    //    centerposs[y].y + tinyup * 0.5f,
+                    //    centerposs[y].z);
+
+                    Vector3 pos = centerposs[y] + rightdirs[y]*x*tinyright + UpDirect * tinyup * 0.5f;
+
+                    //左方向和上方向到中心去
+                    pos = pos - rightdirs[y] * 0.5f * right_length;
 
                     vertices[num] = pos;                    
 
-                    uv[num] = new Vector2((float)x / (segment_x - 1), (float)y / (centerposs.Length - 1));
+                    uv[num] = new Vector2((float)x / (segment_right - 1), 
+                        (float)y / (segment_forward - 1));
                     num++;
                 }
                 
             }
-            for (int y = 0; y < segment_y; ++y)
-            {
-                //back
-                for (int x = 0; x < segment_x; ++x)
+            //face2 back
+            for (int y = 0; y < segment_forward; ++y)
+            {                
+                for (int x = 0; x < segment_right; ++x)
                 {
-                    Vector3 pos = new Vector3(
-                        centerposs[y].x + tinywidth * x - width * 0.5f,
-                        centerposs[y].y,
-                        centerposs[y].z - depth * 0.5f)
+                    //Vector3 pos = new Vector3(
+                    //    centerposs[y].x + tinywidth * x - width * 0.5f,
+                    //    centerposs[y].y,
+                    //    centerposs[y].z - depth * 0.5f);
 
-                        - centerposs[0];
+                    Vector3 pos = centerposs[y] + rightdirs[y] * x * tinyright - UpDirect * tinyup * 0.5f;
+
+                    pos = pos - rightdirs[y] * 0.5f * right_length;
 
                     vertices[num] = pos;
-                    uv[num] = new Vector2((float)x / (segment_x - 1), (float)y / (centerposs.Length - 1));
+                    uv[num] = new Vector2((float)x / (segment_right - 1), 
+                        (float)y / (segment_forward - 1));
                     num++;
                 }
             }
 
-            for (int y = 0; y < segment_y; ++y)
+            for (int y = 0; y < segment_forward; ++y)
             {
                 //left
-                for (int z = 0; z < segment_z; ++z)
+                for (int z = 0; z < segment_up; ++z)
                 {
-                    Vector3 pos = new Vector3(
-                        centerposs[y].x - width * 0.5f,
-                        centerposs[y].y,
-                        centerposs[y].z - z * tinydepth + depth * 0.5f)
+                    //Vector3 pos = new Vector3(
+                    //    centerposs[y].x - width * 0.5f,
+                    //    centerposs[y].y,
+                    //    centerposs[y].z - z * tinydepth + depth * 0.5f);
 
-                        - centerposs[0];
+                    Vector3 pos = centerposs[y] + UpDirect * z * tinyup + rightdirs[y] * tinyright *0.5f;
+                    pos = pos - UpDirect * 0.5f * up_length;
 
                     vertices[num] = pos;
-                    uv[num] = new Vector2((float)z / (segment_z - 1), (float)y / (centerposs.Length - 1));
+                    uv[num] = new Vector2((float)z / (segment_up - 1), 
+                        (float)y / (segment_forward - 1));
                     num++;
                 }
             }
 
-            for (int y = 0; y < segment_y; ++y)
+            for (int y = 0; y < segment_forward; ++y)
             {
                 //right
-                for (int z = 0; z < segment_z; ++z)
+                for (int z = 0; z < segment_up; ++z)
                 {
-                    Vector3 pos = new Vector3(
-                        centerposs[y].x + width * 0.5f,
-                        centerposs[y].y,
-                        centerposs[y].z - z * tinydepth + depth * 0.5f)
+                    //Vector3 pos = new Vector3(
+                    //    centerposs[y].x + width * 0.5f,
+                    //    centerposs[y].y,
+                    //    centerposs[y].z - z * tinydepth + depth * 0.5f);
 
-                        - centerposs[0];
+                    Vector3 pos = centerposs[y] + UpDirect * z * tinyup - rightdirs[y] * tinyright * 0.5f;
+                    pos = pos - UpDirect * 0.5f * up_length;
 
                     vertices[num] = pos;
-                    uv[num] = new Vector2((float)z / (segment_z - 1), (float)y / (centerposs.Length - 1));
+                    uv[num] = new Vector2((float)z / (segment_up - 1), 
+                        (float)y / (segment_forward - 1));
                     num++;
                 }
             }
 
-            //bottom
-            for (int z = 0; z < segment_z; ++z)
+            //start face
+            for (int z = 0; z < segment_up; ++z)
             {
-                for (int x = 0; x < segment_x; ++x)
+                for (int x = 0; x < segment_right; ++x)
                 {
-                    Vector3 pos = new Vector3(
-                        x * tinywidth - width * 0.5f,
-                        0,
-                        z * tinydepth - depth * 0.5f);
+                    //Vector3 pos = new Vector3(
+                    //    x * tinywidth - width * 0.5f,
+                    //    0,
+                    //    z * tinydepth - depth * 0.5f);
+
+                    Vector3 pos = UpDirect * z * tinyup + rightdirs[0] * tinyright *x;
+
+                    pos = pos - UpDirect * up_length * 0.5f - rightdirs[0] * right_length * 0.5f;
+
                     vertices[num] = pos;
-                    uv[num] = new Vector2((float)x / (segment_x - 1), (float)z / (segment_z - 1));
+                    uv[num] = new Vector2((float)x / (segment_right - 1), (float)z / (segment_up - 1));
                     num++;
                 }
             }
             //top
-            for (int z = 0; z < segment_z; ++z)
+            for (int z = 0; z < segment_up; ++z)
             {
-                for (int x = 0; x < segment_x; ++x)
+                for (int x = 0; x < segment_right; ++x)
                 {
-                    Vector3 pos = new Vector3(
-                        x * tinywidth - width * 0.5f +
-                        centerposs[centerposs.Length - 1].x,
-                        centerposs[centerposs.Length -1].y, 
-                        z * tinydepth - depth * 0.5f +
-                        centerposs[centerposs.Length - 1].z)
+                    //Vector3 pos = new Vector3(
+                    //    x * tinywidth - width * 0.5f +
+                    //    centerposs[centerposs.Length - 1].x,
+                    //    centerposs[centerposs.Length -1].y, 
+                    //    z * tinydepth - depth * 0.5f +
+                    //    centerposs[centerposs.Length - 1].z);
 
-                        - centerposs[0];
+                    Vector3 pos = centerposs[segment_forward-1] +
+                        UpDirect * z * tinyup
+                        + rightdirs[segment_forward-1] * tinyright * x;
+
+                    pos = pos - UpDirect * up_length * 0.5f - rightdirs[segment_forward - 1] * right_length * 0.5f;
+
                     vertices[num] = pos;
-                    uv[num] = new Vector2((float)x / (segment_x - 1), (float)z / (segment_z - 1));
+                    uv[num] = new Vector2((float)x / (segment_right - 1), (float)z / (segment_up - 1));
                     num++;
                 }
             }
+
+            //test
+            //for (int i = 0; i < centerposs.Length; ++i)
+            //{
+            //    GameObject newgameobj = new GameObject();
+            //    newgameobj.transform.transform.parent = this.transform;
+            //    newgameobj.transform.localPosition = centerposs[i];
+            //}
+
         }
 
         private void SetTriangles()
         {
             //有问题 索引点计算不对
-            int numtriangles = (segment_x * segment_y);
-            triangles = new int[(
-                (segment_x - 1) * (segment_y - 1) * 2 +
-                (segment_y - 1) * (segment_z - 1) * 2 +
-                (segment_x - 1) * (segment_z - 1) * 2)
-                * 6];
+            //int numtriangles = (segment_x * segment_y);
+            //triangles = new int[(
+            //    (segment_x - 1) * (segment_y - 1) * 2 +
+            //    (segment_y - 1) * (segment_z - 1) * 2 +
+            //    (segment_x - 1) * (segment_z - 1) * 2)
+            //    * 6];
+            int numtriangles =
+                (segment_forward - 1) * (segment_right - 1) * 12 +
+                (segment_forward - 1) * (segment_up - 1) * 12 +
+                (segment_up - 1) * (segment_right - 1) * 12;
+
+            triangles = new int[numtriangles];
+
             int index = 0;//用来给三角形索引计数
 
             //Front Face
-            for (int y = 0; y < segment_y - 1; y++)
-                for (int x = 0; x < segment_x - 1; x++)
+            for (int y = 0; y < segment_forward - 1; y++)
+                for (int x = 0; x < segment_right - 1; x++)
                 {
-                    int line = segment_x;
+                    int line = segment_right;
                     int self = x + y * line;
 
-                    //triangles[index] = self;
-                    //triangles[index + 1] = self + line + 1;
-                    //triangles[index + 2] = self + 1;
-                    //triangles[index + 3] = self;
-                    //triangles[index + 4] = self + line;
-                    //triangles[index + 5] = self + line + 1;
-
-                    triangles[index] = self + 1;
-                    triangles[index + 1] = self + line;
-                    triangles[index + 2] = self;
-                    triangles[index + 3] = self + 1;
+                    triangles[index] = self;
+                    triangles[index + 1] = self + 1;
+                    triangles[index + 2] = self + line + 1;
+                    triangles[index + 3] = self;
                     triangles[index + 4] = self + 1 + line;
                     triangles[index + 5] = self + line;
                     index += 6;
                 }
 
             //Back Face
-            for (int y = 0; y < segment_y - 1; y++)
-                for (int x = 0; x < segment_x - 1; x++)
+            for (int y = 0; y < segment_forward - 1; y++)
+                for (int x = 0; x < segment_right - 1; x++)
                 {
-                    int line = segment_x;
-                    int self = x + segment_x * segment_y + y * line;
-
-                    //triangles[index] = self + 1;
-                    //triangles[index + 1] = self + line;
-                    //triangles[index + 2] = self;
-                    //triangles[index + 3] = self + 1;
-                    //triangles[index + 4] = self + 1 + line;
-                    //triangles[index + 5] = self + line;
+                    int line = segment_right;
+                    int self = x + segment_right * segment_forward + y * line;
 
                     triangles[index] = self;
                     triangles[index + 1] = self + line + 1;
@@ -319,11 +363,11 @@ namespace Demo
                 }
 
             //Left Face
-            for (int y = 0; y < segment_y - 1; y++)
-                for (int z = 0; z < segment_x - 1; z++)
+            for (int y = 0; y < segment_forward - 1; y++)
+                for (int z = 0; z < segment_up - 1; z++)
                 {
-                    int line = segment_z;
-                    int self = z + segment_x * segment_y * 2 + line * y;
+                    int line = segment_up;
+                    int self = z + segment_up * segment_forward * 2 + line * y;
 
                     triangles[index] = self;
                     triangles[index + 1] = self + line + 1;
@@ -341,11 +385,11 @@ namespace Demo
                 }
 
             //Right Face
-            for (int y = 0; y < segment_y - 1; y++)
-                for (int z = 0; z < segment_x - 1; z++)
+            for (int y = 0; y < segment_forward - 1; y++)
+                for (int z = 0; z < segment_up - 1; z++)
                 {
-                    int line = segment_z;
-                    int self = z + segment_x * segment_y * 2 + segment_y * segment_z + line * y;
+                    int line = segment_up;
+                    int self = z + segment_up * segment_forward * 2 + segment_forward * segment_right + line * y;
 
                     //triangles[index] = self;
                     //triangles[index + 1] = self + line + 1;
@@ -353,21 +397,22 @@ namespace Demo
                     //triangles[index + 3] = self;
                     //triangles[index + 4] = self + line;
                     //triangles[index + 5] = self + line + 1;
-                    triangles[index] = self + 1;
-                    triangles[index + 1] = self + line;
-                    triangles[index + 2] = self;
-                    triangles[index + 3] = self + 1;
+                    triangles[index] = self;
+                    triangles[index + 1] = self + 1;
+                    triangles[index + 2] = self + line + 1;
+                    triangles[index + 3] = self;
                     triangles[index + 4] = self + 1 + line;
                     triangles[index + 5] = self + line;
                     index += 6;
                 }
 
             //Bottom Face
-            for (int z = 0; z < segment_z - 1; z++)
-                for (int x = 0; x < segment_x - 1; x++)
+            for (int z = 0; z < segment_up - 1; z++)
+                for (int x = 0; x < segment_right - 1; x++)
                 {
-                    int line = segment_x;
-                    int self = x + segment_x * segment_y * 2 + segment_y * segment_z * 2 + line * z;
+                    int line = segment_right;
+                    int self = x + segment_right * segment_forward * 2 +
+                        segment_forward * segment_up * 2 + line * z;
 
                     //triangles[index] = self + line;
                     //triangles[index + 1] = self + 1;
@@ -376,22 +421,22 @@ namespace Demo
                     //triangles[index + 4] = self;
                     //triangles[index + 5] = self + 1;
 
-                    triangles[index] = self + 1;
-                    triangles[index + 1] = self + line;
-                    triangles[index + 2] = self;
-                    triangles[index + 3] = self + 1;
-                    triangles[index + 4] = self + line + 1;
+                    triangles[index] = self;
+                    triangles[index + 1] = self + 1;
+                    triangles[index + 2] = self + line + 1;
+                    triangles[index + 3] = self;
+                    triangles[index + 4] = self + 1 + line;
                     triangles[index + 5] = self + line;
                     index += 6;
                 }
 
             //Top Face
-            for (int z = 0; z < segment_z - 1; z++)
-                for (int x = 0; x < segment_x - 1; x++)
+            for (int z = 0; z < segment_up - 1; z++)
+                for (int x = 0; x < segment_right - 1; x++)
                 {
-                    int line = segment_x;
-                    int self = x + segment_x * segment_y * 2 + segment_y * segment_z * 2
-                        + segment_x * segment_z + line * z;
+                    int line = segment_right;
+                    int self = x + segment_right * segment_forward * 2 + segment_forward * segment_up * 2
+                        + segment_right * segment_up + line * z;
 
                     triangles[index] = self;
                     triangles[index + 1] = self + line + 1;

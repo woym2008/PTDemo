@@ -16,17 +16,17 @@ namespace Demo
 
         public Material m_SelfMaterial;
 
-        public override void InitTile(MidiTile data, float scale, float startprocess = 0)
+        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float delaytime)
         {
-            base.InitTile(data, scale, startprocess);
+            base.InitTile(data, scale, startprocess, endprocess, delaytime);
 
             RenderModel = this.GetComponent<MorphCurve>();
 
             m_SelfMaterial = this.GetComponent<MeshRenderer>().material;
 
-            RenderModel.SetLength(scale);
+            RenderModel.SetLength(0.1f);
             RenderModel.SetWidth(0.1f);
-            RenderModel.SetDepth(0.1f);            
+            RenderModel.SetDepth(scale);            
         }
 
         public override void CreateMesh(Vector3[] points)
@@ -36,9 +36,9 @@ namespace Demo
             m_SelfMaterial = RenderModel.GetMeshMaterial();
         }
 
-        //public override void setRotation(Quaternion rot)
-        //{
-        //    this.transform.rotation = rot * Quaternion.Euler(-90,0,0);
-        //}
+        public override void setRotation(Quaternion rot)
+        {
+            //this.transform.rotation = rot * Quaternion.Euler(-90, 0, 0);
+        }
     }
 }

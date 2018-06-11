@@ -40,15 +40,16 @@ namespace Demo
         protected MidiTile m_TileData;
         protected float m_CurProcess;
         protected float m_StartProcess;
+        protected float m_EndProcess;
 
         [SerializeField]
         public float m_MoveTime;
 
-        public float m_DesoryTime;
+        public float m_DelayTime;
 
         //bool m_bIsTouched = false;
         //bool m_bCanTouch = false;
-        TouchState m_TouchState = TouchState.NotTouch;
+        protected TouchState m_TouchState = TouchState.CanTouch;
         //protected float scale;
         [SerializeField]
         bool m_bIsUseing = false;
@@ -60,12 +61,17 @@ namespace Demo
             }
         }
         //--------------------------------------------
-        public virtual void InitTile(MidiTile data, float lenght, float startprocess = 0)
+        public virtual void InitTile(MidiTile data, float lenght, 
+            float startprocess, float endprocess,
+            float delaytime)
         {
             m_TileData = data;
             m_StartProcess = startprocess;
+            m_EndProcess = endprocess;
             m_CurProcess = 0;
             m_MoveSpeed = 1.0f;
+
+            m_DelayTime = delaytime;
 
             m_MoveTime = 0;
 
@@ -74,7 +80,7 @@ namespace Demo
             m_bIsUseing = true;
 
             //m_bIsTouched = false;
-            m_TouchState = TouchState.NotTouch;
+            m_TouchState = TouchState.CanTouch;
         }
 
         public virtual void CreateMesh(Vector3[] points = null)
@@ -90,6 +96,10 @@ namespace Demo
             //    this.transform.position.y + offset.y,
             //    this.transform.position.z + offset.z);
             m_MoveTime += dt;
+            if (m_MoveTime > m_DelayTime * 2)
+            {
+                m_TouchState = TouchState.Touched;
+            }
 
             //m_CurProcess = process;
             //Vector3 pos = m_Parent.GetPos(m_MoveTime);
@@ -107,6 +117,18 @@ namespace Demo
             //    }
             //}
             //m_TileData.PlayTile(realpassedtime);
+        }
+
+        public virtual void AutoUpdate()
+        {
+            if (m_TouchState  == TouchState.CanTouch)
+            {
+                if (m_MoveTime > m_DelayTime)
+                {
+                    OnTouchBeat(this.transform.position);
+                }
+            }
+            
         }
         //--------------------------------------------
         //public void SetPosition(Vector3 pos)

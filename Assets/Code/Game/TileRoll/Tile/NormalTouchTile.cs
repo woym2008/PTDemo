@@ -24,9 +24,9 @@ namespace Demo
         bool m_EnablePressed;
         //--------------------------------------
 
-        public override void InitTile(MidiTile data, float scale, float startprocess = 0)
+        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float delaytime)
         {
-            base.InitTile(data, scale, startprocess);
+            base.InitTile(data, scale, startprocess, endprocess, delaytime);
 
             RenderModel = this.GetComponent<MorphCube>();
 
@@ -73,6 +73,7 @@ namespace Demo
             {
                 if(m_PressedHeight > 2*m_Height)
                 {
+                    m_TouchState = TouchState.Touched;
                     return;
                 }
                 m_PressedHeight += dt * m_speed;

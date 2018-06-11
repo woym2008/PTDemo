@@ -29,7 +29,7 @@ namespace Demo.TileTrack
         public bool isDebug = false;
 
         public ITrackViewer trackViewer;
-        private int m_TrackLineNum = 2;             // 轨道数量
+        private int m_TrackLineNum = 3;             // 轨道数量
         //private  float m_speed = 3;               // 轨道运动的速度
         public int maxTrackNum = 4;
         //private float m_fSpace = 2f;              // 音符间距(m)
