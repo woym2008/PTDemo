@@ -5,7 +5,7 @@
 // 2. 添加漫反射(通过计算发射角度) + 环境光
 // 3. 利用立方贴图，通过反射天空盒 模拟环境反射
 
-Shader "Hidden/Custom-SimpleGlassCurve"
+Shader "Custom/Custom-SimpleGlassCurve"
 {
 	Properties
 	{
