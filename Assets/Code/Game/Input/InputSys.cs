@@ -62,6 +62,36 @@ namespace Demo
                         }
                         return;
                     }
+                    else if(oneTouch.phase == TouchPhase.Moved ||
+                        oneTouch.phase == TouchPhase.Stationary) {
+                        Vector3 mouseworld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        Debug.Log("world :" + mouseworld.x + "," + mouseworld.y + "," + mouseworld.z);
+                        Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                        Debug.DrawLine(cam_ray.origin, cam_ray.direction);
+
+                        RaycastHit hitInfo;
+                        if (Physics.Raycast(cam_ray, out hitInfo, 100.0f)) {
+                            if (hitInfo.collider != null) {
+                                if (hitInfo.collider.gameObject.tag == "Cloud") {
+                                    //Debug.LogError("Cloud");
+                                    TouchCloud tc = hitInfo.collider.gameObject.GetComponent<TouchCloud>();
+                                    tc.MoveCloud(m_MainCamera);
+                                } else {
+                                    TouchTileBase pBTC = hitInfo.collider.gameObject.GetComponent<TouchTileBase>();
+                                    if (pBTC != null) {
+                                        pBTC.OnTouchBeat(hitInfo.point);
+
+                                        //m_CurClickPoint = hitInfo.point;
+
+                                        //tempTouchBeat = pBTC;
+                                    }
+                                }
+
+                            }
+                        }
+                        return;
+                    }
                     
                     else if (oneTouch.phase == TouchPhase.Ended)
                     {

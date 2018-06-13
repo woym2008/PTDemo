@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Demo
 {
@@ -127,7 +128,8 @@ namespace Demo
             {
                 int bpm = m_system.getBPM();
                 float basebeat = m_system.getBaseBeat();
-                m_Roll.Init(m_Tiles, bpm, basebeat, (float)m_Tiles[m_Tiles.Length - 1].EndTime, m_PlayerObj);
+                m_Roll.Init(m_Tiles, bpm, basebeat, 
+                    (float)m_Tiles[m_Tiles.Length - 1].EndTime, m_PlayerObj);
 
                 //if(m_RotObj != null)
                 //{
@@ -177,6 +179,11 @@ namespace Demo
         public void AutoPlay()
         {
             m_Roll.SetAutoPlay();
+        }
+
+        public void Reset()
+        {
+            SceneManager.LoadScene("GameScene2");
         }
     }
 }

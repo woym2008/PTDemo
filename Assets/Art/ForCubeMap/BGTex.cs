@@ -30,7 +30,7 @@ public class BGTex : MonoBehaviour {
         if(curalphaspeed > 0.0f)
         {
             //curalphaspeed += 0.1f * Time.deltaTime;
-            if(m_curalpha > 0.5f)
+            if(m_curalpha > 0.6f)
             {
                 curalphaspeed = -alphaspeed;
             }

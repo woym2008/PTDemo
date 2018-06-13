@@ -426,6 +426,7 @@ namespace Demo.TileTrack
 
         public void RecoveryNode(IPTTile node)
         {
+            node.Disappear();
             //NodeManager.instance.RecoverNode(node);
             Debug.LogWarning("未实现节点回收");
         }
@@ -508,7 +509,8 @@ namespace Demo.TileTrack
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(progress);
 
             node.setProcess(progress);
-            position.x += OffsetX;
+            //position.x += OffsetX;
+            position += (rotation * new Vector3(OffsetX, OffsetY, 0));
             node.setPosition(position);
             node.setRotation(rotation);
 
@@ -525,7 +527,12 @@ namespace Demo.TileTrack
 
                 UpdateTilePosition(node);
 
-                if (node.getStartProcess() + TrackNumDef.tileLifeProgress <= this._trackViewer.progress)
+                //if (node.getStartProcess() + TrackNumDef.tileLifeProgress <= this._trackViewer.progress)
+                //{
+                //    _operateList.RemoveAt(i);
+                //    this._trackViewer.RecoveryNode(node);
+                //}
+                if (node.getEndProcess() <= this._trackViewer.progress)
                 {
                     _operateList.RemoveAt(i);
                     this._trackViewer.RecoveryNode(node);
@@ -546,11 +553,13 @@ namespace Demo.TileTrack
             Quaternion rotation = this._trackViewer._spline.GetOrientationOnSpline(node.getProcess());
 
             //position.x += OffsetX;
-            position += (rotation * new Vector3(OffsetX, OffsetY,0));
+            position += (rotation * new Vector3(OffsetX, OffsetY, 0));
 
             node.setPosition(position);
 
             node.setRotation(rotation);
+
+            node.onUpdate();
         }
     }
 }

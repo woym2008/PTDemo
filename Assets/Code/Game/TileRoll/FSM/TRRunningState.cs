@@ -60,7 +60,11 @@ namespace Demo
 
             m_TR.m_track.Update();
 
-            float param = m_RunningTime / m_TR.m_MusicTime;
+            
+            //float param = m_RunningTime / m_TR.m_MusicTime;
+            float param = Mathf.Clamp((m_RunningTime - m_TR.m_CameraDelayTime),0,float.MaxValue) 
+                / (m_TR.m_MusicTime + m_TR.m_RollTime);
+
 
             int playertracknum = m_TR.m_track.trackNum / 2;
 

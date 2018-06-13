@@ -44,13 +44,15 @@ namespace Demo
             m_Length = l;
         }
 
-        public TouchTileBase CreateTile(float startprocess, float endprocess, float delaytime, string name)
+        public TouchTileBase CreateTile(
+            float startprocess, float endprocess, float disappearprocess,
+            float delaytime, string name)
         {
             TouchTileBase pBeat = TouchTileFactory.CreateTile(name);
             if (pBeat != null)
             {
                 pBeat.InitTile(
-                    m_SelfData, m_Length, startprocess, endprocess, delaytime);                
+                    m_SelfData, m_Length, startprocess, endprocess, disappearprocess, delaytime);                
             }
 
             return pBeat;

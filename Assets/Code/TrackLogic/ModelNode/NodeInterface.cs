@@ -221,6 +221,11 @@ namespace Demo.TileTrack
             return startProgress;
         }
 
+        public float getEndProcess()
+        {
+            return startProgress;
+        }
+
         public void setPosition(Vector3 pos)
         {
             this.transform.position = pos;
@@ -244,6 +249,11 @@ namespace Demo.TileTrack
         public float getPositionProgress()
         {
             return positionProgress;
+        }
+
+        public void onUpdate()
+        {
+
         }
 
         //void Appear()

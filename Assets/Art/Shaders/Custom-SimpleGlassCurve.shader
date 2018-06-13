@@ -5,7 +5,7 @@
 // 2. 添加漫反射(通过计算发射角度) + 环境光
 // 3. 利用立方贴图，通过反射天空盒 模拟环境反射
 
-Shader "Hidden/Custom-SimpleGlass"
+Shader "Custom/Custom-SimpleGlass"
 {
 	Properties
 	{
@@ -14,8 +14,12 @@ Shader "Hidden/Custom-SimpleGlass"
 		_CubeMap("CubeMap", cube) = ""{}
 
 		_QOffset("Offset", Vector) = (0,0,0,0)
+		_UpOffset("UpOffset", Vector) = (0,0,0,0)
 		_Brightness("Brightness", Float) = 0.0
 		_Dist("Distance", Float) = 100.0
+
+			_NearDist("_NearDist", Float) = 20.0
+			_FarDist("_FarDist", Float) = 100.0
 	}
 	SubShader
 	{
@@ -43,8 +47,11 @@ Shader "Hidden/Custom-SimpleGlass"
 			float _Alpha;
 
 			float4 _QOffset;
+			float4 _UpOffset;
 			float _Brightness;
 			float _Dist;
+			float _NearDist;
+			float _FarDist;
 
 			struct v2f{
 				float4 pos :POSITION;
@@ -53,6 +60,7 @@ Shader "Hidden/Custom-SimpleGlass"
 				float4 vertex : TEXCOORD2;		// 顶点
 				float3 R :TEXCOORD3;
 				float4 uv:TEXCOORD4;
+				float fade : TEXCOORD5;
 			};
 			
 			v2f vert(appdata_base v)
@@ -60,7 +68,7 @@ Shader "Hidden/Custom-SimpleGlass"
 				v2f o;
 				float4 pos = mul(UNITY_MATRIX_MV, v.vertex);
 				float diffZ = pos.z / _Dist;
-				pos += _QOffset * diffZ * diffZ;
+				pos += (_UpOffset*diffZ + _QOffset * diffZ * diffZ);
 				o.pos = mul(UNITY_MATRIX_P, pos);
 				// o.pos = UnityObjectToClipPos(v.vertex);
 
@@ -69,6 +77,9 @@ Shader "Hidden/Custom-SimpleGlass"
 
 				o.vertex = v.vertex;
 				o.uv = v.texcoord;
+
+				float dis = length(pos.xyz);
+				o.fade = 1 - saturate((dis - _NearDist) / (_FarDist - _NearDist));
 
 				return o; 
 			}
@@ -92,7 +103,7 @@ Shader "Hidden/Custom-SimpleGlass"
 				// fixed3 NdotL = 0.5 * dot(worldNormal, worldLightDir) + 0.5;
 				// col *= _Brightness * half4(NdotL,1.0);
 				
-				col[3] *= _Alpha;
+				col[3] *= _Alpha * IN.fade;
 
 				return col;
 			}

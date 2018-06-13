@@ -36,23 +36,23 @@ namespace Demo
         [SerializeField]
         public int m_MaxTile = 10;
 
-        [SerializeField]
-        public float m_TileRollLength = 10.0f;
+        //[SerializeField]
+        private float m_TileRollLength = 10.0f;
 
-        //[SerializeField]
-        public float m_TrackWidth = 5.0f;
+        ////[SerializeField]
+        //public float m_TrackWidth = 5.0f;
 
-        //[SerializeField]
-        public float m_TrackThickness = 0.1f;
-        
-        //[SerializeField]
-        public int TrackNum = 4;
+        ////[SerializeField]
+        //public float m_TrackThickness = 0.1f;
 
-        //[SerializeField]
-        public Transform m_RollRoot;
+        ////[SerializeField]
+        //public int TrackNum = 4;
 
-        //[SerializeField]
-        public Vector3 m_LocalOffset;
+        ////[SerializeField]
+        //public Transform m_RollRoot;
+
+        ////[SerializeField]
+        //public Vector3 m_LocalOffset;
 
         public float m_BPM = 90;
         public float m_BaseBeat = 1.0f;
@@ -63,6 +63,8 @@ namespace Demo
         //根据bpm算出的结果，一个object从轨道的一端走到另一端的时间
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
+        //摄像机距离点击位置的延迟时间
+        public float m_CameraDelayTime = 0.4f;
 
         public float m_MusicTime = 0.0f;
 
@@ -137,7 +139,9 @@ namespace Demo
 
             float length = TrackManager.instance.trackViewer.GetTrackLength();
 
-            float speed = length / musictime;
+            //float speed = length / musictime;
+            float speed = length / (musictime + m_RollTime);
+
             TrackManager.instance.Speed = speed;
             TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
             //-----------------------------------------------------------
@@ -251,7 +255,7 @@ namespace Demo
 
         public void SetAutoPlay()
         {
-            m_TileMgr.m_bAutoPlay = !m_TileMgr.m_bAutoPlay;
+            TileManager.s_AutoPlay = !TileManager.s_AutoPlay;
         }
     }
 }

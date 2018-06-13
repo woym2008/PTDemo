@@ -14,6 +14,8 @@ public interface IPTTile
 
     float getStartProcess();
 
+    float getEndProcess();
+
     float getPositionProgress();
 
     void setPosition(Vector3 pos);
@@ -22,7 +24,10 @@ public interface IPTTile
 
     void setScale(Vector3 scale);
 
+    void onUpdate();
+
     void Appear(int trackIndex);
 
+    void Disappear();
     //void Recover();
 }

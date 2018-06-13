@@ -14,7 +14,8 @@ namespace Demo
         MeshRenderer m_render;
         Mesh SelfMesh;
         //-------------------------------
-        BoxCollider m_Collider = null;
+        //BoxCollider m_Collider = null;
+        MeshCollider m_MeshCollider = null;
 
         //MeshCollider m_MeshCollider;
         //-------------------------------
@@ -32,6 +33,8 @@ namespace Demo
         public int segment_right = 2;
         public int segment_up = 2;
         public int segment_forward = 2;
+
+        float collidescale = 2.0f;
 
         //test
         //public List<GameObject> gameobjectlist = new List<GameObject>();
@@ -79,10 +82,15 @@ namespace Demo
                 SelfMesh = new Mesh();
             }
 
-            m_Collider = this.gameObject.GetComponent<BoxCollider>();
-            if (m_Collider == null)
+            //m_Collider = this.gameObject.GetComponent<BoxCollider>();
+            //if (m_Collider == null)
+            //{
+            //    m_Collider = this.gameObject.AddComponent<BoxCollider>();
+            //}
+            m_MeshCollider = this.gameObject.GetComponent<MeshCollider>();
+            if (m_MeshCollider == null)
             {
-                m_Collider = this.gameObject.AddComponent<BoxCollider>();
+                m_MeshCollider = this.gameObject.AddComponent<MeshCollider>();
             }
 
             //m_MeshCollider = this.gameObject.GetComponent<MeshCollider>();
@@ -133,7 +141,13 @@ namespace Demo
 
             
             m_render.material = m_material;
-            
+
+            //m_Collider.size = new Vector3(
+            //    right_length,
+            //    up_length,
+            //    forward_length) * collidescale;
+            m_MeshCollider.sharedMesh = meshfilter.mesh;
+            m_MeshCollider.convex = true;
         }
         private void SetVertivesUV(Vector3[] centerposs)
         {

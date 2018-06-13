@@ -67,12 +67,15 @@ Material:
     - _DetailNormalMapScale: 1
     - _Dist: 100
     - _DstBlend: 10
+    - _FarDist: 25
     - _FresnelPower: 3.55
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxDist: 200
     - _Metallic: 0
     - _Mode: 2
+    - _NearDist: 20
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ReflPower: 1
@@ -85,4 +88,5 @@ Material:
     - _Color: {r: 0.99264705, g: 0, b: 0.22591284, a: 0.378}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainTint: {r: 1, g: 1, b: 1, a: 1}
-    - _QOffset: {r: 0, g: -599, b: 0, a: 0}
+    - _QOffset: {r: 0, g: -200, b: 0, a: 0}
+    - _UpOffset: {r: 0, g: 0, b: 0, a: 0}

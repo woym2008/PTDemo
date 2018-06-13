@@ -17,7 +17,7 @@ namespace Demo
     {
         public Queue<TileSpawner> m_CacheSpawner;
 
-        public List<TouchTileBase> m_RunningTiles;
+        //public List<TouchTileBase> m_RunningTiles;
 
         private float m_TileLength = 0.1f;
 
@@ -26,16 +26,21 @@ namespace Demo
 
         private float m_CurMusicTime = 0.0f;
 
+        private float m_DisappearProcess = 0;
+        private float m_DisappearTime = 1.0f;
+
         private Dictionary<int, float> m_LastTrackProcesses;
         private int lasttrack = -1;
 
+        private float m_DelayTimeDisappear = 1.0f;
+
         //private int maxtrack = 1;
 
-        public bool m_bAutoPlay = false;
+        public static bool s_AutoPlay = false;
 
         public TileManager()
         {
-            m_RunningTiles = new List<TouchTileBase>();
+            //m_RunningTiles = new List<TouchTileBase>();
 
             m_LastTrackProcesses = new Dictionary<int, float>();
         }
@@ -53,7 +58,9 @@ namespace Demo
             m_DelayTime = delaytime;
 
             m_CurMusicTime = musictime;
-            m_DelayProcess = delaytime / musictime;
+            m_DelayProcess = delaytime / (musictime + delaytime);
+
+            m_DisappearProcess = m_DisappearTime / (musictime + delaytime);
 
             if (m_CacheSpawner == null)
             {
@@ -80,7 +87,8 @@ namespace Demo
                 TileSpawner pSpawner = m_CacheSpawner.Peek();
                 if (pSpawner.getStartTime <= passedtime)
                 {
-                    float passedprocess = m_DelayProcess + (passedtime) / m_CurMusicTime;
+                    float passedprocess = m_DelayProcess + 
+                        (passedtime) / (m_CurMusicTime + m_DelayTime);
                     AttachBlock(pSpawner, passedprocess);
                     m_CacheSpawner.Dequeue();
                 }
@@ -89,21 +97,21 @@ namespace Demo
 
         public void Update(float dt)
         {
-            for (int i = m_RunningTiles.Count - 1; i >= 0; --i)
-            {
-                m_RunningTiles[i].FrameUpdate(dt);
+            //for (int i = m_RunningTiles.Count - 1; i >= 0; --i)
+            //{
+            //    m_RunningTiles[i].FrameUpdate(dt);
 
-                if (m_bAutoPlay)
-                {
-                    m_RunningTiles[i].AutoUpdate();
-                }
+            //    if (m_bAutoPlay)
+            //    {
+            //        m_RunningTiles[i].AutoUpdate();
+            //    }
 
-                if (m_RunningTiles[i].IsUseless())
-                {
-                    m_RunningTiles[i].ReleaseSelf();
-                    m_RunningTiles.Remove(m_RunningTiles[i]);
-                }
-            }
+            //    if (m_RunningTiles[i].IsUseless())
+            //    {
+            //        m_RunningTiles[i].ReleaseSelf();
+            //        m_RunningTiles.Remove(m_RunningTiles[i]);
+            //    }
+            //}
         }
 
         void AttachBlock(TileSpawner bs, float passedprocess)
@@ -142,13 +150,23 @@ namespace Demo
             if(usefultracknum.Count > 0)
             {
                 int index = UnityEngine.Random.Range(0, usefultracknum.Count);
+                
                 usetrack = usefultracknum[index];
+
+                //Debug.Log("lasttrack: " + lasttrack);
+                //Debug.Log("usefultracknum: " + usetrack);
             }
             else
             {
+                //Debug.LogError("no find usetrack ");
                 usetrack = UnityEngine.Random.Range(0, TrackManager.instance.trackNum);
             }
 
+            //Debug.Log("track index: " + usetrack + "lasttrack: " + lasttrack);
+            if(usetrack == lasttrack)
+            {
+                Debug.LogError("error " + usetrack);
+            }
             if (bs.getLength > 1)
             {
                 int numpoints = 16;
@@ -157,12 +175,15 @@ namespace Demo
                 float everytime = (endtime - (float)bs.getStartTime) / numpoints;
                 for (int i = 0; i < curvepoints.Length; ++i)
                 {
-                    float process = m_DelayProcess + ((float)bs.getStartTime + everytime * i) / m_CurMusicTime;
+                    float process = m_DelayProcess + 
+                        ((float)bs.getStartTime + everytime * i) 
+                        / (m_CurMusicTime + m_DelayTime);
                     curvepoints[i] = TrackManager.instance.GetPosition(process, 0);
                 }
 
-                float endprocess = m_DelayProcess + ((float)bs.getEndTime) / m_CurMusicTime;
-                pTile = bs.CreateTile(m_DelayProcess, endprocess, m_DelayTime, CurverTouchTile.m_TileName);
+                float endprocess = m_DelayProcess + 
+                    ((float)bs.getEndTime) / (m_CurMusicTime + m_DelayTime);
+                pTile = bs.CreateTile(m_DelayProcess, endprocess, m_DisappearProcess, m_DelayTime, CurverTouchTile.m_TileName);
 
                 TrackManager.instance.PushValue(pTile, usetrack);
 
@@ -174,8 +195,11 @@ namespace Demo
             }
             else
             {
-                float endprocess = m_DelayProcess + ((float)bs.getEndTime) / m_CurMusicTime;
-                pTile = bs.CreateTile(m_DelayProcess, endprocess, m_DelayTime, NormalTouchTile.m_TileName);
+                float endprocess = m_DelayProcess + ((float)bs.getEndTime) / (m_CurMusicTime + m_DelayTime);
+
+                pTile = bs.CreateTile(
+                    m_DelayProcess, endprocess, m_DisappearProcess,
+                    m_DelayTime, NormalTouchTile.m_TileName);
 
                 TrackManager.instance.PushValue(pTile, usetrack);
 
@@ -183,12 +207,25 @@ namespace Demo
 
                 bs.CreateTileMesh(pTile);
 
+                //test
+                if(pTile.transform.childCount==0)
+                {
+                    GameObject testobj = new GameObject();
+                    testobj.transform.parent = pTile.transform;
+                    testobj.name = "track:" + usetrack;
+                }
+                else
+                {
+                    pTile.transform.GetChild(0).name = "track:" + usetrack;
+                }
+                
+
                 lasttrack = usetrack;
             }
 
 
 
-            m_RunningTiles.Add(pTile);
+            //m_RunningTiles.Add(pTile);
             
         }
     }

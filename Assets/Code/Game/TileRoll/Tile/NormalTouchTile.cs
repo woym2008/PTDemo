@@ -21,12 +21,14 @@ namespace Demo
         float m_PressedHeight = 0;
         float m_speed = 2f;
 
+        Quaternion m_CurQuat;
+
         bool m_EnablePressed;
         //--------------------------------------
 
-        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float delaytime)
+        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float disappearprocess, float delaytime)
         {
-            base.InitTile(data, scale, startprocess, endprocess, delaytime);
+            base.InitTile(data, scale, startprocess, endprocess, disappearprocess, delaytime);
 
             RenderModel = this.GetComponent<MorphCube>();
 
@@ -65,26 +67,44 @@ namespace Demo
             m_EnablePressed = true;
         }
 
-        public override void FrameUpdate(float dt)
+        public override void onUpdate()
         {
-            base.FrameUpdate(dt);
+            base.onUpdate();
 
             if(m_EnablePressed)
             {
-                if(m_PressedHeight > 2*m_Height)
+                if(m_TouchState != TouchState.Delete && m_PressedHeight > 2*m_Height)
                 {
                     m_TouchState = TouchState.Touched;
                     return;
                 }
-                m_PressedHeight += dt * m_speed;
+                m_PressedHeight += Time.deltaTime * m_speed;
             }
             
         }
 
         public override void setPosition(Vector3 pos)
         {
-            this.transform.position = 
-                new Vector3(pos.x, pos.y - m_PressedHeight, pos.z);
+            Vector3 offset = m_CurQuat * (new Vector3(0, -m_PressedHeight, 0));
+            this.transform.position =
+                new Vector3(pos.x, pos.y, pos.z) + offset;
+
+            //this.transform.position =
+            //    new Vector3(pos.x, pos.y, pos.z);
+        }
+
+        public override void setRotation(Quaternion rot)
+        {
+            base.setRotation(rot);
+
+            m_CurQuat = rot;
+        }
+
+        public override void Appear(int trackid)
+        {
+            GameObject obj = new GameObject();
+            obj.name = "t:" + trackid;
+            obj.transform.parent = this.transform;
         }
     }
 }

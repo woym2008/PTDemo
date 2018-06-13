@@ -124,14 +124,14 @@ namespace Demo.TrackNormal
 
         public void FrameUpdate(float realpassedtime)
         {
-            for(int i= m_RunningTiles.Count-1; i>=0 ; --i)
-            {
-                m_RunningTiles[i].FrameUpdate(realpassedtime);
-                if(!m_RunningTiles[i].IsUseing)
-                {
-                    m_RunningTiles.Remove(m_RunningTiles[i]);
-                }
-            }
+            //for(int i= m_RunningTiles.Count-1; i>=0 ; --i)
+            //{
+            //    m_RunningTiles[i].FrameUpdate(realpassedtime);
+            //    if(!m_RunningTiles[i].IsUseing)
+            //    {
+            //        m_RunningTiles.Remove(m_RunningTiles[i]);
+            //    }
+            //}
         }
 
         public void AddTile(TouchTileBase ptile)

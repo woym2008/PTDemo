@@ -14,6 +14,8 @@ namespace Demo
             NotTouch,
             CanTouch,
             Touched,
+            Touching,
+            Delete,
         }
         public void Dispose()
         {
@@ -41,6 +43,7 @@ namespace Demo
         protected float m_CurProcess;
         protected float m_StartProcess;
         protected float m_EndProcess;
+        protected float m_DelayDisappearProcess;
 
         [SerializeField]
         public float m_MoveTime;
@@ -62,12 +65,13 @@ namespace Demo
         }
         //--------------------------------------------
         public virtual void InitTile(MidiTile data, float lenght, 
-            float startprocess, float endprocess,
+            float startprocess, float endprocess, float disappearprocess,
             float delaytime)
         {
             m_TileData = data;
             m_StartProcess = startprocess;
             m_EndProcess = endprocess;
+            m_DelayDisappearProcess = disappearprocess;
             m_CurProcess = 0;
             m_MoveSpeed = 1.0f;
 
@@ -88,38 +92,7 @@ namespace Demo
 
         }
 
-        public virtual void FrameUpdate(float dt)
-        {
-            //Vector3 offset = m_Parent.TransformVector(0, m_MoveSpeed * Time.deltaTime, 0);
-            //this.transform.position = new Vector3(
-            //    this.transform.position.x + offset.x,
-            //    this.transform.position.y + offset.y,
-            //    this.transform.position.z + offset.z);
-            m_MoveTime += dt;
-            if (m_MoveTime > m_DelayTime * 2)
-            {
-                m_TouchState = TouchState.Touched;
-            }
-
-            //m_CurProcess = process;
-            //Vector3 pos = m_Parent.GetPos(m_MoveTime);
-
-            //Quaternion rot = m_Parent.GetRot(m_MoveTime);
-
-            //this.transform.position = pos;
-            //this.transform.rotation = rot;
-
-            //if (m_TouchState == TouchState.Touched)
-            //{
-            //    if(m_TileData.UpdatePlayTile(Time.deltaTime))
-            //    {
-            //        ReleaseSelf();
-            //    }
-            //}
-            //m_TileData.PlayTile(realpassedtime);
-        }
-
-        public virtual void AutoUpdate()
+        public void AutoUpdate()
         {
             if (m_TouchState  == TouchState.CanTouch)
             {
@@ -127,8 +100,7 @@ namespace Demo
                 {
                     OnTouchBeat(this.transform.position);
                 }
-            }
-            
+            }            
         }
         //--------------------------------------------
         //public void SetPosition(Vector3 pos)
@@ -161,13 +133,18 @@ namespace Demo
             return (float)m_TileData.Process;
         }
 
+        public float getEndProcess()
+        {
+            return m_EndProcess + m_DelayDisappearProcess;
+        }
+
         public float getProcess()
         {
             return m_CurProcess;
 
         }
 
-        public void Appear(int trackid)
+        public virtual void Appear(int trackid)
         {
 
         }
@@ -194,6 +171,10 @@ namespace Demo
 
         public void setScale(Vector3 scale)
         {
+            if(this.transform.childCount >0)
+            {
+                this.transform.GetChild(0).name = "trackmgr t id: " + scale.x;
+            }
             this.transform.localScale = scale;
         }
         //--------------------------------------------
@@ -258,7 +239,7 @@ namespace Demo
         //}
         public bool IsUseless()
         {
-            if(m_TouchState == TouchState.Touched)
+            if(m_TouchState == TouchState.Delete)
             {
                 return true;
             }
@@ -273,7 +254,24 @@ namespace Demo
             TouchTileFactory.ReleaseTile(this);
         }
         //----------------------------------------------------
-        
+        public void Disappear()
+        {
+            ReleaseSelf();
+        }
+
+        public virtual void onUpdate()
+        {
+            m_MoveTime += Time.deltaTime;
+            //if (m_MoveTime > m_DelayTime * 2)
+            //{
+            //    //m_TouchState = TouchState.Touched;
+            //    m_TouchState = TouchState.Delete;
+            //}
+            if(TileManager.s_AutoPlay)
+            {
+                AutoUpdate();
+            }
+        }
         //----------------------------------------------------
     }
 }
