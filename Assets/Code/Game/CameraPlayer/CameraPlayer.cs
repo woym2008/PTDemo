@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Demo.UIKeyboard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Demo
     {
         //------------------------------------------------
         CameraView m_CameraView;
+
+        KeyboardMark m_ClickMark;
 
         //------------------------------------------------
         //public Vector3 m_CameraOffset;
@@ -62,6 +65,8 @@ namespace Demo
             m_CameraView = playerroot.GetComponent<CameraView>();
             Debug.Log("m_CameraView ok");
             m_CameraView.m_Player = this;
+
+            m_ClickMark = playerroot.GetComponentInChildren<KeyboardMark>();
         }
 
         CameraView InstanceCameraPrefab()
@@ -101,5 +106,24 @@ namespace Demo
         {
             m_State = PlayerState.Pause;
         }
+
+        public void SetMarkPos(Vector3 point)
+        {
+            Vector3 locpos = point - (m_position + m_CameraView.m_CameraOffset);
+
+            m_ClickMark.transform.parent = this.m_CameraView.transform;
+            m_ClickMark.transform.localPosition = locpos;
+        }
+
+        public void SetClickPoint(int index, Vector3 point)
+        {
+            //test
+            //m_CameraView.transform.position = m_position;
+            //Vector3 locpos = point - (m_position + m_CameraView.m_CameraOffset);
+
+            m_ClickMark.AddMarkPoint(index, point);
+        }
+
+        
     }
 }

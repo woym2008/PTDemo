@@ -64,7 +64,7 @@ namespace Demo
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
         //摄像机距离点击位置的延迟时间
-        public float m_CameraDelayTime = 0.4f;
+        public float m_CameraDelayTime = 0.8f;
 
         public float m_MusicTime = 0.0f;
 
@@ -127,6 +127,9 @@ namespace Demo
 
             m_track = TrackManager.instance;
 
+            //float clickpointdis = m_TileRollLength * m_CameraDelayTime / m_RollTime;
+
+
             //float waitprocess = m_RollTime / musictime;
             //CreateSpawners(tiles, basebeat);
             //tilelenght = 
@@ -145,7 +148,21 @@ namespace Demo
             TrackManager.instance.Speed = speed;
             TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
             //-----------------------------------------------------------
-            m_Player.position = TrackManager.instance.GetPosition(0, 0);
+            float clickpointparam = Mathf.Clamp((m_CameraDelayTime), 0, float.MaxValue)
+                / (m_MusicTime + m_RollTime);
+
+            int playertracknum = m_track.trackNum / 2;
+            m_Player.position = TrackManager.instance.GetPosition(0, playertracknum);
+
+            for(int i=0;i< m_track.trackNum;++i)
+            {
+                //Debug.LogError("clickpointparam: " + clickpointparam);
+                Vector3 clickpointpos = m_track.GetPosition(clickpointparam,i);
+                m_Player.SetClickPoint(i,clickpointpos);
+            }
+
+            Vector3 markpos = m_track.GetPosition(clickpointparam, playertracknum);
+            m_Player.SetMarkPos(markpos);
         }
 
         public void FrameUpdate(float dt)
