@@ -39,7 +39,7 @@ namespace Demo
 
         public void Push(IRecyclableObject obj)
         {
-            Debug.LogWarning("Push obj:" + obj);
+            //Debug.LogWarning("Push obj:" + obj);
             string type = obj.GetRecycleType();
             Stack<IRecyclableObject> stackIdleObject = m_poolIdleObject[type];
             if (stackIdleObject == null)
@@ -53,7 +53,7 @@ namespace Demo
 
         public IRecyclableObject Pop(string type)
         {
-            Debug.LogWarning("Pop obj:");
+            //Debug.LogWarning("Pop obj:");
             Stack<IRecyclableObject> stackIdleObject = m_poolIdleObject[type];
             if (stackIdleObject != null && stackIdleObject.Count > 0)
             {

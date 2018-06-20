@@ -12,7 +12,8 @@ namespace Demo
         //------------------------------------------------
         CameraView m_CameraView;
 
-        KeyboardMark m_ClickMark;
+        public KeyboardMark m_ClickMark;
+        public GameObject m_PressMark;
 
         //------------------------------------------------
         //public Vector3 m_CameraOffset;
@@ -67,6 +68,14 @@ namespace Demo
             m_CameraView.m_Player = this;
 
             m_ClickMark = playerroot.GetComponentInChildren<KeyboardMark>();
+            for(int i=0;i< playerroot.childCount;++i)
+            {
+                if(playerroot.GetChild(i).name == "StartPress")
+                {
+                    m_PressMark = playerroot.GetChild(i).gameObject;
+                    break;
+                }
+            }
         }
 
         CameraView InstanceCameraPrefab()
@@ -90,6 +99,12 @@ namespace Demo
             
         }
 
+        public void CorrectPos(float cameradis)
+        {
+            m_CameraView.UpdatePos();
+
+            m_CameraView.SetCameraPos(cameradis);
+        }
         //------------------------------------------------------
         public void startMove()
         {
@@ -107,13 +122,21 @@ namespace Demo
             m_State = PlayerState.Pause;
         }
 
-        public void SetMarkPos(Vector3 point)
+        public void SetMarkPos(Vector3 point, float delaymarkdis)
         {
-            Vector3 locpos = point - (m_position + m_CameraView.m_CameraOffset);
+            m_ClickMark.transform.position = point;
 
-            m_ClickMark.transform.parent = this.m_CameraView.transform;
-            m_ClickMark.transform.localPosition = locpos;
+            m_PressMark.transform.position = point;
+            m_PressMark.transform.localPosition = new Vector3(
+                m_PressMark.transform.localPosition.x,
+                m_PressMark.transform.localPosition.y,
+                m_PressMark.transform.localPosition.z + delaymarkdis);
         }
+
+        //public void SetStartPressPos(Vector3 point)
+        //{
+        //    m_PressMark.transform.position = point;
+        //}
 
         public void SetClickPoint(int index, Vector3 point)
         {
@@ -121,7 +144,9 @@ namespace Demo
             //m_CameraView.transform.position = m_position;
             //Vector3 locpos = point - (m_position + m_CameraView.m_CameraOffset);
 
-            m_ClickMark.AddMarkPoint(index, point);
+            Vector3 locpos = point - (m_position + m_CameraView.m_CameraOffset);
+
+            m_ClickMark.AddMarkPoint(index, locpos);
         }
 
         

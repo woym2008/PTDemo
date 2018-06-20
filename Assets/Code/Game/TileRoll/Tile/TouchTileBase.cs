@@ -41,9 +41,12 @@ namespace Demo
 
         protected MidiTile m_TileData;
         protected float m_CurProcess;
-        protected float m_StartProcess;
+        protected float m_DelayProcess;
         protected float m_EndProcess;
         protected float m_DelayDisappearProcess;
+        protected float m_StartpressTime;
+        protected float m_LeastMoveTime;
+        float disppeartime = 5.0f;
 
         [SerializeField]
         public float m_MoveTime;
@@ -65,19 +68,31 @@ namespace Demo
         }
         //--------------------------------------------
         public virtual void InitTile(MidiTile data, float lenght, 
-            float startprocess, float endprocess, float disappearprocess,
-            float delaytime)
+            float musictime, 
+            float delaytime,
+            float startpresstime)
         {
+            
             m_TileData = data;
-            m_StartProcess = startprocess;
-            m_EndProcess = endprocess;
-            m_DelayDisappearProcess = disappearprocess;
+
+            float alltime = delaytime + musictime;
+            m_EndProcess = (float)m_TileData.EndTime / alltime;
+            m_DelayProcess = delaytime / alltime;
+
+            //m_StartProcess = startprocess;
+            //m_EndProcess = endprocess;
+            m_DelayDisappearProcess = disppeartime / alltime;
+
             m_CurProcess = 0;
-            m_MoveSpeed = 1.0f;
+
+            m_StartpressTime = startpresstime;
 
             m_DelayTime = delaytime;
 
             m_MoveTime = 0;
+
+            m_LeastMoveTime = m_DelayTime
+                - m_StartpressTime;
 
             //m_bCanTouch = false;
 
@@ -87,7 +102,7 @@ namespace Demo
             m_TouchState = TouchState.CanTouch;
         }
 
-        public virtual void CreateMesh(Vector3[] points = null)
+        public virtual void CreateMesh(Vector3[] points = null, Vector3[] normals = null)
         {
 
         }
@@ -112,11 +127,6 @@ namespace Demo
         //{
         //    this.transform.rotation = quat;
         //}
-        //--------------------------------------------
-        public void SetSpeed(float speed)
-        {
-            m_MoveSpeed = speed;
-        }
 
         //public void AttachParent(TileTrack parent)
         //{
@@ -156,7 +166,7 @@ namespace Demo
 
         public float getPositionProgress()
         {
-            return m_StartProcess;
+            return m_DelayProcess;
         }
 
         public virtual void setPosition(Vector3 pos)
@@ -194,7 +204,7 @@ namespace Demo
         {
             if(m_TouchState == TouchState.CanTouch)
             {
-                Debug.Log("OnTouchBeat");
+                //Debug.Log("OnTouchBeat");
                 m_TouchState = TouchState.Touched;
                 m_TileData.PlayTile();
 
@@ -271,6 +281,30 @@ namespace Demo
             {
                 AutoUpdate();
             }
+        }
+
+        public virtual bool onAction()
+        {
+            if(m_MoveTime > m_DelayTime + m_TileData.EndTime - m_TileData.StartTime)
+            {
+                //Debug.LogError("error m_MoveTime" + m_MoveTime + " m_DelayTime: " + m_DelayTime);
+                return false;
+            }
+            
+            if (m_MoveTime < m_LeastMoveTime)
+            {
+                return false;
+            }
+
+            if(m_TouchState == TouchState.CanTouch)
+            {
+                OnTouchBeat(this.transform.position);
+                return true;
+            }
+            //Debug.LogError("error m_TouchState" );
+
+
+            return false;
         }
         //----------------------------------------------------
     }

@@ -24,6 +24,7 @@ namespace Demo
         private int[] triangles;
         //-------------------------------
         public Vector3 UpDirect = new Vector3(0, 1, 0);
+        public Vector3[] up_Directs;
         public float up_length = 1.0f;
         public float right_length = 1.0f;
         public float forward_length = 1.0f;
@@ -75,8 +76,14 @@ namespace Demo
             forward_length = l;
         }
 
-        public void CreateMesh(Vector3[] pos)
+        public void CreateMesh(Vector3[] pos, Vector3[] normals)
         {
+            up_Directs = new Vector3[normals.Length];
+            for(int i=0;i<normals.Length; ++i)
+            {
+                up_Directs[i] = normals[i];
+            }
+
             if (SelfMesh == null)
             {
                 SelfMesh = new Mesh();
@@ -167,7 +174,8 @@ namespace Demo
 
             for (int i = 0; i < forwarddirs.Length-1; ++i) {
                 forwarddirs[i] = (centerposs[i+1] - centerposs[i]).normalized;
-                rightdirs[i] = Vector3.Cross(forwarddirs[i],UpDirect);
+                //rightdirs[i] = Vector3.Cross(forwarddirs[i],UpDirect);
+                rightdirs[i] = Vector3.Cross(forwarddirs[i], up_Directs[i]);
             }
             forwarddirs[forwarddirs.Length - 1] = forwarddirs[forwarddirs.Length - 2];
             rightdirs[rightdirs.Length - 1] = Vector3.Cross(forwarddirs[forwarddirs.Length - 1],UpDirect);

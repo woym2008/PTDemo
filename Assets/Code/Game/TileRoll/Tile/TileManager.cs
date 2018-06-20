@@ -24,15 +24,17 @@ namespace Demo
         private float m_DelayProcess = 0.0f;
         private float m_DelayTime = 0.0f;
 
-        private float m_CurMusicTime = 0.0f;
+        private float m_MusicTime = 0.0f;
 
-        private float m_DisappearProcess = 0;
-        private float m_DisappearTime = 1.0f;
+        private float m_StartPressTime = 0.0f;
+
+        //private float m_DisappearProcess = 0;
+        //private float m_DisappearTime = 2.0f;
 
         private Dictionary<int, float> m_LastTrackProcesses;
         private int lasttrack = -1;
 
-        private float m_DelayTimeDisappear = 1.0f;
+        //private float m_DelayTimeDisappear = 1.0f;
 
         //private int maxtrack = 1;
 
@@ -50,17 +52,18 @@ namespace Demo
             float onetiletime,
             int numdelaytile,
             float musictime, 
-            float baselength)
+            float baselength,
+            float startpresstime)
         {
             m_TileLength = baselength;
 
             float delaytime = numdelaytile * onetiletime;
             m_DelayTime = delaytime;
 
-            m_CurMusicTime = musictime;
+            m_MusicTime = musictime;
             m_DelayProcess = delaytime / (musictime + delaytime);
 
-            m_DisappearProcess = m_DisappearTime / (musictime + delaytime);
+            //m_DisappearProcess = m_DisappearTime / (musictime + delaytime);
 
             if (m_CacheSpawner == null)
             {
@@ -78,6 +81,8 @@ namespace Demo
                 }
                 m_CacheSpawner.Enqueue(new TileSpawner(tiles[i], scale * m_TileLength));
             }
+
+            m_StartPressTime = startpresstime;
         }
         
         public void UpdateSpawner(float passedtime)
@@ -87,8 +92,8 @@ namespace Demo
                 TileSpawner pSpawner = m_CacheSpawner.Peek();
                 if (pSpawner.getStartTime <= passedtime)
                 {
-                    float passedprocess = m_DelayProcess + 
-                        (passedtime) / (m_CurMusicTime + m_DelayTime);
+                    float passedprocess = 
+                        ((float)pSpawner.getStartTime + m_DelayTime) / (m_MusicTime + m_DelayTime);
                     AttachBlock(pSpawner, passedprocess);
                     m_CacheSpawner.Dequeue();
                 }
@@ -173,33 +178,37 @@ namespace Demo
                 Vector3[] curvepoints = new Vector3[numpoints];
                 float endtime = (float)bs.getEndTime;
                 float everytime = (endtime - (float)bs.getStartTime) / numpoints;
+                Vector3[] normals = new Vector3[numpoints];
+
                 for (int i = 0; i < curvepoints.Length; ++i)
                 {
                     float process = m_DelayProcess + 
                         ((float)bs.getStartTime + everytime * i) 
-                        / (m_CurMusicTime + m_DelayTime);
+                        / (m_MusicTime + m_DelayTime);
                     curvepoints[i] = TrackManager.instance.GetPosition(process, 0);
+
+                    normals[i] = TrackManager.instance.GetRotation(process, 0) * new Vector3(0,1,0);
                 }
 
                 float endprocess = m_DelayProcess + 
-                    ((float)bs.getEndTime) / (m_CurMusicTime + m_DelayTime);
-                pTile = bs.CreateTile(m_DelayProcess, endprocess, m_DisappearProcess, m_DelayTime, CurverTouchTile.m_TileName);
+                    ((float)bs.getEndTime) / (m_MusicTime + m_DelayTime);
+                pTile = bs.CreateTile(m_MusicTime, m_DelayTime, m_StartPressTime
+                    , CurverTouchTile.m_TileName);
 
                 TrackManager.instance.PushValue(pTile, usetrack);
 
                 m_LastTrackProcesses[usetrack] = endprocess;
 
-                bs.CreateTileMesh(pTile, curvepoints);
+                bs.CreateTileMesh(pTile, curvepoints, normals);
 
                 lasttrack = usetrack;
             }
             else
             {
-                float endprocess = m_DelayProcess + ((float)bs.getEndTime) / (m_CurMusicTime + m_DelayTime);
+                float endprocess = m_DelayProcess + ((float)bs.getEndTime) / (m_MusicTime + m_DelayTime);
 
                 pTile = bs.CreateTile(
-                    m_DelayProcess, endprocess, m_DisappearProcess,
-                    m_DelayTime, NormalTouchTile.m_TileName);
+                    m_MusicTime, m_DelayTime, m_StartPressTime, NormalTouchTile.m_TileName);
 
                 TrackManager.instance.PushValue(pTile, usetrack);
 

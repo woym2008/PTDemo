@@ -116,6 +116,14 @@ namespace Demo.TileTrack
             return rotation;
         }
 
+        public override void ActionTrack(int trackindex)
+        {
+            if(_lineList.Count > trackindex)
+            {
+                _lineList[trackindex].ActionLastNode();
+            }
+        }
+
         public override void SetTracklineNum(int num, float lineSpace)
         {
             base.SetTracklineNum(num, lineSpace);
@@ -560,6 +568,17 @@ namespace Demo.TileTrack
             node.setRotation(rotation);
 
             node.onUpdate();
+        }
+
+        public void ActionLastNode()
+        {
+            for(int i= _operateList.Count-1; i>=0; --i)
+            {
+                if(_operateList[i].onAction())
+                {
+                    break;
+                }
+            }
         }
     }
 }

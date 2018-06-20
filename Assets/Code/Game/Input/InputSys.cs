@@ -15,6 +15,11 @@ namespace Demo
         }
         void Update()
         {
+            if(!DemoGame.m_SwitchInput)
+            {
+                return;
+            }
+
             if (m_MainCamera == null)
             {
                 return;
@@ -107,7 +112,7 @@ namespace Demo
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 mouseworld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Debug.Log("world :" + mouseworld.x + "," + mouseworld.y + "," + mouseworld.z);
+                //Debug.Log("world :" + mouseworld.x + "," + mouseworld.y + "," + mouseworld.z);
                 Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 Debug.DrawLine(cam_ray.origin, cam_ray.direction);

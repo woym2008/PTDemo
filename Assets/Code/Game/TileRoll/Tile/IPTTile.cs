@@ -26,8 +26,11 @@ public interface IPTTile
 
     void onUpdate();
 
+    bool onAction();
+
     void Appear(int trackIndex);
 
     void Disappear();
     //void Recover();
+
 }

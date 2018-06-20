@@ -78,6 +78,8 @@ namespace Demo.TileTrack
 
         Quaternion GetRotation(float paramater, int lineIndex);
 
+        void ActionTrack(int trackindex);
+
         void SetTrackWidth(float width);
         void SetTrackHeight(float height);
     }
@@ -146,6 +148,11 @@ namespace Demo.TileTrack
         public virtual Vector3 GetPosition(float parameter, int lineIndex) { return Vector3.zero; }
 
         public virtual Quaternion GetRotation(float paramater, int lineIndex) { return Quaternion.identity; }
+
+        public virtual void ActionTrack(int trackindex)
+        {
+            ;
+        }
 
         public float GetTrackLength()
         {

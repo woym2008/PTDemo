@@ -22,15 +22,20 @@ namespace Demo
         float m_PressedHeight = 0;
         float m_speed = 2f;
 
-        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float disappearprocess, float delaytime)
+        public override void InitTile(
+            MidiTile data, 
+            float scale, 
+            float musictime, float delaytime,
+            float startpresstime
+            )
         {
-            base.InitTile(data, scale, startprocess, endprocess, disappearprocess, delaytime);
+            base.InitTile(data, scale, musictime, delaytime,startpresstime);
 
             RenderModel = this.GetComponent<MorphCurve>();
 
             m_SelfMaterial = this.GetComponent<MeshRenderer>().material;
 
-            RenderModel.SetLength(0.1f);
+            RenderModel.SetLength(m_Height);
             RenderModel.SetWidth(0.2f);
             RenderModel.SetDepth(scale);
 
@@ -40,9 +45,9 @@ namespace Demo
             m_PressedTime = 0.0f;
         }
 
-        public override void CreateMesh(Vector3[] points)
+        public override void CreateMesh(Vector3[] points, Vector3[] normals = null)
         {
-            RenderModel.CreateMesh(points);
+            RenderModel.CreateMesh(points, normals);
 
             m_SelfMaterial = RenderModel.GetMeshMaterial();
         }

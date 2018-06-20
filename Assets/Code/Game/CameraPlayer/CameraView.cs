@@ -13,10 +13,14 @@ namespace Demo
 
         public Vector3 m_CameraOffset = Vector3.zero;
 
-        private void Start()
+        private void Awake()
         {
             m_CameraOffset = m_Camera.transform.localPosition;
             m_Camera.transform.localPosition = new Vector3(0, 0, 0);
+        }
+        private void Start()
+        {
+            
         }
 
         private void Update()
@@ -26,6 +30,20 @@ namespace Demo
                 return;
             }
 
+            UpdatePos();
+        }
+
+        public void SetCameraPos(float cameradis)
+        {
+            m_Camera.transform.localPosition = new Vector3(
+                m_Camera.transform.localPosition.x,
+                m_Camera.transform.localPosition.y,
+                m_Camera.transform.localPosition.z - cameradis
+                );
+        }
+
+        public void UpdatePos()
+        {
             Vector3 l = m_Player.rotation * m_CameraOffset;
 
             //this.transform.position = m_Player.position - m_Camera.transform.localPosition;

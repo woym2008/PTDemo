@@ -45,23 +45,33 @@ namespace Demo
         }
 
         public TouchTileBase CreateTile(
-            float startprocess, float endprocess, float disappearprocess,
-            float delaytime, string name)
+            float musictime,
+            float delaytime, 
+            float startpresstime,
+            string name)
         {
             TouchTileBase pBeat = TouchTileFactory.CreateTile(name);
             if (pBeat != null)
             {
                 pBeat.InitTile(
-                    m_SelfData, m_Length, startprocess, endprocess, disappearprocess, delaytime);                
+                    m_SelfData,
+                    m_Length, 
+                    musictime, 
+                    delaytime,
+                    startpresstime);                
             }
 
             return pBeat;
         }
 
-        public void CreateTileMesh(TouchTileBase pBeat, Vector3[] points = null)
-        {
-            pBeat.CreateMesh(points);
-        }
+        //public void CreateTileMesh(TouchTileBase pBeat, Vector3[] points = null)
+        //{
+        //    pBeat.CreateMesh(points);
+        //}
 
+        public void CreateTileMesh(TouchTileBase pBeat, Vector3[] points = null, Vector3[] normals = null)
+        {
+            pBeat.CreateMesh(points, normals);
+        }
     }
 }

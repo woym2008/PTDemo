@@ -116,6 +116,7 @@ MonoBehaviour:
   segment_x: 2
   segment_y: 2
   segment_z: 2
+  collidescale: 2
 --- !u!114 &114796414143448280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -128,6 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MoveTime: 0
+  m_DelayTime: 0
   m_bIsUseing: 0
   m_bCanDestory: 0
   RenderModel: {fileID: 114625353905215356}
+  m_Height: 0.01

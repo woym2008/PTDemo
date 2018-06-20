@@ -19,7 +19,7 @@ namespace Demo
 
         public float m_TileSpeed = 1.0f;
 
-        
+        float testparam = 0.0f;
         //CameraPlayer m_Player;
 
 
@@ -60,17 +60,14 @@ namespace Demo
 
             m_TR.m_track.Update();
 
-            
-            //float param = m_RunningTime / m_TR.m_MusicTime;
-            float param = Mathf.Clamp((m_RunningTime - m_TR.m_CameraDelayTime),0,float.MaxValue) 
-                / (m_TR.m_MusicTime + m_TR.m_RollTime);
 
+            float param = m_RunningTime / (m_TR.m_MusicTime + m_TR.m_RollTime);
+            //float param = Mathf.Clamp((m_RunningTime),0,float.MaxValue) 
+            //    / (m_TR.m_MusicTime + m_TR.m_RollTime);
 
             int playertracknum = m_TR.m_track.trackNum / 2;
 
-            Vector3 curpos = m_TR.m_track.GetPosition(param, playertracknum);
-            m_TR.m_Player.position = new Vector3(curpos.x, curpos.y, curpos.z);
-
+            m_TR.m_Player.position = m_TR.m_track.GetPosition(param, playertracknum);
             
             m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, playertracknum);
             //-----------------------------

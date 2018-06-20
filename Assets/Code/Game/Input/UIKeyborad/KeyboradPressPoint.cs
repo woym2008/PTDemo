@@ -1,3 +1,4 @@
+using Demo.TileTrack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,27 @@ namespace Demo.UIKeyboard
             set;
         }
 
-        public void Press()
+        private void Update()
         {
-            //Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Ray ray = new Ray(this.transform.position, Camera.main.transform.position);
+            
+        }
 
-            Debug.DrawRay(this.transform.position, Camera.main.transform.position);
+        public void Press(int index)
+        {
+            TrackManager.instance.ActionTrack(index);
+
+            return;
+
+            //Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = new Ray(Camera.main.transform.position, (this.transform.position - Camera.main.transform.position).normalized);
+
+            Debug.DrawRay(Camera.main.transform.position, (this.transform.position - Camera.main.transform.position).normalized);
 
             RaycastHit hitInfo;
             if (Physics.Raycast(ray, out hitInfo, 100.0f))
             {
+                Debug.Log("Hit ray" + hitInfo.collider.name);
+
                 if (hitInfo.collider != null)
                 {
                     TouchTileBase pBTC = hitInfo.collider.gameObject.GetComponent<TouchTileBase>();

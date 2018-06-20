@@ -256,6 +256,11 @@ namespace Demo.TileTrack
 
         }
 
+        public bool onAction()
+        {
+            return false;
+        }
+
         //void Appear()
         //{
 

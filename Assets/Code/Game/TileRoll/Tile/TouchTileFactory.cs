@@ -19,7 +19,7 @@ namespace Demo
 
         static public TouchTileBase CreateTile(string name)
         {
-            Debug.LogWarning("CreateTile");
+            //Debug.LogWarning("CreateTile");
             string respath = m_BasePath + name;
             TouchTileBase tile = m_Recycler.Pop(name) as TouchTileBase;
             if(tile == null)
@@ -33,7 +33,7 @@ namespace Demo
 
         static public void ReleaseTile(TouchTileBase tile)
         {
-            Debug.LogWarning("ReleaseTile");
+            //Debug.LogWarning("ReleaseTile");
             if(tile != null)
             {
                 tile.gameObject.SetActive(false);

@@ -115,7 +115,7 @@ MonoBehaviour:
   m_bIsUseing: 0
   RenderModel: {fileID: 0}
   m_SelfMaterial: {fileID: 2100000, guid: 0986ae2496bc1714db5565fd7ef5559c, type: 2}
-  m_Height: 0.1
+  m_Height: 0.01
 --- !u!114 &114458414886506460
 MonoBehaviour:
   m_ObjectHideFlags: 1

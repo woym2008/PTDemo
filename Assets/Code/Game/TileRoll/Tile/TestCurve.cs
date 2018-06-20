@@ -37,7 +37,7 @@ namespace Demo
             RenderModel.SetWidth(0.1f);
             RenderModel.SetDepth(10);
 
-            RenderModel.CreateMesh(points.ToArray());
+            RenderModel.CreateMesh(points.ToArray(),null);
 
             m_SelfMaterial = RenderModel.GetMeshMaterial();
         }

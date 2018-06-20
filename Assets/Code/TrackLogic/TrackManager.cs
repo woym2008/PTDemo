@@ -126,6 +126,10 @@ namespace Demo.TileTrack
             return trackViewer.GetRotation(paramater, lineIndex);
         }
 
+        public void ActionTrack(int lineIndex)
+        {
+            trackViewer.ActionTrack(lineIndex);
+        }
         // 设置轨道的运动速度
         public float Speed
         {

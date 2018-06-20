@@ -26,9 +26,13 @@ namespace Demo
         bool m_EnablePressed;
         //--------------------------------------
 
-        public override void InitTile(MidiTile data, float scale, float startprocess, float endprocess, float disappearprocess, float delaytime)
+        public override void InitTile(
+            MidiTile data, float scale, 
+            float musictime, float delaytime,
+            float startpresstime
+            )
         {
-            base.InitTile(data, scale, startprocess, endprocess, disappearprocess, delaytime);
+            base.InitTile(data, scale, musictime, delaytime, startpresstime);
 
             RenderModel = this.GetComponent<MorphCube>();
 
@@ -36,7 +40,7 @@ namespace Demo
 
             RenderModel.SetLength(m_Height);
             RenderModel.SetWidth(0.2f);
-            RenderModel.SetDepth(scale);
+            RenderModel.SetDepth(scale * 0.5f);
 
             if(scale > 2)
             {
@@ -50,7 +54,7 @@ namespace Demo
             m_PressedHeight = 0;
         }
 
-        public override void CreateMesh(Vector3[] points)
+        public override void CreateMesh(Vector3[] points, Vector3[] normals)
         {
             RenderModel.CreateMesh();
 

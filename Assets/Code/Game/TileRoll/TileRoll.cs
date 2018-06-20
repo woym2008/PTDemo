@@ -63,8 +63,12 @@ namespace Demo
         //根据bpm算出的结果，一个object从轨道的一端走到另一端的时间
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
+        //public static float s_StaticRolltime = 5;
         //摄像机距离点击位置的延迟时间
-        public float m_CameraDelayTime = 0.8f;
+        //public float m_CameraDelayTime = 0.5f;
+        //public float m_StartPressDelayTime = 0.5f;
+        float m_CameraDelayDis = 1.2f;
+        float m_StartPressDis = 0.8f;
 
         public float m_MusicTime = 0.0f;
 
@@ -125,6 +129,8 @@ namespace Demo
             m_RollTime = basetiletime * m_MaxTile;
             //m_RollTime = 10.0f;
 
+            
+
             m_track = TrackManager.instance;
 
             //float clickpointdis = m_TileRollLength * m_CameraDelayTime / m_RollTime;
@@ -133,8 +139,8 @@ namespace Demo
             //float waitprocess = m_RollTime / musictime;
             //CreateSpawners(tiles, basebeat);
             //tilelenght = 
-            m_TileMgr.CreateSpawners(tiles, basetiletime,m_MaxTile,
-                musictime, m_TileLenght);
+            //m_TileMgr.CreateSpawners(tiles, basetiletime,m_MaxTile,
+            //    musictime, m_TileLenght, );
             //-----------------------------------------------------------
             //track
             TrackManager.instance.Init(TrackNumDef.enTrackType.Curve);
@@ -148,21 +154,41 @@ namespace Demo
             TrackManager.instance.Speed = speed;
             TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
             //-----------------------------------------------------------
-            float clickpointparam = Mathf.Clamp((m_CameraDelayTime), 0, float.MaxValue)
+
+
+            float startPressDelayTime = (m_StartPressDis) / speed;
+
+            //s_StaticRolltime = m_RollTime;
+            //s_StaticRolltime = m_RollTime - m_CameraDelayTime + m_StartPressDelayTime;
+
+            m_TileMgr.CreateSpawners(tiles, basetiletime, m_MaxTile,
+                musictime, m_TileLenght, startPressDelayTime);
+            //-----------------------------------------------------------
+            float clickpointparam = 0
                 / (m_MusicTime + m_RollTime);
+
+            //float startpressparam = Mathf.Clamp((m_StartPressDelayTime), 0, float.MaxValue)
+            //    / (m_MusicTime + m_RollTime);
 
             int playertracknum = m_track.trackNum / 2;
             m_Player.position = TrackManager.instance.GetPosition(0, playertracknum);
+            m_Player.rotation = TrackManager.instance.GetRotation(0, playertracknum);
+            m_Player.CorrectPos(m_CameraDelayDis);
+            //m_StartPressDelayTime = 0.8f;
+            //Quaternion markrot = m_track.GetRotation(clickpointparam, playertracknum);
+            //Vector3 markpos = markrot * new Vector3(0, 0, m_CameraDelayDis);
+            Vector3 markpos = m_track.GetPosition(clickpointparam, playertracknum);
+            m_Player.SetMarkPos(markpos, m_StartPressDis);
 
-            for(int i=0;i< m_track.trackNum;++i)
+            //Vector3 markstartpos = m_track.GetPosition(startpressparam, playertracknum);
+            //m_Player.SetStartPressPos(markstartpos);
+
+            for (int i=0;i< m_track.trackNum;++i)
             {
                 //Debug.LogError("clickpointparam: " + clickpointparam);
                 Vector3 clickpointpos = m_track.GetPosition(clickpointparam,i);
                 m_Player.SetClickPoint(i,clickpointpos);
             }
-
-            Vector3 markpos = m_track.GetPosition(clickpointparam, playertracknum);
-            m_Player.SetMarkPos(markpos);
         }
 
         public void FrameUpdate(float dt)

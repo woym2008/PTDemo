@@ -34,6 +34,7 @@ namespace Demo
 
         public Transform m_PlayerObj;
 
+        public static bool m_SwitchInput = false;
         //------------------------------------
         public Vector3 m_TileOffset = Vector3.zero;
         //------------------------------------
@@ -145,6 +146,10 @@ namespace Demo
             //--------------------------------------
 
             TouchTileFactory.Init();
+
+
+            //test code
+            Switch();
         }
 
         public void StartDemo()
@@ -184,6 +189,29 @@ namespace Demo
         public void Reset()
         {
             SceneManager.LoadScene("GameScene2");
+        }
+
+        public void Switch()
+        {
+            m_SwitchInput = !m_SwitchInput;
+            if(m_SwitchInput)
+            {
+                if(m_Roll.m_Player.m_ClickMark.UIKey != null)
+                {
+                    m_Roll.m_Player.m_ClickMark.gameObject.SetActive(false);
+                    m_Roll.m_Player.m_ClickMark.UIKey.gameObject.SetActive(false);
+                }
+                
+            }
+            else
+            {
+                if (m_Roll.m_Player.m_ClickMark.UIKey != null)
+                {
+                    m_Roll.m_Player.m_ClickMark.gameObject.SetActive(true);
+                    m_Roll.m_Player.m_ClickMark.UIKey.gameObject.SetActive(true);
+                }
+                    
+            }
         }
     }
 }
