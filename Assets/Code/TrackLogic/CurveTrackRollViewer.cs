@@ -77,10 +77,12 @@ namespace Demo.TileTrack
             }
 
             _spline.interpolationMode = Spline.InterpolationMode.Hermite;
+            //_spline.interpolationMode = Spline.InterpolationMode.Bezier;
             _spline.rotationMode = Spline.RotationMode.Tangent;
             _spline.tangentMode = Spline.TangentMode.UseTangents;
             _spline.perNodeTension = false;
-            _spline.tension = 0.3f;
+            _spline.tension = 0.5f;
+
             _spline.updateMode = Spline.UpdateMode.DontUpdate;
             _spline.interpolationAccuracy = 1;
 
@@ -90,6 +92,7 @@ namespace Demo.TileTrack
             _splineMesh.uvScale = Vector2.one;
             _splineMesh.xyScale = Vector2.one;
             _splineMesh.segmentCount = 100;
+
             //_splineMesh.splitMode = SplineMesh.SplitMode.DontSplit;
             _splineMesh.splitMode = SplineMesh.SplitMode.BySplineParameter;
             _splineMesh.segmentStart = 0f;

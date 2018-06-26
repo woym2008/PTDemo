@@ -1,0 +1,9 @@
+diff a/Assets/Code/TrackLogic/CurveTrackRollViewer.cs b/Assets/Code/TrackLogic/CurveTrackRollViewer.cs	(rejected hunks)
+@@ -82,6 +82,7 @@
+ -            _spline.tangentMode = Spline.TangentMode.UseNormalizedTangents;
+ +            _spline.tangentMode = Spline.TangentMode.UseTangents;
+              _spline.perNodeTension = false;
+++<<<<<<< HEAD
+ +            _spline.tension = 0.3f;
+ +=======
+              _spline.tension = 0.0f;
