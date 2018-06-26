@@ -156,6 +156,9 @@ namespace Demo
         {
             InitData();
 
+            // Test code
+            //return;
+
             m_Roll.EnableGame(m_system);
             //m_Player.startMove();
             //m_Player.SetSpeed(5);

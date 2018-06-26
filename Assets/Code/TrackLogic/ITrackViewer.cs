@@ -75,6 +75,7 @@ namespace Demo.TileTrack
         /// <param name="lineIndex">表示的轨道线索引 左边第一条索引为0 </param>
         /// <returns></returns>
         Vector3 GetPosition(float paramater, int lineIndex);
+        Vector3 GetPosition(float paramater, int lineIndex,bool isVisibleParameter);
 
         Quaternion GetRotation(float paramater, int lineIndex);
 
@@ -146,6 +147,7 @@ namespace Demo.TileTrack
         public virtual void GenerateTrack(GameObject obj, CurveNodeData[] pathDataArray, int meshSegement)
         { }
         public virtual Vector3 GetPosition(float parameter, int lineIndex) { return Vector3.zero; }
+        public virtual Vector3 GetPosition(float paramater, int lineIndex, bool isVisibleParameter) { return Vector3.zero; }
 
         public virtual Quaternion GetRotation(float paramater, int lineIndex) { return Quaternion.identity; }
 

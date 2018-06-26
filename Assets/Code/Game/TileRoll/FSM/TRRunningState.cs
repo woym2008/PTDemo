@@ -67,7 +67,7 @@ namespace Demo
 
             int playertracknum = m_TR.m_track.trackNum / 2;
 
-            m_TR.m_Player.position = m_TR.m_track.GetPosition(param, playertracknum);
+            m_TR.m_Player.position = m_TR.m_track.GetPosition(param, playertracknum,true);
             
             m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, playertracknum);
             //-----------------------------
