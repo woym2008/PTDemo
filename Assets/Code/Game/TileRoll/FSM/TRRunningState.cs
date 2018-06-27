@@ -51,6 +51,7 @@ namespace Demo
             m_TR.m_track.Start();
         }
 
+        float lastParam = 0f;
         public void Execute(float dt)
         {
             m_StartTime += dt;
@@ -66,6 +67,8 @@ namespace Demo
             //    / (m_TR.m_MusicTime + m_TR.m_RollTime);
 
             int playertracknum = m_TR.m_track.trackNum / 2;
+            Debug.Log(param - lastParam);
+            lastParam = param;
 
             m_TR.m_Player.position = m_TR.m_track.GetPosition(param, playertracknum,true);
             

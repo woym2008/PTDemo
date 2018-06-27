@@ -77,11 +77,10 @@ namespace Demo.TileTrack
             }
 
             _spline.interpolationMode = Spline.InterpolationMode.Hermite;
-            //_spline.interpolationMode = Spline.InterpolationMode.Bezier;
             _spline.rotationMode = Spline.RotationMode.Tangent;
-            _spline.tangentMode = Spline.TangentMode.UseNormalizedTangents;
+            _spline.tangentMode = Spline.TangentMode.UseTangents;
             _spline.perNodeTension = false;
-            _spline.tension = 0.0f;
+            _spline.tension = 0.3f;
             _spline.updateMode = Spline.UpdateMode.DontUpdate;
             _spline.interpolationAccuracy = 1;
 
@@ -91,8 +90,8 @@ namespace Demo.TileTrack
             _splineMesh.uvScale = Vector2.one;
             _splineMesh.xyScale = Vector2.one;
             _splineMesh.segmentCount = 100;
-            _splineMesh.splitMode = SplineMesh.SplitMode.DontSplit;
-            //_splineMesh.splitMode = SplineMesh.SplitMode.BySplineParameter;
+            //_splineMesh.splitMode = SplineMesh.SplitMode.DontSplit;
+            _splineMesh.splitMode = SplineMesh.SplitMode.BySplineParameter;
             _splineMesh.segmentStart = 0f;
             _splineMesh.segmentEnd = TrackNumDef.SplineParamaterInterval;
             _splineMesh.highAccuracy = true;
@@ -124,17 +123,18 @@ namespace Demo.TileTrack
             {
                 return this.GetPosition(parameter, lineIndex);
             }
-            
-            //if(_splineMesh.splitMode == SplineMesh.SplitMode.BySplineParameter)
-            //{
-            //    float cullingValue = TrackNumDef.SplineParamaterInterval * 0.33f;
 
-            //    if((parameter - _splineMesh.segmentStart)> (cullingValue*2))
-            //    {// 超过起始的2/3
-            //        _splineMesh.segmentStart = parameter - (TrackNumDef.SplineParamaterInterval / 4);
-            //        _splineMesh.segmentEnd = _splineMesh.segmentStart + TrackNumDef.SplineParamaterInterval;
-            //    }
-            //}
+            if (_splineMesh.splitMode == SplineMesh.SplitMode.BySplineParameter)
+            {
+                float cullingValue = TrackNumDef.SplineParamaterInterval * 0.33f;
+
+                if ((parameter - _splineMesh.segmentStart) > (cullingValue * 2))
+                {// 超过起始的2/3
+                    _splineMesh.segmentStart = parameter - (TrackNumDef.SplineParamaterInterval / 4);
+                    _splineMesh.segmentEnd = _splineMesh.segmentStart + TrackNumDef.SplineParamaterInterval;
+                    _splineMesh.UpdateMesh();
+                }
+            }
 
             return this.GetPosition(parameter, lineIndex);
         }
