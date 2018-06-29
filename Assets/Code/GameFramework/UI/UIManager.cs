@@ -20,8 +20,8 @@ namespace Demo.FrameWork
         private readonly List<string> m_UIFormAssetNamesBeingLoaded;    // 正在被加载的UI界面名称
         private readonly HashSet<int> m_UIFormsToReleaseOnLoad; // 需要被取消加载的界面
 
-        private List<UIFromScript> m_forms;     // 所有打开的界面链表
-        private List<UIFromScript> m_formsRecyclepool;  // 待回收的缓存列表
+        private List<UIFormScript> m_forms;     // 所有打开的界面链表
+        private List<UIFormScript> m_formsRecyclepool;  // 待回收的缓存列表
         private int m_formSequence;             // 界面序列。递增唯一
         private List<int> m_existFormSequences; // 存在的界面的序列列表
 
@@ -32,8 +32,8 @@ namespace Demo.FrameWork
 
         public override void Init()
         {
-            this.m_forms = new List<UIFromScript>();
-            this.m_formsRecyclepool = new List<UIFromScript>();
+            this.m_forms = new List<UIFormScript>();
+            this.m_formsRecyclepool = new List<UIFormScript>();
             this.m_formSequence = 0;
             this.m_existFormSequences = new List<int>();
 
