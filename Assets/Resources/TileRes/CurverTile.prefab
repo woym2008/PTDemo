@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114329584759966554}
   - component: {fileID: 114458414886506460}
   - component: {fileID: 64248405038258942}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: CurverTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}

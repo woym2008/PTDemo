@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Demo.GameSys;
 namespace Demo.FrameWork
 {
     [GameState]
@@ -16,12 +17,8 @@ namespace Demo.FrameWork
     {
         public override void OnStateEnter()
         {
-
-            //CUIManager.GetInstance().CloseAllForm((string[])null, true, true);
-
-            //ResourceManager.LoadScene("login", new ResourceManager.LoadCompletedDelegate(this.OnLoginSceneCompleted));
-            
-            //Singleton<CSoundManager>.CreateInstance();
+            //Singleton<ResourceLoader>.GetInstance().LoadScene("EmptyScene", new ResourceLoader.LoadCompletedDelegate(this.OnLoginSceneCompleted));
+            ResourceManager.LoadScene("Login", new LoadSceneCallbacks(this.OnLoginSceneCompleted));
         }
 
         public override void OnStateLeave()
@@ -29,8 +26,6 @@ namespace Demo.FrameWork
             base.OnStateLeave();
 
             //XSingleton<CLoginSystem>.GetInstance().CloseLogin();
-
-            Debug.Log("CloseLogin...");
             
             //ResourceManager.RemoveCachedResources(new enResourceType[5]
             //  {
@@ -42,12 +37,10 @@ namespace Demo.FrameWork
             //  });
         }
 
-        private void OnLoginSceneCompleted()
-        {
-            Debug.Log("Enter Login scene ...");
-           
+        private void OnLoginSceneCompleted(string sceneName, float duration, object userData)
+        {           
             // 显示登录场景界面
-            //CLoginSystem.GetInstance().Draw();
+            LoginSystem.GetInstance().ShowLoginPanel();
                      
         }
     }

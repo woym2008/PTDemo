@@ -33,7 +33,7 @@ namespace Demo.FrameWork
         public virtual void OnStateResume()
         { }
 
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(float elapseSeconds, float realElapseSeconds)
         { }
 
         public virtual string name {

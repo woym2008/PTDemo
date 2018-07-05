@@ -107,7 +107,7 @@ namespace Demo
             //m_Collider.center = new Vector3(width * 0.5f * ExtendDirect.x, 
             //    length * 0.5f * ExtendDirect.y, 
             //    depth * 0.5f * ExtendDirect.z);
-            m_Collider.center = new Vector3(0,0, 0);
+            m_Collider.center = new Vector3(0,0, 0.2f);
             //m_Collider.size = m_render.bounds.size;
 
             //temp
@@ -117,8 +117,8 @@ namespace Demo
             //    m_render.bounds.size.z);
             m_Collider.size = new Vector3(
                 width,
-                length,
-                depth) * collidescale;
+                0.2f,//length,
+                depth+0.3f) * collidescale;
 
             //end
             //m_Collider.bounds.

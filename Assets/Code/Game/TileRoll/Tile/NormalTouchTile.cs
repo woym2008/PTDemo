@@ -1,5 +1,6 @@
 ﻿using PTAudio.Midi.Builder;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace Demo
     public class NormalTouchTile : TouchTileBase
     {
         //--------------------------------------
-        public static string m_TileName = "NormalTile";
+        //public static string m_TileName = "NormalTile";
+        public static string m_TileName = "Effect_01_Tile";
         //--------------------------------------
         public bool m_bCanDestory;
         Material m_SelfMaterial;
@@ -24,6 +26,8 @@ namespace Demo
         Quaternion m_CurQuat;
 
         bool m_EnablePressed;
+        //--------------------------------------
+        public GameObject m_partical;
         //--------------------------------------
 
         public override void InitTile(
@@ -46,8 +50,8 @@ namespace Demo
             {
                 RenderModel.segment_z = (int)scale + 1;
             }
-
-            RenderModel.collidescale = 1.5f;
+            // 临时注释掉
+            //RenderModel.collidescale = 1.5f;
 
             m_EnablePressed = false;
 
@@ -69,6 +73,21 @@ namespace Demo
         public override void ShowPress()
         {
             m_EnablePressed = true;
+
+            StartCoroutine(DisplayTouchedEffect());
+            
+        }
+
+        private IEnumerator DisplayTouchedEffect()
+        {
+            // 临时显示效果，所以直接创建了，后面改为缓存形式
+
+            if (m_partical == null)
+                yield break;
+
+            m_partical.SetActive(true);
+            yield return new WaitForSeconds(0.8f);
+            m_partical.SetActive(false);
         }
 
         public override void onUpdate()

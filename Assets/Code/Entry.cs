@@ -30,7 +30,7 @@ namespace Demo
             m_system.init();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            Debug.Log("Plat is Android");
+            //Debug.Log("Plat is Android");
             m_system.SetPlatform(SystemInPlatform.Android);            
 #else
             Debug.Log("Plat is PC");

@@ -9,6 +9,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Demo.GameSys;
+
 namespace Demo.FrameWork
 {
     public class GameEntry : MonoSingleton<GameEntry>
@@ -29,7 +31,10 @@ namespace Demo.FrameWork
 
             this.InitBaseSys();
 
-                        
+            this.InitPeripherySys();
+
+            this.RegisterUISystems();
+
             XSingleton<GameStateCtrlMgr>.GetInstance().Initialize();
             XSingleton<GameStateCtrlMgr>.GetInstance().GotoState("LaunchState");
         }
@@ -44,14 +49,24 @@ namespace Demo.FrameWork
 
         protected void InitPeripherySys()
         {
+            XSingleton<LoginSystem>.CreateInstance();
+        }
+
+        // 注册UI系统
+        protected void RegisterUISystems()
+        {
             
         }
 
+
         private void Update()
         {
-            // 更新当前的游戏状态
-            XSingleton<GameStateCtrlMgr>.GetInstance().OnUpdate();
+            float deltaTime = Time.deltaTime;
 
+            // 更新当前的游戏状态
+            XSingleton<GameStateCtrlMgr>.GetInstance().Update(deltaTime, deltaTime);
+
+            ResourceManager.Update(deltaTime, deltaTime);
         }
 
         public void LateUpdate()

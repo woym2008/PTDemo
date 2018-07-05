@@ -11,7 +11,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: CMCM
   productName: NewPTDemo
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -635,9 +635,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 815885a7-35be-4e9b-85ca-dcff14770e3e
+  cloudProjectId: 251df695-7c11-410d-8339-b54b49b70ea9
   projectName: NewPTDemo
-  organizationId: fan-zhang
+  organizationId: jinse
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

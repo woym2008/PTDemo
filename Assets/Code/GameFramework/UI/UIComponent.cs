@@ -15,7 +15,7 @@ namespace Demo.FrameWork
     public class UIComponent : MonoBehaviour
     {
         [HideInInspector]
-        public UIFormScript m_belongedFormScript;
+        public UIForm m_belongedFormScript;
 
         [HideInInspector]
         public int m_indexInlist;
@@ -63,7 +63,7 @@ namespace Demo.FrameWork
             return null;
         }
 
-        public virtual void Initialize(UIFormScript form)
+        public virtual void Initialize(UIForm form)
         {
             if(!this.m_isInitialized)
             {

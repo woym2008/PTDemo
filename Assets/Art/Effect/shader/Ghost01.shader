@@ -16,8 +16,6 @@ Shader "Taecg/VFX/Ghost01" {
         _Strength ("Strength", Float ) = 1
         _Glow ("Glow", Float ) = 1
         _MainTex ("MainTex", 2D) = "white" {}
-		_QOffset("Offset", Vector) = (0,0,0,0)
-		_Dist("Distance", Float) = 100.0
     }
     SubShader {
         Tags {
@@ -31,10 +29,8 @@ Shader "Taecg/VFX/Ghost01" {
                 "LightMode"="ForwardBase"
             }
             Blend One One
-            //Blend SrcAlpha OneMinusSrcAlpha
-            //ZTest NotEqual
+            ZTest NotEqual
             ZWrite Off
-			Cull Off
             
             CGPROGRAM
             #pragma vertex vert
@@ -48,10 +44,6 @@ Shader "Taecg/VFX/Ghost01" {
             uniform float4 _InColor;
             uniform float _Strength;
             uniform float _Glow;
-
-			float4 _QOffset;
-			float _Dist;
-
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             struct VertexInput {
                 float4 vertex : POSITION;
@@ -65,18 +57,11 @@ Shader "Taecg/VFX/Ghost01" {
                 float3 normalDir : TEXCOORD2;
             };
             VertexOutput vert (VertexInput v) {
-				float4 vPos = mul(UNITY_MATRIX_MV, v.vertex);
-				//o.normal = mul(v.normal, (float3x3)unity_WorldToObject);
-				float zOff = vPos.z / _Dist;
-				vPos += _QOffset * zOff * zOff;
-				
-
                 VertexOutput o = (VertexOutput)0;
                 o.uv0 = v.texcoord0;
                 o.normalDir = UnityObjectToWorldNormal(v.normal);
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
-				o.pos = mul(UNITY_MATRIX_P, vPos);
-                //o.pos = UnityObjectToClipPos(v.vertex );
+                o.pos = UnityObjectToClipPos(v.vertex );
                 return o;
             }
             float4 frag(VertexOutput i) : COLOR {

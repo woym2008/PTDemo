@@ -22,7 +22,7 @@ namespace Demo.FrameWork
 
         public void GotoState(string name)
         {
-            Debug.LogWarning(string.Format("GameStateCtrl Goto State {0}" ,name));
+            //Debug.LogWarning(string.Format("GameStateCtrl Goto State {0}" ,name));
             this.gameStateMachine.ChangeState(name);
         }
 
@@ -38,12 +38,17 @@ namespace Demo.FrameWork
             this.gameStateMachine = null;
         }
 
-        public void OnUpdate()
+        /// <summary>
+        /// 资源管理器轮询。
+        /// </summary>
+        /// <param name="elapseSeconds">逻辑流逝时间，以秒为单位。</param>
+        /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
+        public void Update(float elapseSeconds, float realElapseSeconds)
         {
             IState state = this.GetCurrentState();
             if(state != null)
             {
-                state.OnUpdate();
+                state.OnUpdate(elapseSeconds, realElapseSeconds);
             }
         }
 

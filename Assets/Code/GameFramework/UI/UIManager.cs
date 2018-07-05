@@ -15,13 +15,17 @@ namespace Demo.FrameWork
 {
     internal sealed partial class UIManager : XSingleton<UIManager>
     {
+        #region 通知事件
+        public delegate void LoadUIFormCallback(string assetName, UIForm form);
+        public delegate void UnloadUIFormCallback(string assetName);
+        #endregion
 
         private readonly List<int> m_UIFormsBeingLoaded;        // 正在被加载的UI界面
         private readonly List<string> m_UIFormAssetNamesBeingLoaded;    // 正在被加载的UI界面名称
         private readonly HashSet<int> m_UIFormsToReleaseOnLoad; // 需要被取消加载的界面
 
-        private List<UIFormScript> m_forms;     // 所有打开的界面链表
-        private List<UIFormScript> m_formsRecyclepool;  // 待回收的缓存列表
+        private List<UIForm> m_forms;           // 所有打开的界面链表
+        private List<UIForm> m_formsRecyclepool;// 待回收的缓存列表
         private int m_formSequence;             // 界面序列。递增唯一
         private List<int> m_existFormSequences; // 存在的界面的序列列表
 
@@ -29,11 +33,11 @@ namespace Demo.FrameWork
         private EventSystem m_uiInputEventSystem;
         private Camera m_uiCamera;
 
-
+        #region 功能函数部分
         public override void Init()
         {
-            this.m_forms = new List<UIFormScript>();
-            this.m_formsRecyclepool = new List<UIFormScript>();
+            this.m_forms = new List<UIForm>();
+            this.m_formsRecyclepool = new List<UIForm>();
             this.m_formSequence = 0;
             this.m_existFormSequences = new List<int>();
 
@@ -88,8 +92,10 @@ namespace Demo.FrameWork
             this.m_uiCamera = camera;
         }
 
+
         private void CreateUISecen()
         { }
+
 
         public void Update()
         {
@@ -99,21 +105,24 @@ namespace Demo.FrameWork
         {
 
         }
+        
+        
+        #endregion
+
+        
+        #region 公共接口部分
 
         /// <summary>
-        /// 打开UI界面
+        /// 加载ui窗口界面
         /// </summary>
-        /// <param name="uiFormAssetName">界面资源名称(界面路径)</param>
-        /// <param name="pauseCoveredUIForm">是否暂停被覆盖的UI界面</param>
-        /// <returns>返回界面的序列ID编号</returns>
-        public int OpenUIForm(string uiFormAssetName, bool pauseCoveredUIForm)
+        /// <param name="assetName"></param>
+        /// <param name="loadCallback">加载完成后回调函数</param>
+        public static void LoadUIForm(string assetName, LoadUIFormCallback loadCallback)
         {
 
-            int sequenceId = 0;
-
-            return sequenceId;
-            
         }
+
+        #endregion
 
     }
 }
