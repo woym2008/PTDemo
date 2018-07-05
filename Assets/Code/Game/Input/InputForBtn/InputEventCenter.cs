@@ -37,7 +37,7 @@ namespace Demo
                     {
                         bs.Add(s);
                         bs.Sort();
-                        Debug.Log("add list " + bs.Count + "  priority is " + s.Priority);
+                        //Debug.Log("add list " + bs.Count + "  priority is " + s.Priority);
                         return true;
                     }
                 }

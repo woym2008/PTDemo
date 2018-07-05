@@ -29,6 +29,7 @@ public abstract class XSingleton<T> where T : class, new()
         if (XSingleton<T>.s_instance == null)
         {
             XSingleton<T>.s_instance = Activator.CreateInstance<T>();
+
             (XSingleton<T>.s_instance as XSingleton<T>).Init();
         }
     }

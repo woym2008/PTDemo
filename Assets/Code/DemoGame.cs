@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Demo.FrameWork;
 
 namespace Demo
 {
@@ -59,13 +60,22 @@ namespace Demo
         //------------------------------------
         //public float AutoPlay = 1.0f;
         //------------------------------------
+
+        void Awake()
+        {
+            Application.targetFrameRate = 80;
+        }
+
         private void Start()
         {
+            
             m_system = new AudioSystem();
             m_system.init(SoundEngineType);
 
+            XSingleton<InputManager>.CreateInstance();
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-            Debug.Log("Plat is Android");
+          
             m_system.SetPlatform(SystemInPlatform.Android);            
 #else
             Debug.Log("Plat is PC");
@@ -82,6 +92,7 @@ namespace Demo
             //InitData();
         }
 
+
         private void Update()
         {
             //Debug.LogWarning("m_system.update");
@@ -90,11 +101,12 @@ namespace Demo
 
             //Debug.LogWarning("FrameUpdate");
             if (m_Roll != null)
+                //m_Roll.FrameUpdate(Time.deltaTime);
                 m_Roll.FrameUpdate(Time.deltaTime, (float)m_system.GetAccompanimentTime());
 
-
+            InputManager.GetInstance().Update();
             //纠正伴奏
-            Debug.Log("m_Roll.MusicPlayTime: " + m_Roll.m_MusicTime);
+            //Debug.Log("m_Roll.MusicPlayTime: " + m_Roll.m_MusicTime);
 
             if (Math.Abs((float)m_system.GetAccompanimentTime() - m_Roll.MusicPlayTime) > 0.1f)
             {
@@ -166,6 +178,9 @@ namespace Demo
         public void StartDemo()
         {
             InitData();
+
+            // Test code
+            //return;
 
             m_Roll.EnableGame(m_system);
             //m_Player.startMove();

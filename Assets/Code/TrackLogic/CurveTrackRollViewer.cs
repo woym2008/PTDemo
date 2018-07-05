@@ -41,7 +41,7 @@ namespace Demo.TileTrack
         private List<CurveTrackLine> _lineList = new List<CurveTrackLine>();
         public override void Init()
         {
-            Debug.Log("SplineTrackViewer Init");
+            //Debug.Log("SplineTrackViewer Init");
 
             if (_prepareList == null)
             {
@@ -77,25 +77,35 @@ namespace Demo.TileTrack
             }
 
             _spline.interpolationMode = Spline.InterpolationMode.Hermite;
+            //_spline.interpolationMode = Spline.InterpolationMode.Bezier;
             _spline.rotationMode = Spline.RotationMode.Tangent;
-            _spline.tangentMode = Spline.TangentMode.UseNormalizedTangents;
+            _spline.tangentMode = Spline.TangentMode.UseTangents;
             _spline.perNodeTension = false;
-            _spline.tension = 3.0f;
+            _spline.tension = 0.5f;
+
             _spline.updateMode = Spline.UpdateMode.DontUpdate;
+            _spline.interpolationAccuracy = 1;
 
             _splineMesh.spline = _spline;
-            _splineMesh.updateMode = SplineMesh.UpdateMode.WhenSplineChanged;
+            _splineMesh.updateMode = SplineMesh.UpdateMode.DontUpdate;
             _splineMesh.uvMode = SplineMesh.UVMode.InterpolateV;
             _splineMesh.uvScale = Vector2.one;
             _splineMesh.xyScale = Vector2.one;
             _splineMesh.segmentCount = 100;
-            _splineMesh.splitMode = SplineMesh.SplitMode.DontSplit;
+
+            //_splineMesh.splitMode = SplineMesh.SplitMode.DontSplit;
+            _splineMesh.splitMode = SplineMesh.SplitMode.BySplineParameter;
+            _splineMesh.segmentStart = 0f;
+            _splineMesh.segmentEnd = TrackNumDef.SplineParamaterInterval;
+            _splineMesh.highAccuracy = true;
+
 
             _meshRender = _splineMesh.gameObject.GetComponent<MeshRenderer>();
             if (_meshRender == null)
             {
                 _meshRender = _splineMesh.gameObject.AddComponent<MeshRenderer>();
             }
+            _meshRender.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             return;
         }
@@ -110,6 +120,28 @@ namespace Demo.TileTrack
             
             return pos;
         }
+        public override Vector3 GetPosition(float parameter, int lineIndex,bool isVisibleParameter)
+        {
+            if (!isVisibleParameter)
+            {
+                return this.GetPosition(parameter, lineIndex);
+            }
+
+            if (_splineMesh.splitMode == SplineMesh.SplitMode.BySplineParameter)
+            {
+                float cullingValue = TrackNumDef.SplineParamaterInterval * 0.33f;
+
+                if ((parameter - _splineMesh.segmentStart) > (cullingValue * 2))
+                {// 超过起始的2/3
+                    _splineMesh.segmentStart = parameter - (TrackNumDef.SplineParamaterInterval / 4);
+                    _splineMesh.segmentEnd = _splineMesh.segmentStart + TrackNumDef.SplineParamaterInterval;
+                    _splineMesh.UpdateMesh();
+                }
+            }
+
+            return this.GetPosition(parameter, lineIndex);
+        }
+
         public override Quaternion GetRotation(float paramater, int lineIndex) 
         {
             Quaternion rotation = _spline.GetOrientationOnSpline(paramater);

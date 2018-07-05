@@ -176,7 +176,7 @@ namespace Demo
             {
                 Debug.LogError("error " + usetrack);
             }
-            if (bs.getLength > 2)
+            if (bs.getLength > 1)
             {
                 int numpoints = 16;
                 Vector3[] curvepoints = new Vector3[numpoints];

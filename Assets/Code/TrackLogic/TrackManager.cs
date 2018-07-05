@@ -116,10 +116,11 @@ namespace Demo.TileTrack
         /// 获取轨道上某点的坐标位置
         /// </summary>
         /// <param name="paramater"> 0-1 索取的点在轨道中的百分比率</param>
+        /// isVisibleParamater 是否将当前的进度设置为显示进度
         /// <returns></returns>
-        public Vector3 GetPosition(float paramater, int lineIndex)
+        public Vector3 GetPosition(float paramater, int lineIndex,bool isVisibleParameter = false)
         {
-            return trackViewer.GetPosition(paramater, lineIndex);
+            return trackViewer.GetPosition(paramater, lineIndex,isVisibleParameter);
         }
         public Quaternion GetRotation(float paramater, int lineIndex)
         {
