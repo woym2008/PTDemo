@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Demo
 {
-    public class NormalTouchTile : TouchTileBase
+    public class NormalTouchTile : TouchTile<TouchTileEvent>
     {
         //--------------------------------------
         public static string m_TileName = "NormalTile";
@@ -17,7 +17,7 @@ namespace Demo
         //--------------------------------------
         public MorphCube RenderModel;
         //--------------------------------------
-        public float m_Height = 0.1f;
+        public float m_Height = 0.2f;
         float m_PressedHeight = 0;
         float m_speed = 2f;
 
@@ -40,7 +40,7 @@ namespace Demo
 
             RenderModel.SetLength(m_Height);
             RenderModel.SetWidth(0.2f);
-            RenderModel.SetDepth(scale * 0.5f);
+            RenderModel.SetDepth(scale * 1f);
 
             if(scale > 2)
             {
@@ -109,6 +109,19 @@ namespace Demo
             GameObject obj = new GameObject();
             obj.name = "t:" + trackid;
             obj.transform.parent = this.transform;
+        }
+
+        public override void OnPress<TouchTileEvent>(TouchTileEvent e)
+        {
+            GameObject touchobj = e.m_TouchObj;
+            if(touchobj == this.gameObject)
+            {
+                OnTouchBeat(e.m_TouchPos);
+            }
+        }
+
+        public override void OnEnd<TouchTileEvent>(TouchTileEvent e)
+        {
         }
     }
 }

@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Demo
 {
-    public abstract class Sensor<T> : BaseSensor where T : InputEvent, new()
+    public abstract class Sensor<T> : BaseInputSensor where T : InputEvent, new()
     {
         virtual public void Init()
         {
-            EventCenter.getInstance.RigisterSensor<T>(this);
+            //EventCenter.getInstance.RigisterSensor<T>(this);
         }
 
         virtual public void Uninit()
         {
-            EventCenter.getInstance.UnRigisterSensor<T>(this);
+            //EventCenter.getInstance.UnRigisterSensor<T>(this);
         }
 
         /////////////////BaseSensor interface imp  
@@ -48,10 +48,12 @@ namespace Demo
             }
         }
 
-        public int CompareTo(BaseSensor other) { return other.Priority - priority; }
+        public int CompareTo(BaseInputSensor other) { return other.Priority - priority; }
 
         /// ///////////////////////////////  
 
         abstract public void OnEvent<T>(T t) where T : InputEvent;
+        abstract public void OnPress<T>(T t) where T : InputEvent;
+        abstract public void OnEnd<T>(T t) where T : InputEvent;
     }
 }

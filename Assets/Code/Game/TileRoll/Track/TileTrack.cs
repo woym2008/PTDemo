@@ -206,6 +206,9 @@ namespace Demo.TrackNormal
             }
         }
 
+        public override void OnPress<PressTrack>(PressTrack data) { }
+        public override void OnEnd<PressTrack>(PressTrack data) { }
+
         private void PressTile()
         {
             Debug.Log("PressTile");

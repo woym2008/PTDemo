@@ -66,6 +66,7 @@ namespace Demo
                 return m_bIsUseing;
             }
         }
+        
         //--------------------------------------------
         public virtual void InitTile(MidiTile data, float lenght, 
             float musictime, 
@@ -166,7 +167,7 @@ namespace Demo
 
         public float getPositionProgress()
         {
-            return m_DelayProcess;
+            return m_DelayProcess/(1- m_DelayProcess);
         }
 
         public virtual void setPosition(Vector3 pos)
@@ -188,10 +189,6 @@ namespace Demo
             this.transform.localScale = scale;
         }
         //--------------------------------------------
-        public virtual void OnEndTouch()
-        {
-        }
-
         public void EnableTouch()
         {
             if (m_TouchState == TouchState.NotTouch)
@@ -213,6 +210,10 @@ namespace Demo
         }
 
         public virtual void OnTouching(Vector3 touchpos)
+        {
+        }
+
+        public virtual void OnEndTouch()
         {
         }
         //----------------------------------------------------
@@ -307,5 +308,13 @@ namespace Demo
             return false;
         }
         //----------------------------------------------------
+        private void OnMouseDown()
+        {
+            ;
+        }
+        private void OnMouseUp()
+        {
+            
+        }
     }
 }

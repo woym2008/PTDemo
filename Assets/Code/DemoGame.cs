@@ -14,6 +14,7 @@ namespace Demo
     public class DemoGame : MonoBehaviour
     {
         AudioSystem m_system;
+        public int SoundEngineType = 0;
 
         //[SerializeField] StreamingAssetResouce midiSource;
 
@@ -61,7 +62,7 @@ namespace Demo
         private void Start()
         {
             m_system = new AudioSystem();
-            m_system.init();
+            m_system.init(SoundEngineType);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             Debug.Log("Plat is Android");
@@ -89,8 +90,17 @@ namespace Demo
 
             //Debug.LogWarning("FrameUpdate");
             if (m_Roll != null)
-                m_Roll.FrameUpdate(Time.deltaTime);
+                m_Roll.FrameUpdate(Time.deltaTime, (float)m_system.GetAccompanimentTime());
 
+
+            //纠正伴奏
+            Debug.Log("m_Roll.MusicPlayTime: " + m_Roll.m_MusicTime);
+
+            if (Math.Abs((float)m_system.GetAccompanimentTime() - m_Roll.MusicPlayTime) > 0.1f)
+            {
+                m_system.SetAccompanimentTime(m_Roll.MusicPlayTime);
+            }
+            //end
             //Debug.LogWarning("MoveUpdate");
             //if(m_Player == null)
             //{
@@ -129,6 +139,7 @@ namespace Demo
             {
                 int bpm = m_system.getBPM();
                 float basebeat = m_system.getBaseBeat();
+                int div = m_system.getDivision();
                 m_Roll.Init(m_Tiles, bpm, basebeat, 
                     (float)m_Tiles[m_Tiles.Length - 1].EndTime, m_PlayerObj);
 
@@ -193,6 +204,7 @@ namespace Demo
 
         public void Switch()
         {
+            return;
             m_SwitchInput = !m_SwitchInput;
             if(m_SwitchInput)
             {

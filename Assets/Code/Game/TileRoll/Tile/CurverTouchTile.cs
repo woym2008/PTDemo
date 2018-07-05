@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Demo
 {
-    public class CurverTouchTile : TouchTileBase
+    public class CurverTouchTile : TouchTile<TouchTileEvent>
     {
         //--------------------------------------
         public static string m_TileName = "CurverTile";
@@ -115,6 +115,30 @@ namespace Demo
                 m_EnablePressed = true;
                 m_TileData.PlayTile();
             }
+        }
+
+        public override void OnEndTouch()
+        {
+            if(m_TouchState == TouchState.Touching)
+            {
+                m_TouchState = TouchState.Touched;
+
+                m_TileData.StopTile();
+            }            
+        }
+
+        public override void OnPress<TouchTileEvent>(TouchTileEvent e)
+        {
+            GameObject touchobj = e.m_TouchObj;
+            if (touchobj == this.gameObject)
+            {
+                OnTouchBeat(e.m_TouchPos);
+            }
+        }
+
+        public override void OnEnd<TouchTileEvent>(TouchTileEvent e)
+        {
+            OnEndTouch();
         }
     }
 }

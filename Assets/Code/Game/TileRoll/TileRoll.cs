@@ -33,26 +33,32 @@ namespace Demo
             }
         }
 
+        public float RunningTime
+        {
+            get
+            {
+                return m_RunningTime;
+            }
+            set
+            {
+                m_RunningTime = value;
+            }
+        }
+
+        public float MusicPlayTime
+        {
+            get
+            {
+                return m_RunningTime - m_RollTime;
+            }
+        }
+
         [SerializeField]
-        public int m_MaxTile = 10;
+        public int m_MaxTile = 2;
 
         //[SerializeField]
+        //这个值有问题 应该是一个可见面板最大长度的值
         private float m_TileRollLength = 10.0f;
-
-        ////[SerializeField]
-        //public float m_TrackWidth = 5.0f;
-
-        ////[SerializeField]
-        //public float m_TrackThickness = 0.1f;
-
-        ////[SerializeField]
-        //public int TrackNum = 4;
-
-        ////[SerializeField]
-        //public Transform m_RollRoot;
-
-        ////[SerializeField]
-        //public Vector3 m_LocalOffset;
 
         public float m_BPM = 90;
         public float m_BaseBeat = 1.0f;
@@ -63,10 +69,8 @@ namespace Demo
         //根据bpm算出的结果，一个object从轨道的一端走到另一端的时间
         //也即是生成tile后 轨道延迟时间
         public float m_RollTime = 0.0f;
-        //public static float s_StaticRolltime = 5;
-        //摄像机距离点击位置的延迟时间
-        //public float m_CameraDelayTime = 0.5f;
-        //public float m_StartPressDelayTime = 0.5f;
+
+        //摄像机的延迟距离位置
         float m_CameraDelayDis = 1.2f;
         float m_StartPressDis = 0.8f;
 
@@ -75,6 +79,7 @@ namespace Demo
         public float m_IntoTouchProportion = 0.1f;
         public float m_IntoTouchAreaTime = 0;
 
+        float m_RunningTime = 0.0f;
         //---------------------------------------------------
         public Vector3 m_TileOffset = Vector3.zero;
         //---------------------------------------------------
@@ -125,11 +130,11 @@ namespace Demo
             m_BPM = bpm;
             m_curBPM = m_BPM;
             //basebeat = m_BaseBeat;
+            //1/4拍为基础拍 1/4拍的音符为一个基础块长度 
+            //开头延迟的时间为m_MaxTile个基础块
             float basetiletime = 60.0f * basebeat / bpm;
             m_RollTime = basetiletime * m_MaxTile;
-            //m_RollTime = 10.0f;
-
-            
+            //m_RollTime = 10.0f;            
 
             m_track = TrackManager.instance;
 
@@ -148,8 +153,8 @@ namespace Demo
 
             float length = TrackManager.instance.trackViewer.GetTrackLength();
 
-            //float speed = length / musictime;
-            float speed = length / (musictime + m_RollTime);
+            float speed = length / m_MusicTime;
+            //float speed = length / (musictime + m_RollTime);
 
             TrackManager.instance.Speed = speed;
             TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
@@ -191,9 +196,9 @@ namespace Demo
             }
         }
 
-        public void FrameUpdate(float dt)
+        public void FrameUpdate(float dt, float musicrealtime)
         {
-            if(m_FSM != null)
+            if (m_FSM != null)
             {
                 m_FSM.FrameUpdate(dt * m_speedratio);
             }

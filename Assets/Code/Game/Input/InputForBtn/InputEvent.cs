@@ -55,6 +55,9 @@ namespace Demo
             set { _need_broadCast = value; }
         }
 
+        public Vector3 m_TouchPos;
+        public GameObject m_TouchObj;
+
         //重置属性  可覆写该函数以初始化自定义的事件数据  
         virtual public void reset()
         {

@@ -12,9 +12,6 @@ namespace Demo
     {
         TileRoll m_TR;
 
-        float m_RunningTime = 0;
-        float m_StartTime = 0;
-
         public float basespeed = 1.0f;
 
         public float m_TileSpeed = 1.0f;
@@ -40,8 +37,7 @@ namespace Demo
 
         public void Reset()
         {
-            m_StartTime = 0;
-            m_RunningTime = 0;
+            m_TR.RunningTime = 0;
         }
 
         public void Enter()
@@ -53,17 +49,20 @@ namespace Demo
 
         public void Execute(float dt)
         {
-            m_StartTime += dt;
-            m_RunningTime += dt;
+            m_TR.RunningTime += dt;
 
-            m_TR.getTileManager.UpdateSpawner(m_RunningTime);
+            //纠正伴奏
+            //
+
+            m_TR.getTileManager.UpdateSpawner(m_TR.RunningTime);
 
             m_TR.m_track.Update();
 
 
-            float param = m_RunningTime / (m_TR.m_MusicTime + m_TR.m_RollTime);
+            //float param = m_TR.RunningTime / (m_TR.m_MusicTime + m_TR.m_RollTime);
             //float param = Mathf.Clamp((m_RunningTime),0,float.MaxValue) 
             //    / (m_TR.m_MusicTime + m_TR.m_RollTime);
+            float param = m_TR.RunningTime / m_TR.m_MusicTime;
 
             int playertracknum = m_TR.m_track.trackNum / 2;
 

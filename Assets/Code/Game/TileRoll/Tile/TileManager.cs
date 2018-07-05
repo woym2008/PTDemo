@@ -74,8 +74,11 @@ namespace Demo
             //float basttilelength = m_TileRollLength / m_MaxTile;
             for (int i = 0; i < tiles.Length; ++i)
             {
+                //把一个块主音和其他音的所有长度加起来的最长长度 建立块
+                //float scale = (float)(tiles[i].EndTime - tiles[i].StartTime) / onetiletime;
+                //只使用主音轨的长度建立块
                 float scale = (float)(tiles[i].EndTime - tiles[i].StartTime) / onetiletime;
-                if(scale <=1)
+                if (scale <=1)
                 {
                     scale = 1;
                 }
@@ -93,7 +96,8 @@ namespace Demo
                 if (pSpawner.getStartTime <= passedtime)
                 {
                     float passedprocess = 
-                        ((float)pSpawner.getStartTime + m_DelayTime) / (m_MusicTime + m_DelayTime);
+                        ((float)pSpawner.getStartTime + m_DelayTime) 
+                        / (m_MusicTime + m_DelayTime);
                     AttachBlock(pSpawner, passedprocess);
                     m_CacheSpawner.Dequeue();
                 }
@@ -172,7 +176,7 @@ namespace Demo
             {
                 Debug.LogError("error " + usetrack);
             }
-            if (bs.getLength > 1)
+            if (bs.getLength > 2)
             {
                 int numpoints = 16;
                 Vector3[] curvepoints = new Vector3[numpoints];

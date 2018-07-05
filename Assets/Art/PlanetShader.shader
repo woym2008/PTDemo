@@ -13,17 +13,17 @@ Shader "Custom/PlanetShader" {
 
 	}
 	SubShader {
-		//Tags { "RenderType"="Opaque" }
-			Tags{
-			"Queue" = "Transparent"
-			"RenderType" = "Transparent"
-		}
+		Tags { "RenderType"="Opaque" }
+		//	Tags{
+		//	"Queue" = "Transparent"
+		//	"RenderType" = "Transparent"
+		//}
 		LOD 200
 
 		Pass
 		{
 
-			Blend SrcAlpha OneMinusSrcAlpha
+			//Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag

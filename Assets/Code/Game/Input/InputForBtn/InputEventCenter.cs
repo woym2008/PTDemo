@@ -21,16 +21,16 @@ namespace Demo
                 return m_Instance;
             }
         }
-        Dictionary<int, List<BaseSensor>> _eventMap = new Dictionary<int, List<BaseSensor>>();
+        Dictionary<int, List<BaseInputSensor>> _eventMap = new Dictionary<int, List<BaseInputSensor>>();
 
         //注册 如果已经注册返回FALSE  
-        public bool RigisterSensor<T>(Sensor<T> s) where T : InputEvent, new()
+        public bool RigisterSensor<T>(TouchTile<T> s) where T : InputEvent, new()
         {
             if (s != null)
             {
                 if (_eventMap.ContainsKey(s.EventID))
                 {
-                    List<BaseSensor> bs = _eventMap[s.EventID];
+                    List<BaseInputSensor> bs = _eventMap[s.EventID];
                     if (bs.Contains(s))
                         return false;
                     else
@@ -43,7 +43,7 @@ namespace Demo
                 }
                 else
                 {
-                    List<BaseSensor> bs = new List<BaseSensor>();
+                    List<BaseInputSensor> bs = new List<BaseInputSensor>();
                     _eventMap.Add(s.EventID, bs);
                     Debug.Log("add map " + s.EventID);
                     bs.Add(s);
@@ -55,32 +55,46 @@ namespace Demo
             return false;
         }
         //反注册 如果没有注册返回false  
-        public bool UnRigisterSensor<T>(Sensor<T> s) where T : InputEvent, new()
+        public bool UnRigisterSensor<T>(TouchTile<T> s) where T : InputEvent, new()
         {
             if (s != null)
             {
                 if (_eventMap.ContainsKey(s.EventID))
                 {
-                    List<BaseSensor> bs = _eventMap[s.EventID];
+                    List<BaseInputSensor> bs = _eventMap[s.EventID];
                     return bs.Remove(s);
                 }
             }
             return false;
         }
 
-        public void OnEvent<T>(T t) where T : InputEvent
+        public void OnPress<T>(T t) where T : InputEvent
         {
             Debug.Log("on event  " + t.EventID);
             if (_eventMap.ContainsKey(t.EventID))
             {
-                Debug.Log("has eventid");
-                List<BaseSensor> bs = _eventMap[t.EventID];
+                List<BaseInputSensor> bs = _eventMap[t.EventID];
                 foreach (var item in bs)
                 {
-                    //Debug.Log("deal sensor" + item.gb.GetHashCode() + " enablesensor  " + item.EnableSensor);
                     if (t.BroadCarst && item.EnableSensor)
                     {
-                        item.OnEvent<T>(t);
+                        item.OnPress<T>(t);
+                    }
+                }
+            }
+        }
+
+        public void OnEnd<T>(T t) where T : InputEvent
+        {
+            Debug.Log("on event  " + t.EventID);
+            if (_eventMap.ContainsKey(t.EventID))
+            {
+                List<BaseInputSensor> bs = _eventMap[t.EventID];
+                foreach (var item in bs)
+                {
+                    if (t.BroadCarst && item.EnableSensor)
+                    {
+                        item.OnEnd<T>(t);
                     }
                 }
             }

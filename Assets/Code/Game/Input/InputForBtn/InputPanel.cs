@@ -23,7 +23,7 @@ namespace Demo
             pevent.Sender = this.gameObject;
             pevent.SetParam(m_PanelID, bstart);
 
-            EventCenter.getInstance.OnEvent<PressTrack>(pevent);
+            //EventCenter.getInstance.OnEvent<PressTrack>(pevent);
         }
 
         public void OnPointerDown(PointerEventData eventData)
