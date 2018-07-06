@@ -18,10 +18,10 @@ namespace Demo
 
         void postEvent(bool bstart)
         {
-            PressTrack pevent = new PressTrack();
-            pevent.reset();
-            pevent.Sender = this.gameObject;
-            pevent.SetParam(m_PanelID, bstart);
+            //PressTrack pevent = new PressTrack();
+            //pevent.reset();
+            //pevent.Sender = this.gameObject;
+            //pevent.SetParam(m_PanelID, bstart);
 
             //EventCenter.getInstance.OnEvent<PressTrack>(pevent);
         }

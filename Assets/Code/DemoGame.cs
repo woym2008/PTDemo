@@ -240,5 +240,23 @@ namespace Demo
                     
             }
         }
+
+        //-----------------------------------------------
+        //editor
+#if UNITY_EDITOR
+        public void GetMidiDataInEditor(float tilelength)
+        {
+            PTAudio.Midi.Data.MidiBaseData data;
+            AudioSystem.LoadMidiData(path,out data);
+            midibpm = (int)data.bpm;
+            musiclength = (float)data.musiclength;
+
+            calcTracklength = (midibpm / 60.0f) * musiclength * tilelength;
+        }
+
+        public int midibpm;
+        public float musiclength;
+        public float calcTracklength;
+#endif
     }
 }

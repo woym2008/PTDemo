@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Demo.TrackNormal
 {
-    public class TileTrack : Sensor<PressTrack>
+    public class TileTrack
     {
         int m_TrackID;
         //y
@@ -185,29 +185,6 @@ namespace Demo.TrackNormal
             return instance;
         }
         //----------------------------------------------------------
-        public override void OnEvent<PressTrack>(PressTrack data)
-        {
-            System.Object[] ps = data.GetParam();
-            if (ps != null && ps.Length > 0)
-            {
-                if ((int)ps[0] == this.m_TrackID)
-                {
-                    if((bool)ps[1])
-                    {
-                        PressTile();
-                    }
-                    else
-                    {
-                        ReleaseTile();
-                    }
-
-                }
-
-            }
-        }
-
-        public override void OnPress<PressTrack>(PressTrack data) { }
-        public override void OnEnd<PressTrack>(PressTrack data) { }
 
         private void PressTile()
         {
