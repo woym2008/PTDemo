@@ -56,14 +56,16 @@ namespace Demo
         {
             base.setPosition(pos);
 
-            
+            //this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight, 0));
+
+            this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight, 0));
         }
 
         public override void setRotation(Quaternion rot)
         {
             //base.setRotation(rot);
             //this.transform.rotation = rot;
-            this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight, 0));
+
         }
 
         public override void onUpdate()

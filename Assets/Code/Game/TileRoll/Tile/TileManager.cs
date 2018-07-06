@@ -177,6 +177,7 @@ namespace Demo
                 Debug.LogError("error " + usetrack);
             }
             if (bs.getLength > 1)
+            //if (true)
             {
                 int numpoints = 16;
                 Vector3[] curvepoints = new Vector3[numpoints];
@@ -186,9 +187,13 @@ namespace Demo
 
                 for (int i = 0; i < curvepoints.Length; ++i)
                 {
-                    float process = m_DelayProcess + 
-                        ((float)bs.getStartTime + everytime * i) 
-                        / (m_MusicTime + m_DelayTime);
+                    //选取点计算的问题 每个采样点为延迟进度+花费时间/歌曲时间
+                    //float process = m_DelayProcess + 
+                    //    ((float)bs.getStartTime + everytime * i) 
+                    //    / (m_MusicTime + m_DelayTime);
+                    float process = m_DelayProcess +
+                        ((float)bs.getStartTime + everytime * i)
+                        / (m_MusicTime);
                     curvepoints[i] = TrackManager.instance.GetPosition(process, 0);
 
                     normals[i] = TrackManager.instance.GetRotation(process, 0) * new Vector3(0,1,0);

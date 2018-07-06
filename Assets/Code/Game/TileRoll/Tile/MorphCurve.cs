@@ -174,11 +174,11 @@ namespace Demo
 
             for (int i = 0; i < forwarddirs.Length-1; ++i) {
                 forwarddirs[i] = (centerposs[i+1] - centerposs[i]).normalized;
-                //rightdirs[i] = Vector3.Cross(forwarddirs[i],UpDirect);
+                //rightdirs[i] = Vector3.Cross(forwarddirs[i], UpDirect);
                 rightdirs[i] = Vector3.Cross(forwarddirs[i], up_Directs[i]);
             }
             forwarddirs[forwarddirs.Length - 1] = forwarddirs[forwarddirs.Length - 2];
-            rightdirs[rightdirs.Length - 1] = Vector3.Cross(forwarddirs[forwarddirs.Length - 1],UpDirect);
+            rightdirs[rightdirs.Length - 1] = Vector3.Cross(forwarddirs[forwarddirs.Length - 1], up_Directs[up_Directs.Length - 1]);
 
             //顶点数
             int allpointnum = centerposs.Length * 8 + 8;
@@ -207,7 +207,9 @@ namespace Demo
                     //    centerposs[y].y + tinyup * 0.5f,
                     //    centerposs[y].z);
 
-                    Vector3 pos = centerposs[y] + rightdirs[y]*x*tinyright + UpDirect * tinyup * 0.5f;
+                    //Vector3 pos = centerposs[y] + rightdirs[y]*x*tinyright + UpDirect * tinyup * 0.5f;
+
+                    Vector3 pos = centerposs[y] + rightdirs[y] * x * tinyright + up_Directs[y] * tinyup * 0.5f;
 
                     //左方向和上方向到中心去
                     pos = pos - rightdirs[y] * 0.5f * right_length;
@@ -230,7 +232,7 @@ namespace Demo
                     //    centerposs[y].y,
                     //    centerposs[y].z - depth * 0.5f);
 
-                    Vector3 pos = centerposs[y] + rightdirs[y] * x * tinyright - UpDirect * tinyup * 0.5f;
+                    Vector3 pos = centerposs[y] + rightdirs[y] * x * tinyright - up_Directs[y] * tinyup * 0.5f;
 
                     pos = pos - rightdirs[y] * 0.5f * right_length;
 
@@ -251,8 +253,8 @@ namespace Demo
                     //    centerposs[y].y,
                     //    centerposs[y].z - z * tinydepth + depth * 0.5f);
 
-                    Vector3 pos = centerposs[y] + UpDirect * z * tinyup + rightdirs[y] * tinyright *0.5f;
-                    pos = pos - UpDirect * 0.5f * up_length;
+                    Vector3 pos = centerposs[y] + up_Directs[y] * z * tinyup + rightdirs[y] * tinyright *0.5f;
+                    pos = pos - up_Directs[y] * 0.5f * up_length;
 
                     vertices[num] = pos;
                     uv[num] = new Vector2((float)z / (segment_up - 1), 
@@ -271,8 +273,8 @@ namespace Demo
                     //    centerposs[y].y,
                     //    centerposs[y].z - z * tinydepth + depth * 0.5f);
 
-                    Vector3 pos = centerposs[y] + UpDirect * z * tinyup - rightdirs[y] * tinyright * 0.5f;
-                    pos = pos - UpDirect * 0.5f * up_length;
+                    Vector3 pos = centerposs[y] + up_Directs[y] * z * tinyup - rightdirs[y] * tinyright * 0.5f;
+                    pos = pos - up_Directs[y] * 0.5f * up_length;
 
                     vertices[num] = pos;
                     uv[num] = new Vector2((float)z / (segment_up - 1), 
@@ -291,9 +293,9 @@ namespace Demo
                     //    0,
                     //    z * tinydepth - depth * 0.5f);
 
-                    Vector3 pos = UpDirect * z * tinyup + rightdirs[0] * tinyright *x;
+                    Vector3 pos = up_Directs[0] * z * tinyup + rightdirs[0] * tinyright *x;
 
-                    pos = pos - UpDirect * up_length * 0.5f - rightdirs[0] * right_length * 0.5f;
+                    pos = pos - up_Directs[0] * up_length * 0.5f - rightdirs[0] * right_length * 0.5f;
 
                     vertices[num] = pos;
                     uv[num] = new Vector2((float)x / (segment_right - 1), (float)z / (segment_up - 1));
@@ -313,10 +315,10 @@ namespace Demo
                     //    centerposs[centerposs.Length - 1].z);
 
                     Vector3 pos = centerposs[segment_forward-1] +
-                        UpDirect * z * tinyup
+                        up_Directs[segment_forward - 1] * z * tinyup
                         + rightdirs[segment_forward-1] * tinyright * x;
 
-                    pos = pos - UpDirect * up_length * 0.5f - rightdirs[segment_forward - 1] * right_length * 0.5f;
+                    pos = pos - up_Directs[segment_forward - 1] * up_length * 0.5f - rightdirs[segment_forward - 1] * right_length * 0.5f;
 
                     vertices[num] = pos;
                     uv[num] = new Vector2((float)x / (segment_right - 1), (float)z / (segment_up - 1));
