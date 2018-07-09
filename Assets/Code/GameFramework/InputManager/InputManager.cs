@@ -34,6 +34,8 @@ namespace Demo.FrameWork
             acceptInput = true;
 
             layerMask = (1 << LayerMask.NameToLayer("Tile"));
+
+            Input.multiTouchEnabled = true;            
         }
 
         private void UpdateEscape()
@@ -99,49 +101,147 @@ namespace Demo.FrameWork
 
                     if (oneTouch.phase == TouchPhase.Began)
                     {
-                        //Vector3 mouseworld = m_Camera.ScreenToWorldPoint(Input.mousePosition);
-                        Ray cam_ray = m_Camera.ScreenPointToRay(Input.mousePosition);
-
+                        Ray cam_ray = Camera.main.ScreenPointToRay(Input.touches[i].position);
+                        RaycastHit hitInfo;
                         if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
                         {
-                            TouchTileBase pBTC = hitInfo.collider.gameObject.GetComponent<TouchTileBase>();
-                            if (pBTC != null)
+                            if (hitInfo.collider != null)
                             {
-                                pBTC.OnTouchBeat(hitInfo.point);
+                                EmitPressEvent(hitInfo.collider.gameObject,hitInfo.point);                                
                             }
                         }
+                        continue;
+                    }
+                    else if(oneTouch.phase == TouchPhase.Moved ||
+                        oneTouch.phase == TouchPhase.Stationary) {
+                        //Vector3 mouseworld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        //Debug.Log("world :" + mouseworld.x + "," + mouseworld.y + "," + mouseworld.z);
+                        Ray cam_ray = Camera.main.ScreenPointToRay(Input.touches[i].position);
+
+                        RaycastHit hitInfo;
+                        Vector3 hitpos = Vector3.zero;
+                        if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
+                        {
+                            hitpos = hitInfo.point;
+                            if(hitInfo.collider != null)
+                            {
+                                EmitTouchingEvent(hitInfo.collider.gameObject, hitInfo.point);
+                            }
+                            else
+                            {
+                                EmitTouchingEvent(null, hitInfo.point);
+                            }
+                            
+                        }                        
+                        continue;
+                    }
+                    
+                    else if (oneTouch.phase == TouchPhase.Ended)
+                    {
+                        Ray cam_ray = Camera.main.ScreenPointToRay(Input.touches[i].position);
+                        RaycastHit hitInfo;
+                        Vector3 hitpos = Vector3.zero;
+                        if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
+                        {
+                            hitpos = hitInfo.point;
+                        }
+                        EmitEndEvent(hitInfo.collider.gameObject, hitInfo.point);                      
                     }
                 }
             }
 
 #else
+
             if (Input.GetMouseButtonDown(0))
             {
-                //Vector3 mouseworld = m_Camera.ScreenToWorldPoint(Input.mousePosition);
-                Ray cam_ray = m_Camera.ScreenPointToRay(Input.mousePosition);
-
+                Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hitInfo;
                 if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
                 {
-                    TouchTileBase pBTC = hitInfo.collider.gameObject.GetComponent<TouchTileBase>();
-                    
-                    if (pBTC != null)
+                    if (hitInfo.collider != null)
                     {
-                        pBTC.OnTouchBeat(hitInfo.point);
+                        EmitPressEvent(hitInfo.collider.gameObject, hitInfo.point);
                     }
                 }
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                //if (tempTouchBeat != null)
-                //{
-                //    tempTouchBeat.OnEndTouch();
-                //}
+                Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hitInfo;
+                Vector3 hitpos = Vector3.zero;
+                if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
+                {
+                    hitpos = hitInfo.point;
+                }
+                if(hitInfo.collider != null)
+                {
+                    EmitEndEvent(hitInfo.collider.gameObject, hitInfo.point);
+                }
+                else
+                {
+                    EmitEndEvent(null, hitInfo.point);
+                }
+                
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                Vector3 mouseworld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Debug.Log("world :" + mouseworld.x + "," + mouseworld.y + "," + mouseworld.z);
+                Ray cam_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                RaycastHit hitInfo;
+                Vector3 hitpos = Vector3.zero;
+                if (Physics.Raycast(cam_ray, out hitInfo, 100.0f, layerMask))
+                {
+                    hitpos = hitInfo.point;
+                    if (hitInfo.collider == null)
+                    {
+                        EmitTouchingEvent(null, hitInfo.point);
+                    }
+                    else
+                    {
+                        EmitTouchingEvent(hitInfo.collider.gameObject, hitInfo.point);
+                    }
+
+                }
             }
 
 #endif
         }
 
+        void EmitPressEvent(GameObject touchobj, Vector3 touchpos)
+        {
+            TouchTileEvent pevent = new TouchTileEvent();
+            pevent.reset();
+            //pevent.Sender = this.gameObject;
+            pevent.m_TouchPos = touchpos;
+            pevent.m_TouchObj = touchobj;
+            //pevent.SetParam(m_PanelID, bstart);
+            EventCenter.getInstance.OnPress<TouchTileEvent>(pevent);
+        }
+
+        void EmitEndEvent(GameObject touchobj, Vector3 touchpos)
+        {
+            TouchTileEvent pevent = new TouchTileEvent();
+            pevent.reset();
+            //pevent.Sender = this.gameObject;
+            pevent.m_TouchPos = touchpos;
+            pevent.m_TouchObj = touchobj;
+            EventCenter.getInstance.OnEnd<TouchTileEvent>(pevent);
+        }
+
+        void EmitTouchingEvent(GameObject touchobj, Vector3 touchpos)
+        {
+            TouchTileEvent pevent = new TouchTileEvent();
+            pevent.reset();
+            //pevent.Sender = this.gameObject;
+            pevent.m_TouchPos = touchpos;
+            pevent.m_TouchObj = touchobj;
+            EventCenter.getInstance.OnPressing<TouchTileEvent>(pevent);
+        }
+
         #endregion
+
 
     }
 }

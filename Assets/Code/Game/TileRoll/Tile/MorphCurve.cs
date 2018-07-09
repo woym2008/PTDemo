@@ -154,7 +154,9 @@ namespace Demo
             //    up_length,
             //    forward_length) * collidescale;
             m_MeshCollider.sharedMesh = meshfilter.mesh;
+            m_MeshCollider.inflateMesh = true;
             m_MeshCollider.convex = true;
+            m_MeshCollider.skinWidth = 0.05f;
         }
         private void SetVertivesUV(Vector3[] centerposs)
         {

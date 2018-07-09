@@ -226,16 +226,16 @@ namespace Demo
                 bs.CreateTileMesh(pTile);
 
                 //test
-                if(pTile.transform.childCount==0)
-                {
-                    GameObject testobj = new GameObject();
-                    testobj.transform.parent = pTile.transform;
-                    testobj.name = "track:" + usetrack;
-                }
-                else
-                {
-                    pTile.transform.GetChild(0).name = "track:" + usetrack;
-                }
+                //if(pTile.transform.childCount==0)
+                //{
+                //    GameObject testobj = new GameObject();
+                //    testobj.transform.parent = pTile.transform;
+                //    testobj.name = "track:" + usetrack;
+                //}
+                //else
+                //{
+                //    pTile.transform.GetChild(0).name = "track:" + usetrack;
+                //}
                 
 
                 lasttrack = usetrack;

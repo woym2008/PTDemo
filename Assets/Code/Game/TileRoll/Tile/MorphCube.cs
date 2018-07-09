@@ -31,7 +31,7 @@ namespace Demo
         public int segment_y = 2;
         public int segment_z = 2;
         //-------------------------------
-        public float collidescale = 2.0f;
+        public float collidescale = 2.2f;
         //-------------------------------
         public void CreateMesh()
         {

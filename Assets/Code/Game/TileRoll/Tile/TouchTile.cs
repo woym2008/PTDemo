@@ -49,8 +49,10 @@ namespace Demo
 
         public int CompareTo(BaseInputSensor other) { return other.Priority - priority; }
 
-        abstract public void OnPress<T>(T t) where T : InputEvent;
+        abstract public void OnPress<T1>(T1 t) where T1 : InputEvent;
 
-        abstract public void OnEnd<T>(T t) where T : InputEvent;
+        abstract public void OnEnd<T1>(T1 t) where T1 : InputEvent;
+
+        abstract public void OnPressing<T1>(T1 t) where T1 : InputEvent;
     }
 }

@@ -142,5 +142,9 @@ namespace Demo
         public override void OnEnd<TouchTileEvent>(TouchTileEvent e)
         {
         }
+
+        public override void OnPressing<TouchTileEvent>(TouchTileEvent e)
+        {
+        }
     }
 }

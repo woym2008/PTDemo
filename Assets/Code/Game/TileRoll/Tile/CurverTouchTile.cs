@@ -16,12 +16,15 @@ namespace Demo
 
         public Material m_SelfMaterial;
 
+        public GameObject m_PressParticle;
+
         bool m_EnablePressed;
         float m_PressedTime = 0.0f;
         public float m_Height = 0.1f;
         float m_PressedHeight = 0;
         float m_speed = 2f;
 
+        int m_press_framecount = 0;
         public override void InitTile(
             MidiTile data, 
             float scale, 
@@ -43,6 +46,11 @@ namespace Demo
             m_PressedHeight = 0;
 
             m_PressedTime = 0.0f;
+
+            if(m_PressParticle != null)
+            {
+                m_PressParticle.SetActive(false);
+            }
         }
 
         public override void CreateMesh(Vector3[] points, Vector3[] normals = null)
@@ -58,7 +66,7 @@ namespace Demo
 
             //this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight, 0));
 
-            this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight, 0));
+            this.transform.position += this.transform.rotation * (new Vector3(0, -m_PressedHeight + 0.05f, 0));
         }
 
         public override void setRotation(Quaternion rot)
@@ -84,7 +92,7 @@ namespace Demo
                             m_TouchState = TouchState.Touched;
                             return;
                         }
-                        m_PressedHeight -= Time.deltaTime * m_speed;
+                        m_PressedHeight -= Time.deltaTime * m_speed;                                                
                     }
                     else
                     {
@@ -100,7 +108,13 @@ namespace Demo
                         {
                             m_PressedHeight += Time.deltaTime * m_speed;
                         }
-                        
+
+                        //检测 如果好几帧都没被按住了，说明已经断了
+                        m_press_framecount++;
+                        if (m_press_framecount > 5)
+                        {
+                            OnEndTouch();
+                        }
                     }
                         
                     break;
@@ -116,6 +130,14 @@ namespace Demo
                 m_TouchState = TouchState.Touching;
                 m_EnablePressed = true;
                 m_TileData.PlayTile();
+
+                if (m_PressParticle != null)
+                {
+                    m_PressParticle.SetActive(true);
+                    m_PressParticle.transform.position = touchpos;
+                }
+
+                m_press_framecount = 0;
             }
         }
 
@@ -126,7 +148,26 @@ namespace Demo
                 m_TouchState = TouchState.Touched;
 
                 m_TileData.StopTile();
+
+                if (m_PressParticle != null)
+                {
+                    m_PressParticle.SetActive(false);
+                }
             }            
+        }
+
+        public override void OnTouching(Vector3 touchpos)
+        {
+            if (m_TouchState == TouchState.Touching)
+            {
+                //还在按住这个 清零按住计时
+                m_press_framecount = 0;
+
+                if (m_PressParticle != null)
+                {
+                    m_PressParticle.transform.position = touchpos;
+                }
+            }
         }
 
         public override void OnPress<TouchTileEvent>(TouchTileEvent e)
@@ -140,7 +181,19 @@ namespace Demo
 
         public override void OnEnd<TouchTileEvent>(TouchTileEvent e)
         {
-            OnEndTouch();
+            //if(e.m_TouchObj == this.gameObject)
+            //{
+            //    OnEndTouch();
+            //}            
+        }
+
+        public override void OnPressing<TouchTileEvent>(TouchTileEvent e)
+        {
+            GameObject touchobj = e.m_TouchObj;
+            if (touchobj == this.gameObject)
+            {
+                OnTouching(e.m_TouchPos);
+            }
         }
     }
 }

@@ -18,5 +18,6 @@ namespace Demo
         //void OnEvent<T>(T t) where T : InputEvent;
         void OnPress<T>(T t) where T : InputEvent;
         void OnEnd<T>(T t) where T : InputEvent;
+        void OnPressing<T>(T t) where T : InputEvent;
     }
 }

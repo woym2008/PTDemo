@@ -16,7 +16,7 @@ namespace Demo
         private void Awake()
         {
             m_CameraOffset = m_Camera.transform.localPosition;
-            m_Camera.transform.localPosition = new Vector3(0, 0, 0);
+            m_Camera.transform.localPosition = new Vector3(0, m_CameraOffset.y, 0);
         }
         private void Start()
         {

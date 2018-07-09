@@ -33,6 +33,8 @@ namespace Demo
             }
         }
 
+        public GameObject GamePianoPressBtn;
+
         public float RunningTime
         {
             get
@@ -71,7 +73,7 @@ namespace Demo
         public float m_RollTime = 0.0f;
 
         //摄像机的延迟距离位置
-        float m_CameraDelayDis = 1.2f;
+        float m_CameraDelayDis = 0f;
         float m_StartPressDis = 0.8f;
 
         public float m_MusicTime = 0.0f;
@@ -157,6 +159,7 @@ namespace Demo
             //float speed = length / (musictime + m_RollTime);
 
             TrackManager.instance.Speed = speed;
+            TrackManager.instance.trackViewer.SetTrackWidth(2.2f);
             TrackManager.instance.trackViewer.SetTrackHeight(0.001f);
             //-----------------------------------------------------------
 
@@ -274,7 +277,7 @@ namespace Demo
                 pathDataList.Add(data);
             }
 
-            track.GenerateTrack(m_trackPrefab, pathDataList.ToArray(),400);
+            track.GenerateTrack(m_trackPrefab, pathDataList.ToArray());
         }
 
         public void AddSpeed()

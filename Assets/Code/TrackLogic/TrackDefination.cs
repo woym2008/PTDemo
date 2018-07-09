@@ -17,10 +17,10 @@ namespace Demo.TileTrack
             Curve,     // 样条曲线运动
         }
 
-        static public int CurveMeshSegment = 500;          // 默认的曲面mesh由多少段组成
+        static public int CurveMeshSegment = 50;          // 默认的曲面mesh由多少段组成
         static public int maxTrackLineNum = 4;      // 轨道线最大数量
-        static public int defaultLineNum = 3;
-        static public float defaultlineSpace = 0.3f;  // 轨道线之间的距离
+        static public int defaultLineNum = 4;
+        static public float defaultlineSpace = 0.5f;  // 轨道线之间的距离
         
 
         static public float tilespace = 0.5f;         // 音符间隔

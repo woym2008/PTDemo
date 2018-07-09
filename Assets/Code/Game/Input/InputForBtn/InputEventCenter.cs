@@ -84,6 +84,22 @@ namespace Demo
             }
         }
 
+        public void OnPressing<T>(T t) where T : InputEvent
+        {
+            Debug.Log("on event  " + t.EventID);
+            if (_eventMap.ContainsKey(t.EventID))
+            {
+                List<BaseInputSensor> bs = _eventMap[t.EventID];
+                foreach (var item in bs)
+                {
+                    if (t.BroadCarst && item.EnableSensor)
+                    {
+                        item.OnPressing<T>(t);
+                    }
+                }
+            }
+        }
+
         public void OnEnd<T>(T t) where T : InputEvent
         {
             Debug.Log("on event  " + t.EventID);

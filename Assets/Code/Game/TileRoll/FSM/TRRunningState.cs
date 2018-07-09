@@ -48,6 +48,8 @@ namespace Demo
         }
 
         float lastParam = 0f;
+        float rot_t = 0;
+        bool enableslerp = false;
         public void Execute(float dt)
         {
             m_TR.RunningTime += dt;
@@ -65,13 +67,37 @@ namespace Demo
             //    / (m_TR.m_MusicTime + m_TR.m_RollTime);
             float param = m_TR.RunningTime / m_TR.m_MusicTime;
 
-            int playertracknum = m_TR.m_track.trackNum / 2;
+            float playertracknum = m_TR.m_track.trackNum / 2;
             //Debug.Log(param - lastParam);
             lastParam = param;
 
-            m_TR.m_Player.position = m_TR.m_track.GetPosition(param, playertracknum,true);
+            m_TR.m_Player.position = m_TR.m_track.GetPosition(param, (int)playertracknum,true);
             
-            m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, playertracknum);
+            
+            Quaternion trackrotation = m_TR.m_track.GetRotation(param, (int)playertracknum);
+            //m_TR.m_Player.rotation = m_TR.m_track.GetRotation(param, (int)playertracknum);
+
+            if(m_TR.m_Player.rotation != trackrotation)
+            {
+                enableslerp = true;
+            }
+            if(enableslerp)
+            {
+                rot_t += Time.deltaTime * 0.1f;
+                if(rot_t >=1)
+                {
+                    rot_t = 1;
+                    enableslerp = false;
+                }
+                m_TR.m_Player.rotation = Quaternion.Slerp(m_TR.m_Player.rotation, trackrotation, rot_t);
+            }
+            else
+            {
+                m_TR.m_Player.rotation = trackrotation;
+            }
+            //temp code
+            //todo 从轨道中获取两个轨道中间的位置
+            m_TR.m_Player.position += m_TR.m_Player.rotation * (new Vector3(-0.2f, 0, 0));
             //-----------------------------
             m_TR.getTileManager.Update(dt);
             //for (int i= m_RunningTiles.Count-1;i>=0;--i)

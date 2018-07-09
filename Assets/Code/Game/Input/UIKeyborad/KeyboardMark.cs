@@ -12,6 +12,8 @@ namespace Demo.UIKeyboard
 
         public GameObject UIKey;
 
+        public GameObject TrackKey;
+
         private void Start()
         {
             m_Mark = new Dictionary<int, KeyboradPressPoint>();
@@ -41,6 +43,16 @@ namespace Demo.UIKeyboard
             
             markpoint.transform.parent = this.transform.parent;
             markpoint.transform.localPosition = pos;
+
+            if(TrackKey != null)
+            {
+                GameObject pressTrackKey = Instantiate(TrackKey) as GameObject;
+                pressTrackKey.transform.parent = markpoint.transform;
+                pressTrackKey.transform.localPosition = new Vector3(0, 0, 0);
+                pressTrackKey.transform.localScale = new Vector3(0.5f, 0.02f, 1.0f);
+                pressTrackKey.SetActive(false);
+            }            
+
             m_Mark.Add(mark, markpoint);
         }
 
